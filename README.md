@@ -8,10 +8,10 @@
 
 [**English**](./README.md) · [**Tiếng Việt**](./README.vi.md)
 
-[![Version](https://img.shields.io/badge/version-1.0.0-FAFF69?labelColor=0B0D10)](https://github.com/leminhhuy113/muse-for-windows/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-34D399?labelColor=0B0D10)](./LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20(x64%20%2F%20ARM64)-60A5FA?labelColor=0B0D10)](./docs/COMPATIBILITY.md)
-[![Standard](https://img.shields.io/badge/1MS%20Studio-1RS%20v1.2-FAFF69?labelColor=0B0D10)](./DESIGN-SYSTEM/README.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-C7F34B?labelColor=151A14)](https://github.com/leminhhuy113/muse-for-windows/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-98D5A4?labelColor=151A14)](./LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20(x64%20%2F%20ARM64)-F5FBE9?labelColor=151A14)](./docs/COMPATIBILITY.md)
+[![Standard](https://img.shields.io/badge/1MS%20Studio-1RS%20v1.2-C7F34B?labelColor=151A14)](https://1ms-studio.com)
 [![CI](https://github.com/leminhhuy113/muse-for-windows/actions/workflows/ci.yml/badge.svg)](https://github.com/leminhhuy113/muse-for-windows/actions/workflows/ci.yml)
 
 </div>
@@ -26,8 +26,9 @@
 
 **Muse for Windows** — engineered by **1MS Studio** on the **1RS v1.2** design standard — delivers a fast, security-first, native-feeling Windows desktop workspace that combines:
 
-- **Official Muse Experience (Mode A):** Isolated, sandboxed `WebContentsView` (`persist:muse-official`) preserving your real Muse account, Conversations, **Feed**, **Ideas**, **Goals**, **Library**, **Connectors**, and **Cloud Computer (Secure VM)** — with zero credential interception and zero extra API keys required.
-- **Native Windows 10 & 11 Shell:** Custom `38px` title bar with native `titleBarOverlay` & **Snap Layouts (`Win+Z`)**, System Tray, Jump Lists, Global Keyboard Shortcuts (`Ctrl+Alt+M`, `Ctrl+Alt+Space`), and Native Toast Notifications.
+- **Official Muse Experience (Mode A):** Seamless full-bleed `WebContentsView` (`persist:muse-official`) synchronized with native Dark/Light themes, preserving your real Muse account, Conversations, **Feed**, **Ideas**, **Goals**, **Library**, **Connectors**, and **Cloud Computer (Secure VM)** — with zero credential interception and zero extra API keys required.
+- **Live Quota Usage in Bottom-Left Status Bar & Dynamic Tray Icon:** Real-time read-only quota telemetry displaying your active Muse plan (`Free` / `Power` / `Maximum`), weekly usage percentage, reset window, and additional token balance right in the **Bottom-Left Studio Bar** and on a dynamically rendered **32×32 Windows System Tray Icon**.
+- **Native Windows 10 & 11 5-Space Studio (`1ms-studio.com` × Lucian UX/UI):** Custom `44px` header with **Snap Layouts (`Win+Z`)**, **Lucian `#416` 5-Space Switcher**, right-side **Windows Companion Dock** (1-click screen capture & file staging), contextual **Lucian `#417` Collapsible Sidebars**, Global Keyboard Shortcuts (`Ctrl+Alt+M`, `Ctrl+Alt+Space`), and Native Toast Notifications.
 - **Quick Assistant Launcher:** Instant keyboard-first prompt composer with `@workspace` mentions, ghost suggestions, voice trigger, and legitimate clipboard/focus handoff to official Muse (or optional Mode C local agent execution).
 - **Sandboxed Local Workspace (`10 GB` Default Quota):** Path-traversal, symlink, and **NTFS junction** escape guards, segmented storage meter, Windows Recycle Bin deletion, and SHA-256 verified workspace migration with automatic rollback.
 - **Default-Deny Permission Center & 34-Tool Local Agent Bridge:** Granular policies (`Disabled`, `Deny`, `Ask every time`, `Read only`, `Allow in scope`), 45-second expiring approval dialogs, Emergency Stop, Loopback-only `127.0.0.1` MCP server, dedicated-profile Playwright browser automation, experimental Windows UI Automation Computer Use, and sanitized **SQLite** audit logging.
@@ -45,9 +46,9 @@
 |---|---|
 | ![Command Palette](./docs/assets/screenshots/command-palette.png) | ![Local Workspace](./docs/assets/screenshots/local-workspace.png) |
 
-| Default-Deny Permissions Center | Agent Activity Inspector |
+| Default-Deny Permissions Center | Live Quota Usage & Tray Sync |
 |---|---|
-| ![Permissions Center](./docs/assets/screenshots/permissions-center.png) | ![Agent Activity](./docs/assets/screenshots/agent-activity-inspector.png) |
+| ![Permissions Center](./docs/assets/screenshots/permissions-center.png) | ![Live Quota Popover](./docs/assets/screenshots/agent-activity-inspector.png) |
 
 | Settings (Dark Theme) | Settings (Light Theme) |
 |---|---|
@@ -75,16 +76,16 @@
 
 ## Download & Installation
 
-Download verified binaries from [**GitHub Releases (`v1.0.0`)**](https://github.com/leminhhuy113/muse-for-windows/releases/tag/v1.0.0):
+Download verified binaries from [**GitHub Releases (`v1.1.0`)**](https://github.com/leminhhuy113/muse-for-windows/releases/tag/v1.1.0):
 
-- **Installer (x64 — Recommended):** `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe` *(Per-user install, no Administrator rights required)*
-- **Portable (x64):** `Muse-for-Windows-1MS-Studio-v1.0.0-Portable-x64.exe`
-- **ARM64 Builds (Unverified Hardware):** `Setup-arm64.exe` & `Portable-arm64.exe`
+- **Installer (x64 — Recommended):** `Muse-for-Windows-1MS-Studio-v1.1.0-Setup-x64.exe` *(Per-user install, no Administrator rights required)*
+- **Portable (x64):** `Muse-for-Windows-1MS-Studio-v1.1.0-Portable-x64.exe`
+- **ARM64 Builds (Cross-compiled, Unverified Hardware):** `Setup-arm64.exe` & `Portable-arm64.exe`
 - **Checksums & Supply Chain:** Verify downloads against `SHA256SUMS.txt` and `SBOM.cdx.json`.
 
 ```powershell
 # Verify SHA-256 checksum in PowerShell before running
-Get-FileHash .\Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe -Algorithm SHA256
+Get-FileHash .\Muse-for-Windows-1MS-Studio-v1.1.0-Setup-x64.exe -Algorithm SHA256
 ```
 
 ---
@@ -107,8 +108,8 @@ npm run dist:win:x64 # Package Setup-x64.exe & Portable-x64.exe
 ## Technology Stack & Design System
 
 - **Desktop & Runtime:** Electron `36`, TypeScript `5.8` (`strict: true`), Node.js `node:sqlite`, Windows PowerShell/.NET UI Automation helper
-- **Frontend & State:** React `19`, Vite `6` (`electron-vite`), Tailwind CSS `4`, Zustand `5`, Zod `3.25`
-- **Design System (`1RS v1.2`):** **1MS Studio** Carbon surfaces (`#0B0D10`), Electric Lime (`#FAFF69`), locally bundled **Play** typography (`@fontsource/play` OFL-1.1), **Lucide Icons**, and adapted interactive patterns from [**Lucian UX/UI Prompt**](https://github.com/Seokwoooo/lucian-uxui) (`v1.2.0`, MIT License by Seokwoooo).
+- **Frontend & State:** React `19`, Vite `6` (`electron-vite`), Tailwind CSS `4`, Zustand `5`, Zod `4.6.7`
+- **Design System (`1RS v1.2` · `1ms-studio.com` DNA):** Botanical Olive Dark (`#151A14`), Sage-Cream Light (`#F5FBE9`), Electric Lime (`#C7F34B`), locally bundled **Manrope Variable** (`@fontsource-variable/manrope` OFL-1.1, Vietnamese + Latin subsets), **Lucide Icons**, and genuine interactive components from [**Lucian UX/UI Prompt**](https://github.com/Seokwoooo/lucian-uxui) (`v1.2.0`, MIT License by Seokwoooo).
 
 ---
 

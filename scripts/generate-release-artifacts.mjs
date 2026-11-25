@@ -21,97 +21,412 @@ fs.mkdirSync(DOCS_ASSETS_DIR, { recursive: true });
 async function generateSocialPreview() {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   const outPng = path.join(DOCS_ASSETS_DIR, 'github-social-preview.png');
-  const playWoffPath = path
-    .join(ROOT, 'node_modules', '@fontsource', 'play', 'files', 'play-latin-700-normal.woff2')
+
+  const manropeLatin = path
+    .join(
+      ROOT,
+      'node_modules',
+      '@fontsource-variable',
+      'manrope',
+      'files',
+      'manrope-latin-wght-normal.woff2',
+    )
     .replace(/\\/g, '/');
-  const playRegPath = path
-    .join(ROOT, 'node_modules', '@fontsource', 'play', 'files', 'play-latin-400-normal.woff2')
+  const manropeVi = path
+    .join(
+      ROOT,
+      'node_modules',
+      '@fontsource-variable',
+      'manrope',
+      'files',
+      'manrope-vietnamese-wght-normal.woff2',
+    )
     .replace(/\\/g, '/');
 
+  const darkShotPath = path
+    .join(ROOT, 'reports', 'screenshots', 'states', '02-quota-popover-vi.png')
+    .replace(/\\/g, '/');
+  const lightShotPath = path
+    .join(ROOT, 'reports', 'screenshots', 'light', '09-local-bridge-vi-light.png')
+    .replace(/\\/g, '/');
+
+  /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
   const html = `<!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <style>
-  @font-face { font-family: 'Play'; font-weight: 400; src: url('file:///${playRegPath}') format('woff2'); }
-  @font-face { font-family: 'Play'; font-weight: 700; src: url('file:///${playWoffPath}') format('woff2'); }
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 200 800;
+    src: url('file:///${manropeVi}') format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+  }
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 200 800;
+    src: url('file:///${manropeLatin}') format('woff2');
+  }
+  :root {
+    --bg-canvas: #151A14;
+    --bg-surface: #1F271D;
+    --bg-elevated: #283224;
+    --bg-cream: #F5FBE9;
+    --accent-lime: #C7F34B;
+    --ink-primary: #F4F9ED;
+    --ink-secondary: #CBD5C1;
+    --ink-muted: #97A68B;
+    --ink-dark: #151A14;
+    --border-line: rgba(244, 249, 237, 0.11);
+    --border-strong: rgba(199, 243, 75, 0.34);
+    --font-display: 'Manrope', 'Segoe UI', sans-serif;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    width: 1280px; height: 640px; overflow: hidden;
-    background: #0B0D10; color: #F5F7FA; font-family: 'Play', 'Segoe UI', sans-serif;
-    display: flex; align-items: center; justify-content: space-between; padding: 68px 76px;
+  html, body {
+    width: 1280px;
+    height: 640px;
+    overflow: hidden;
+    background: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+  }
+  .stage {
     position: relative;
+    width: 1280px;
+    height: 640px;
+    display: grid;
+    grid-template-columns: 548px 1fr;
+    align-items: center;
+    padding: 54px 62px;
+    isolation: isolate;
   }
-  .grid-bg {
-    position: absolute; inset: 0;
-    background-image: linear-gradient(to right, #181C24 1px, transparent 1px),
-                      linear-gradient(to bottom, #181C24 1px, transparent 1px);
-    background-size: 64px 64px; opacity: 0.45; z-index: 0;
+  /* Botanical studio ambient light sculptures */
+  .glow-lime {
+    position: absolute;
+    width: 680px;
+    height: 680px;
+    right: -120px;
+    top: -180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(199, 243, 75, 0.17) 0%, rgba(199, 243, 75, 0.04) 42%, transparent 70%);
+    z-index: -2;
   }
-  .left { position: relative; z-index: 2; max-width: 650px; }
+  .glow-warm {
+    position: absolute;
+    width: 560px;
+    height: 560px;
+    left: -140px;
+    bottom: -220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 251, 233, 0.07) 0%, transparent 68%);
+    z-index: -2;
+  }
+  .frame-ring {
+    position: absolute;
+    inset: 18px;
+    border-radius: 28px;
+    border: 1px solid var(--border-line);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Left Editorial Column (1ms-studio.com DNA) */
+  .editorial {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 12px 10px 10px 6px;
+  }
+  .brand-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .wordmark {
+    position: relative;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.085em;
+    line-height: 1;
+    color: var(--ink-primary);
+  }
+  .wordmark::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    right: -9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-lime);
+  }
+  .brand-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border-line);
+    margin-left: 6px;
+  }
+  .studio-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .hero-copy {
+    margin-top: 6px;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-line);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent-lime);
+    margin-bottom: 20px;
+  }
+  .kicker-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-lime);
+    box-shadow: 0 0 10px var(--accent-lime);
+  }
+  h1 {
+    font-size: 66px;
+    font-weight: 800;
+    font-style: normal;
+    letter-spacing: -0.048em;
+    line-height: 1.03;
+    color: var(--ink-primary);
+    margin-bottom: 20px;
+  }
+  .lime-slab {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 18px 8px;
+    border-radius: 20px;
+    background: var(--accent-lime);
+    color: var(--ink-dark);
+  }
+  .lead {
+    font-size: 17.5px;
+    font-weight: 500;
+    line-height: 1.52;
+    letter-spacing: -0.01em;
+    color: var(--ink-secondary);
+    max-width: 472px;
+  }
+
+  .pills-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .pill {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 7px 14px; border-radius: 999px;
-    background: rgba(250,255,105,0.12); border: 1px solid rgba(250,255,105,0.4);
-    color: #FAFF69; font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
-    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 33px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-line);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-primary);
   }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #FAFF69; }
-  h1 { font-size: 60px; font-weight: 700; line-height: 1.12; margin-bottom: 18px; }
-  h1 span { color: #FAFF69; }
-  p { font-size: 21px; line-height: 1.48; color: #949BA8; margin-bottom: 32px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
-  .chip {
-    padding: 8px 14px; border-radius: 8px; background: #12151A; border: 1px solid #282D36;
-    font-size: 14px; font-weight: 700; color: #F5F7FA;
+  .pill.is-cream {
+    background: var(--bg-cream);
+    color: var(--ink-dark);
+    border-color: transparent;
   }
-  .right {
-    position: relative; z-index: 2;
-    width: 410px; height: 460px; border-radius: 20px;
-    background: #12151A; border: 1px solid #282D36;
-    padding: 28px; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: 0 32px 64px rgba(0,0,0,0.65);
+  .repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
   }
-  .card-row {
-    padding: 14px 16px; border-radius: 10px; background: #0B0D10; border: 1px solid #282D36;
-    display: flex; align-items: center; justify-content: space-between; font-size: 14px;
+  .repo-meta strong {
+    color: var(--ink-primary);
+    font-weight: 700;
   }
-  .ok { color: #34D399; font-weight: 700; font-size: 12px; }
+
+  /* Right Showcase Stage: Real Layered Dark + Light Product Screenshots */
+  .showcase {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  figure.shot-back {
+    position: absolute;
+    right: -8px;
+    top: 6px;
+    width: 536px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(21, 26, 20, 0.18);
+    box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.72);
+    transform: rotate(1.5deg);
+    opacity: 0.95;
+    z-index: 2;
+  }
+  figure.shot-back img,
+  figure.shot-front img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  figure.shot-front {
+    position: relative;
+    right: 28px;
+    top: 34px;
+    width: 592px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(244, 249, 237, 0.18);
+    box-shadow:
+      0 42px 95px -18px rgba(0, 0, 0, 0.88),
+      0 0 0 1px rgba(199, 243, 75, 0.16);
+    z-index: 5;
+  }
+
+  /* Floating Live Tray Icon Callout Card */
+  .tray-callout {
+    position: absolute;
+    right: 10px;
+    bottom: 6px;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px 12px 13px;
+    border-radius: 18px;
+    background: rgba(31, 39, 29, 0.94);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 22px 48px -12px rgba(0, 0, 0, 0.85);
+  }
+  .tray-icon-preview {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--bg-canvas);
+    border: 1px solid rgba(199, 243, 75, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px;
+  }
+  .tray-bar {
+    width: 26px;
+    height: 4px;
+    border-radius: 99px;
+    background: #2D3829;
+    overflow: hidden;
+  }
+  .tray-bar-fill {
+    width: 45%;
+    height: 100%;
+    border-radius: 99px;
+    background: var(--accent-lime);
+  }
+  .tray-text b {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--ink-primary);
+  }
+  .tray-text span {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-lime);
+  }
 </style>
 </head>
 <body>
-  <div class="grid-bg"></div>
-  <div class="left">
-    <div class="pill"><span class="dot"></span>1MS STUDIO · POWERED BY 1RS v1.2 · MIT OPEN SOURCE</div>
-    <h1>Muse <span>for Windows</span></h1>
-    <p>Independent native-grade Windows 10 &amp; 11 desktop client for Muse — isolated WebContentsView, Global Quick Assistant, Sandboxed Workspace, and Default-Deny Permission Center.</p>
-    <div class="chips">
-      <span class="chip">Windows 10 &amp; 11 (x64 / ARM64)</span>
-      <span class="chip">VI · EN · 中文 · 日本語 · 한국어</span>
-      <span class="chip">Lucian UX/UI</span>
-    </div>
-  </div>
-  <div class="right">
-    <div style="display:flex;align-items:center;gap:16px;">
-      <svg width="72" height="72" viewBox="0 0 512 512" fill="none">
-        <rect x="24" y="24" width="464" height="464" rx="112" fill="#0B0D10" stroke="#282D36" stroke-width="14"/>
-        <path d="M128 368V152L256 276L384 152V368" stroke="#FAFF69" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="384" cy="140" r="30" fill="#FAFF69"/>
-      </svg>
-      <div>
-        <div style="font-size:20px;font-weight:700;">Muse v${pkg.version}</div>
-        <div style="font-size:13px;color:#949BA8;">Developed by 1MS Studio</div>
+  <div class="stage">
+    <div class="glow-lime"></div>
+    <div class="glow-warm"></div>
+    <div class="frame-ring"></div>
+
+    <div class="editorial">
+      <div class="brand-row">
+        <span class="wordmark">1ms</span>
+        <span class="brand-divider"></span>
+        <span class="studio-tag">One Millisecond Studio · 1RS v1.2</span>
+      </div>
+
+      <div class="hero-copy">
+        <div class="kicker">
+          <span class="kicker-dot"></span>
+          <span>NATIVE WINDOWS 10 &amp; 11 AI WORKSTATION · v${pkg.version}</span>
+        </div>
+        <h1>
+          Muse<br/>
+          <span class="lime-slab">for Windows.</span>
+        </h1>
+        <p class="lead">
+          Seamless official Muse workspace paired with live Quota Usage telemetry in the System Tray &amp; status bar, a 10 GB sandboxed file vault, and 34 permission-gated Windows tools.
+        </p>
+      </div>
+
+      <div class="pills-footer">
+        <div class="pills">
+          <span class="pill is-cream">Windows x64 &amp; ARM64</span>
+          <span class="pill">Live Quota · Tray &amp; Bar</span>
+          <span class="pill">Tiếng Việt · EN · 中文 · 日本語 · 한국어</span>
+        </div>
+        <div class="repo-meta">
+          <strong>MIT Open Source</strong>
+          <span>·</span>
+          <span>github.com/leminhhuy113/muse-for-windows</span>
+        </div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div class="card-row"><span>Isolated Official Muse Session</span><span class="ok">SANDBOXED</span></div>
-      <div class="card-row"><span>10 GB Local Workspace Guard</span><span class="ok">JUNCTION SAFE</span></div>
-      <div class="card-row"><span>34-Tool Local Agent Bridge</span><span class="ok">DEFAULT-DENY</span></div>
-      <div class="card-row"><span>DPAPI Encrypted Secret Store</span><span class="ok">VERIFIED</span></div>
-    </div>
-    <div style="font-size:12px;color:#858D9C;display:flex;justify-content:space-between;">
-      <span>github.com/leminhhuy113/muse-for-windows</span>
-      <span style="color:#FAFF69;font-weight:700;">1RS v1.2</span>
+
+    <div class="showcase">
+      <figure class="shot-back">
+        <img src="file:///${lightShotPath}" alt="Light Theme Local Bridge" />
+      </figure>
+      <figure class="shot-front">
+        <img src="file:///${darkShotPath}" alt="Dark Theme Muse Workstation & Live Quota Popover" />
+      </figure>
+      <div class="tray-callout">
+        <div class="tray-icon-preview">
+          <svg width="20" height="16" viewBox="0 0 24 18" fill="none">
+            <path d="M3 15V3L12 11.5L21 3V15" stroke="#C7F34B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="tray-bar"><div class="tray-bar-fill"></div></div>
+        </div>
+        <div class="tray-text">
+          <b>System Tray &amp; Bottom-Left Quota</b>
+          <span>Free plan · 45% used · 1B left</span>
+        </div>
+      </div>
     </div>
   </div>
 </body>
@@ -129,14 +444,17 @@ async function generateSocialPreview() {
   }
   if (!browser) throw new Error('No Chromium/Edge browser found to render social preview');
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 640 } });
+    const page = await browser.newPage({
+      viewport: { width: 1280, height: 640 },
+      deviceScaleFactor: 2,
+    });
     const tmpHtml = path.join(DIST_DIR, '_social_preview.tmp.html');
     fs.writeFileSync(tmpHtml, html, 'utf8');
     await page.goto(`file:///${tmpHtml.replace(/\\/g, '/')}`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: outPng });
     fs.rmSync(tmpHtml, { force: true });
-    console.log(`[Release] Generated ${outPng}`);
+    console.log(`[Release] Generated 2560x1280 @2x hero banner -> ${outPng}`);
   } finally {
     await browser.close();
   }
