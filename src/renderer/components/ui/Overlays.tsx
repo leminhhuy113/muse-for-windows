@@ -18,6 +18,7 @@ import type {
   ToolApprovalDecisionPayload,
   ToolApprovalRequest,
 } from '@shared/types';
+import { useAppStore } from '@renderer/stores/useAppStore';
 import { Button, RiskBadge } from './Primitives';
 
 export interface CommandItem {
@@ -41,6 +42,7 @@ export function CommandPaletteModal({
   commands: CommandItem[];
   placeholder: string;
 }) {
+  const t = useAppStore((s) => s.t);
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -122,7 +124,7 @@ export function CommandPaletteModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Command Palette"
+        aria-label={t.titlebar.commandPalette}
         className="ux u046-pal"
       >
         <div className="u046-field">
@@ -146,10 +148,10 @@ export function CommandPaletteModal({
 
         <div ref={bodyRef} className="u046-body">
           <span ref={hlRef} className="u046-hl" aria-hidden="true" />
-          <ul role="listbox" aria-label="Commands" className="m-0 p-0 list-none relative">
+          <ul role="listbox" aria-label={t.titlebar.commandPalette} className="m-0 p-0 list-none relative">
             {filtered.length === 0 ? (
               <li className="py-10 text-center text-[13.5px] text-[var(--ms-text-muted)]">
-                No matching commands found.
+                {t.palette.noResults}
               </li>
             ) : (
               filtered.map((cmd, idx) => (
@@ -184,8 +186,8 @@ export function CommandPaletteModal({
 
         <div className="flex items-center justify-between px-4 h-10 border-t border-[var(--ms-border)] text-[11.5px] font-medium text-[var(--ms-text-muted)]">
           <div className="flex items-center gap-3">
-            <span>↑↓ Move</span>
-            <span>↵ Run</span>
+            <span>↑↓ {t.palette.move}</span>
+            <span>↵ {t.palette.run}</span>
           </div>
           <span>1MS Studio · 1RS v1.2</span>
         </div>
@@ -202,6 +204,7 @@ export function ToolApprovalModal({
   request: ToolApprovalRequest | null;
   onDecide: (payload: ToolApprovalDecisionPayload) => void;
 }) {
+  const t = useAppStore((s) => s.t);
   const denyBtnRef = useRef<HTMLButtonElement>(null);
   const [remainingSec, setRemainingSec] = useState(45);
 
@@ -237,10 +240,10 @@ export function ToolApprovalModal({
             </div>
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-[var(--ms-accent-text)]">
-                Trusted Local Permission Gate · 1MS Security
+                {t.approvalModal.gateTag}
               </div>
               <h2 id="approval-dialog-title" className="text-[17px] font-semibold">
-                Approve {request.toolName}?
+                {t.approvalModal.approveTitlePrefix} {request.toolName}
               </h2>
             </div>
           </div>
@@ -249,28 +252,28 @@ export function ToolApprovalModal({
 
         <div className="space-y-2.5 p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12.5px] mb-5">
           <div className="flex justify-between gap-2">
-            <span className="text-[var(--ms-text-muted)]">Requesting Component:</span>
+            <span className="text-[var(--ms-text-muted)]">{t.approvalModal.requestingComponent}</span>
             <strong className="font-mono">{request.requestingComponent}</strong>
           </div>
           <div className="flex justify-between gap-2">
-            <span className="text-[var(--ms-text-muted)]">Action:</span>
+            <span className="text-[var(--ms-text-muted)]">{t.approvalModal.action}</span>
             <strong>{request.actionSummary}</strong>
           </div>
           <div className="flex justify-between gap-2">
-            <span className="text-[var(--ms-text-muted)]">Target Resource:</span>
+            <span className="text-[var(--ms-text-muted)]">{t.approvalModal.targetResource}</span>
             <code className="font-mono text-[12px] break-all text-right">
               {request.targetResource}
             </code>
           </div>
           <div className="flex justify-between gap-2">
-            <span className="text-[var(--ms-text-muted)]">Permission Scope:</span>
+            <span className="text-[var(--ms-text-muted)]">{t.approvalModal.permissionScope}</span>
             <span>{request.scope}</span>
           </div>
           {request.commandPreview && (
             <div className="pt-2.5 border-t border-[var(--ms-border)]">
               <div className="flex items-center gap-1.5 text-[11.5px] text-[var(--ms-warning)] font-semibold mb-1">
                 <Terminal size={13} aria-hidden="true" />
-                <span>Controlled Command Preview</span>
+                <span>{t.approvalModal.commandPreview}</span>
               </div>
               <pre className="m-0 p-2.5 rounded-xl bg-[var(--ms-surface)] text-[11.5px] font-mono overflow-x-auto">
                 {request.commandPreview.executable} {request.commandPreview.args.join(' ')}
@@ -280,7 +283,7 @@ export function ToolApprovalModal({
           )}
           {request.sideEffects.length > 0 && (
             <div className="pt-2.5 border-t border-[var(--ms-border)] text-[11.5px] text-[var(--ms-text-secondary)]">
-              <strong>Expected Side Effects:</strong> {request.sideEffects.join(' · ')}
+              <strong>{t.approvalModal.sideEffects}</strong> {request.sideEffects.join(' · ')}
             </div>
           )}
         </div>
@@ -288,7 +291,9 @@ export function ToolApprovalModal({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="inline-flex items-center gap-1.5 text-[12px] text-[var(--ms-text-muted)]">
             <Clock size={13} aria-hidden="true" />
-            <span>Auto-denies in {remainingSec}s</span>
+            <span>
+              {t.approvalModal.autoDeniesIn} {remainingSec}s
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -298,21 +303,21 @@ export function ToolApprovalModal({
               onClick={() => onDecide({ requestId: request.id, decision: 'deny' })}
               className="ms-btn ms-btn-secondary"
             >
-              Deny (Default)
+              {t.approvalModal.denyDefault}
             </button>
             {request.supportsScopedAllow && (
               <Button
                 variant="secondary"
                 onClick={() => onDecide({ requestId: request.id, decision: 'allow_scoped' })}
               >
-                Allow in Scope
+                {t.approvalModal.allowScoped}
               </Button>
             )}
             <Button
               variant="primary"
               onClick={() => onDecide({ requestId: request.id, decision: 'allow_once' })}
             >
-              Allow Once
+              {t.approvalModal.allowOnce}
             </Button>
           </div>
         </div>
@@ -335,6 +340,7 @@ export function DynamicIslandOverlay({
   onEmergencyStop: () => void;
   onInspect: () => void;
 }) {
+  const t = useAppStore((s) => s.t);
   const [expanded, setExpanded] = useState(false);
 
   if (!visible || !state.active) return null;
@@ -344,7 +350,7 @@ export function DynamicIslandOverlay({
       className="lx-island ms-no-drag"
       style={{ width: expanded ? 372 : 244 }}
       role="status"
-      aria-label="Live Agent Activity"
+      aria-label={t.activity.inspectorTitle}
     >
       {!expanded ? (
         <button
@@ -371,15 +377,15 @@ export function DynamicIslandOverlay({
               className="text-left bg-transparent border-0 p-0 min-w-0 flex-1"
             >
               <div className="text-[11px] font-semibold text-[#C7F34B] uppercase tracking-wider">
-                {state.providerLabel} {state.paused ? '(PAUSED)' : 'ACTIVE'}
+                {state.providerLabel} · {state.paused ? t.island.pausedTag : t.island.activeTag}
               </div>
               <div className="text-[13.5px] font-semibold truncate">
-                {state.currentTask || 'Running task'}
+                {state.currentTask || t.island.runningTask}
               </div>
             </button>
             <button
               type="button"
-              aria-label="Collapse indicator"
+              aria-label={t.island.collapseLabel}
               onClick={() => setExpanded(false)}
               className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center border-0 text-white"
             >
@@ -388,8 +394,10 @@ export function DynamicIslandOverlay({
           </div>
 
           <div className="text-[11.5px] text-[#CBD5C1] truncate">
-            Tool: <code className="text-white">{state.currentTool || 'idle'}</code>
-            {state.activeWindowTitle ? ` · Window: ${state.activeWindowTitle}` : ''}
+            {t.island.toolLabel} <code className="text-white">{state.currentTool || '—'}</code>
+            {state.activeWindowTitle
+              ? ` · ${t.island.windowLabel} ${state.activeWindowTitle}`
+              : ''}
           </div>
 
           <div className="flex items-center justify-between gap-2 pt-1">
@@ -399,7 +407,7 @@ export function DynamicIslandOverlay({
               onClick={onPauseToggle}
               icon={state.paused ? <Play size={13} /> : <Pause size={13} />}
             >
-              {state.paused ? 'Resume' : 'Pause'}
+              {state.paused ? t.common.resume : t.common.pause}
             </Button>
             <Button
               size="sm"
@@ -407,7 +415,7 @@ export function DynamicIslandOverlay({
               onClick={onEmergencyStop}
               icon={<Square size={13} />}
             >
-              Emergency Stop
+              {t.permissions.emergencyStop}
             </Button>
           </div>
         </div>
@@ -433,11 +441,12 @@ export function ToastStack({
   toasts: ToastEntry[];
   onDismiss: (id: string) => void;
 }) {
+  const t = useAppStore((s) => s.t);
   const [fanned, setFanned] = useState(false);
 
   if (toasts.length === 0) return null;
 
-  const visible = toasts.slice(-4).reverse(); // index 0 = newest front toast
+  const visible = toasts.slice(-4).reverse();
 
   const iconForTone = (tone: ToastEntry['tone']) => {
     if (tone === 'success')
@@ -454,7 +463,7 @@ export function ToastStack({
       className="ux u070-stack"
       style={{ height: fanned ? visible.length * 74 : 92 }}
       role="region"
-      aria-label="Notifications"
+      aria-label={t.nav.notifications}
       aria-live="polite"
       onMouseEnter={() => setFanned(true)}
       onMouseLeave={() => setFanned(false)}
@@ -497,13 +506,13 @@ export function ToastStack({
                   }}
                   className="mt-1 text-[12px] font-semibold text-[var(--ms-accent-text)] bg-transparent border-0 p-0 underline"
                 >
-                  {toast.undoLabel || 'Undo'}
+                  {toast.undoLabel || t.common.undo}
                 </button>
               )}
             </div>
             <button
               type="button"
-              aria-label="Dismiss notification"
+              aria-label={t.common.close}
               onClick={() => onDismiss(toast.id)}
               className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--ms-text-muted)] hover:bg-[var(--ms-surface-hover)] hover:text-[var(--ms-text-primary)] bg-transparent border-0 p-0"
             >
@@ -538,6 +547,7 @@ export function ConfirmDialog({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const t = useAppStore((s) => s.t);
   const [typed, setTyped] = useState('');
 
   useEffect(() => {
@@ -567,7 +577,9 @@ export function ConfirmDialog({
         {confirmPhrase && (
           <div className="mb-4">
             <div className="text-[12px] text-[var(--ms-text-muted)] mb-1.5">
-              Type <code className="font-mono font-bold text-[var(--ms-danger)]">{confirmPhrase}</code> to confirm:
+              {t.approvalModal.confirmTypePrefix}{' '}
+              <code className="font-mono font-bold text-[var(--ms-danger)]">{confirmPhrase}</code>{' '}
+              {t.approvalModal.confirmTypeSuffix}
             </div>
             <input
               type="text"

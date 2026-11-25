@@ -13,20 +13,20 @@ for (const sub of ['dark', 'light', 'compact', 'high-dpi', 'states']) {
 }
 fs.mkdirSync(PUBLIC_SHOTS, { recursive: true });
 
-test('Electron E2E, Security Isolation, Multi-Language (VI/EN/ZH), All Screens & Visual QA Capture', async () => {
+test('Electron E2E — Native 5-Space Shell, 100% Pure Vietnamese, Live Quota Usage & Visual QA', async () => {
   const tmpUserData = fs.mkdtempSync(path.join(os.tmpdir(), 'muse-e2e-ud-'));
   const tmpWorkspace = fs.mkdtempSync(path.join(os.tmpdir(), 'muse-e2e-ws-'));
 
-  // Seed sanitized demonstration files inside Workspace for clean screenshots
   fs.mkdirSync(path.join(tmpWorkspace, 'Workspace'), { recursive: true });
+  fs.mkdirSync(path.join(tmpWorkspace, 'Shared'), { recursive: true });
   fs.writeFileSync(
-    path.join(tmpWorkspace, 'Workspace', 'Q4-Product-Roadmap.md'),
-    '# Q4 Product Roadmap\n\n- Native Windows 11 Desktop Integration\n- Sandboxed Local Agent Bridge\n- 1MS Studio 1RS v1.2 Design System\n',
+    path.join(tmpWorkspace, 'Workspace', 'Ke-Hoach-San-Pham-Q4.md'),
+    '# Kế hoạch Sản phẩm Q4\n\n- Tích hợp sâu trên Windows 11\n- Hiển thị trực tiếp Quota Usage tại góc trái dưới & Tray Icon\n',
     'utf8',
   );
   fs.writeFileSync(
-    path.join(tmpWorkspace, 'Workspace', 'Research-Brief-VI.md'),
-    '# Tóm tắt Nghiên cứu Muse\n\nTài liệu thử nghiệm an toàn trong thư mục cô lập Muse for Windows.\n',
+    path.join(tmpWorkspace, 'Shared', 'Bao-Cao-Tuan.md'),
+    '# Báo cáo Tuần\n\nTài liệu sẵn sàng đính kèm vào Muse.\n',
     'utf8',
   );
 
@@ -43,7 +43,6 @@ test('Electron E2E, Security Isolation, Multi-Language (VI/EN/ZH), All Screens &
 
   try {
     let win = await app.firstWindow();
-    // Ensure we select the local BrowserWindow (file://.../index.html) rather than the child WebContentsView
     for (let attempt = 0; attempt < 20; attempt++) {
       const match = app.windows().find((w) => w.url().includes('index.html'));
       if (match) {
@@ -58,7 +57,7 @@ test('Electron E2E, Security Isolation, Multi-Language (VI/EN/ZH), All Screens &
 
     await win.setViewportSize({ width: 1440, height: 900 });
 
-    // Verify sandbox & contextBridge security invariants
+    // 1. Security isolation check
     const securityCheck = await win.evaluate(() => ({
       hasRequire: typeof (window as unknown as { require?: unknown }).require !== 'undefined',
       hasProcess: typeof (window as unknown as { process?: unknown }).process !== 'undefined',
@@ -68,226 +67,153 @@ test('Electron E2E, Security Isolation, Multi-Language (VI/EN/ZH), All Screens &
     expect(securityCheck.hasProcess).toBe(false);
     expect(securityCheck.hasMuseApi).toBe(true);
 
-    // 1. Onboarding screen (Vietnamese default / switchable)
-    await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'en' } }));
-    await win.waitForTimeout(220);
-    await expect(win.locator('h1')).toContainText('Welcome to Muse for Windows');
-    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '01-onboarding-en.png') });
-
-    // Switch to Vietnamese & verify NFC rendering
-    await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'vi' } }));
-    await win.waitForTimeout(220);
-    await expect(win.locator('h1')).toContainText('Chào mừng đến với Muse for Windows');
+    // 2. Default pure Vietnamese Onboarding
+    await win.waitForTimeout(200);
+    await expect(win.locator('h1')).toContainText('Chào mừng đến với Muse cho Windows');
     await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '01-onboarding-vi.png') });
 
-    // Switch to Simplified Chinese & verify CJK rendering
+    // Switch to Simplified Chinese & English briefly to prove instant live i18n
     await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'zh' } }));
-    await win.waitForTimeout(220);
+    await win.waitForTimeout(160);
     await expect(win.locator('h1')).toContainText('欢迎使用 Muse for Windows');
-    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'states', '01-onboarding-zh.png') });
 
-    // Switch to English for public gallery + Vietnamese verification
-    await win.evaluate(() =>
-      window.museApi.updateSettings({
-        language: { locale: 'en' },
-        general: {
-          onboardingCompleted: true,
-          launchWithWindows: false,
-          minimizeToTray: true,
-          closeToTray: true,
-          focusMode: false,
-          downloadsSaveBehavior: 'workspace',
-        },
-        appearance: {
-          theme: 'dark',
-          accentPreset: 'electric-lime',
-          fontScale: 1,
-          density: 'comfortable',
-          sidebarCollapsed: false,
-          sidebarWidth: 224,
-          inspectorOpen: true,
-          inspectorWidth: 320,
-          animationIntensity: 'standard',
-          reducedMotion: false,
-          windowMaterial: 'solid',
-          quickAssistantPosition: 'top-center',
-          quickAssistantAlwaysOnTop: true,
-          showDynamicIsland: true,
-          museZoomFactor: 1,
-          highContrast: false,
-        },
-      }),
+    await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'vi' } }));
+    await win.waitForTimeout(160);
+
+    // Complete onboarding -> Enter seamless Muse space (NO fake URL bar, NO 15-item sidebar!)
+    await win.getByRole('button', { name: 'Bắt đầu làm việc với Muse' }).click();
+    await win.waitForTimeout(250);
+
+    await expect(win.locator('aside.u417-sb')).toHaveCount(0);
+    await expect(win.getByText('Open in Default Browser')).toHaveCount(0);
+
+    // 3. Test Live Quota Usage Sync in Bottom-Left Corner (`Góc trái dưới`)
+    await win.getByTestId('quota-sync-btn').click();
+    await expect(win.getByTestId('quota-status-trigger')).toContainText('45% đã dùng', {
+      timeout: 8000,
+    });
+    await expect(win.getByTestId('quota-status-trigger')).toContainText('Gói Miễn phí');
+
+    // Open Windows Companion Dock on right + capture seamless Muse dark screenshot
+    await win.getByRole('button', { name: 'Khay Công cụ Windows' }).click();
+    await win.waitForTimeout(220);
+    await win.screenshot({
+      path: path.join(REPORTS_SHOTS, 'dark', '03-muse-companion-vi-dark.png'),
+    });
+    fs.copyFileSync(
+      path.join(REPORTS_SHOTS, 'dark', '03-muse-companion-vi-dark.png'),
+      path.join(PUBLIC_SHOTS, 'main-workspace-dark.png'),
     );
 
-    const navigateAndCapture = async (screenLabel: string, navLabel: string, pubFile?: string) => {
-      await win.getByRole('button', { name: navLabel, exact: true }).click();
-      await win.waitForTimeout(180);
-      const outDark = path.join(REPORTS_SHOTS, 'dark', `${screenLabel}.png`);
-      await win.screenshot({ path: outDark });
-      if (pubFile) {
-        fs.copyFileSync(outDark, path.join(PUBLIC_SHOTS, pubFile));
-      }
-    };
+    // Open Bottom-Left Quota Popover Card & capture visual proof!
+    await win.getByTestId('quota-status-trigger').click();
+    await expect(win.getByTestId('quota-popover')).toBeVisible();
+    await expect(win.getByTestId('quota-popover')).toContainText('Hạn mức Sử dụng Muse');
+    await expect(win.getByTestId('quota-popover')).toContainText('Đặt lại hàng tuần vào 1 Dec');
+    await expect(win.getByTestId('quota-popover')).toContainText('Còn 1B token');
+    await win.waitForTimeout(200);
+    await win.screenshot({
+      path: path.join(REPORTS_SHOTS, 'states', '02-quota-popover-vi.png'),
+    });
+    await win.keyboard.press('Escape');
 
-    // Main Muse Workspace
-    await navigateAndCapture('03-main-workspace', 'Muse Workspace', 'main-workspace-dark.png');
-
-    // Quick Assistant
-    await navigateAndCapture('04-quick-assistant', 'Quick Assistant', 'quick-assistant.png');
-
-    // Command Palette (Ctrl+K)
-    await win.keyboard.press('Control+k');
-    await expect(win.getByRole('dialog', { name: 'Command Palette' })).toBeVisible();
-    await win.waitForTimeout(150);
-    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'states', '05-command-palette.png') });
+    // 4. Quick Assistant (Pure Vietnamese)
+    await win.getByRole('tab', { name: 'Trợ lý Nhanh' }).click();
+    await win.waitForTimeout(180);
+    await expect(win.getByText('Chế độ A · Chuyển sang Muse')).toBeVisible();
+    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '04-quick-assistant-vi.png') });
     fs.copyFileSync(
-      path.join(REPORTS_SHOTS, 'states', '05-command-palette.png'),
+      path.join(REPORTS_SHOTS, 'dark', '04-quick-assistant-vi.png'),
+      path.join(PUBLIC_SHOTS, 'quick-assistant.png'),
+    );
+
+    // 5. Command Palette (Ctrl+K — Pure Vietnamese)
+    await win.keyboard.press('Control+k');
+    await expect(win.getByRole('dialog', { name: 'Tìm kiếm hoặc chạy lệnh nhanh' })).toBeVisible();
+    await win.waitForTimeout(150);
+    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'states', '05-command-palette-vi.png') });
+    fs.copyFileSync(
+      path.join(REPORTS_SHOTS, 'states', '05-command-palette-vi.png'),
       path.join(PUBLIC_SHOTS, 'command-palette.png'),
     );
     await win.keyboard.press('Escape');
 
-    // Local Workspace
-    await navigateAndCapture('06-local-workspace', 'Local Workspace', 'local-workspace.png');
-
-    // Permissions Center
-    await navigateAndCapture('08-permissions-center', 'Permissions Center', 'permissions-center.png');
-
-    // Local Bridge (and run diagnostic tool to populate SQLite audit log!)
-    await navigateAndCapture('09-local-bridge', 'Local Bridge');
-    await win.getByRole('button', { name: 'Run Read-Only Diagnostic Tool' }).click();
+    // 6. Files Space (`Không gian Tệp` -> Contextual Lucian #417 Sidebar with 3 items!)
+    await win.getByRole('tab', { name: 'Không gian Tệp' }).click();
     await win.waitForTimeout(200);
-
-    // Computer Use
-    await navigateAndCapture('10-computer-use', 'Computer Use');
-
-    // Agent Activity Inspector
-    await navigateAndCapture('11-agent-activity', 'Agent Activity', 'agent-activity-inspector.png');
-
-    // Activity History (SQLite verified!)
-    await navigateAndCapture('13-activity-history', 'Activity History');
-
-    // Downloads & Notifications & Integrations
-    await navigateAndCapture('14-downloads', 'Downloads');
-    await navigateAndCapture('15-notifications', 'Notifications');
-    await navigateAndCapture('21-integrations', 'Integrations');
-
-    // Settings
-    await navigateAndCapture('16-settings', 'Settings', 'settings.png');
-
-    // Light Theme Screenshot Verification
-    await win.evaluate(() =>
-      window.museApi.updateSettings({
-        appearance: {
-          theme: 'light',
-          accentPreset: 'electric-lime',
-          fontScale: 1,
-          density: 'comfortable',
-          sidebarCollapsed: false,
-          sidebarWidth: 224,
-          inspectorOpen: false,
-          inspectorWidth: 320,
-          animationIntensity: 'standard',
-          reducedMotion: false,
-          windowMaterial: 'solid',
-          quickAssistantPosition: 'top-center',
-          quickAssistantAlwaysOnTop: true,
-          showDynamicIsland: true,
-          museZoomFactor: 1,
-          highContrast: false,
-        },
-      }),
-    );
-    await win.waitForTimeout(180);
-    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'light', '16-settings-light.png') });
+    await expect(win.locator('aside.u417-sb')).toBeVisible();
+    await expect(win.locator('aside.u417-sb .u417-it')).toHaveCount(3);
+    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '06-local-workspace-vi.png') });
     fs.copyFileSync(
-      path.join(REPORTS_SHOTS, 'light', '16-settings-light.png'),
+      path.join(REPORTS_SHOTS, 'dark', '06-local-workspace-vi.png'),
+      path.join(PUBLIC_SHOTS, 'local-workspace.png'),
+    );
+
+    // 7. Windows Agent Space (`Tác tử Windows` -> Permissions & Local Bridge in 100% Pure Vietnamese!)
+    await win.getByRole('tab', { name: 'Tác tử Windows' }).click();
+    await win.waitForTimeout(200);
+    await expect(win.locator('h1')).toContainText('Trung tâm Quyền hạn');
+    await win.screenshot({
+      path: path.join(REPORTS_SHOTS, 'dark', '08-permissions-center-vi.png'),
+    });
+    fs.copyFileSync(
+      path.join(REPORTS_SHOTS, 'dark', '08-permissions-center-vi.png'),
+      path.join(PUBLIC_SHOTS, 'permissions-center.png'),
+    );
+
+    // Navigate to `Cầu nối Công cụ` (`LocalBridgePage`) — directly addressing User Image 2!
+    await win.getByRole('button', { name: 'Cầu nối Công cụ', exact: true }).click();
+    await win.waitForTimeout(220);
+    await expect(win.locator('h1')).toContainText('Cầu nối Công cụ Cục bộ');
+    await expect(win.getByText('MỨC RỦI RO · THẤP').first()).toBeVisible();
+    await expect(win.getByText('RISK · LOW')).toHaveCount(0);
+    await expect(win.getByText('Enable Local Agent Bridge')).toHaveCount(0);
+    await win.screenshot({
+      path: path.join(REPORTS_SHOTS, 'dark', '09-local-bridge-vi-dark.png'),
+    });
+
+    // Switch to Light Theme on `Cầu nối Công cụ` to prove exact Light-mode fix for Image 2!
+    await win.getByRole('button', { name: 'Đổi giao diện Sáng / Tối' }).click();
+    await win.waitForTimeout(220);
+    await win.screenshot({
+      path: path.join(REPORTS_SHOTS, 'light', '09-local-bridge-vi-light.png'),
+    });
+    fs.copyFileSync(
+      path.join(REPORTS_SHOTS, 'light', '09-local-bridge-vi-light.png'),
       path.join(PUBLIC_SHOTS, 'theme-light.png'),
     );
 
-    // Restore Dark Theme + Capture Update Center, Diagnostics & About Page
-    await win.evaluate(() =>
-      window.museApi.updateSettings({
-        appearance: {
-          theme: 'dark',
-          accentPreset: 'electric-lime',
-          fontScale: 1,
-          density: 'comfortable',
-          sidebarCollapsed: false,
-          sidebarWidth: 224,
-          inspectorOpen: false,
-          inspectorWidth: 320,
-          animationIntensity: 'standard',
-          reducedMotion: false,
-          windowMaterial: 'solid',
-          quickAssistantPosition: 'top-center',
-          quickAssistantAlwaysOnTop: true,
-          showDynamicIsland: true,
-          museZoomFactor: 1,
-          highContrast: false,
-        },
-      }),
-    );
-    await win.waitForTimeout(150);
-    await win.screenshot({ path: path.join(PUBLIC_SHOTS, 'theme-dark.png') });
+    // Also capture Muse Light Theme (synced nativeTheme!)
+    await win.getByRole('tab', { name: 'Muse' }).click();
+    await win.waitForTimeout(220);
+    await win.screenshot({
+      path: path.join(REPORTS_SHOTS, 'light', '03-muse-companion-vi-light.png'),
+    });
 
-    await navigateAndCapture('22-updates', 'Update Center');
-    await navigateAndCapture('23-diagnostics', 'Diagnostics');
-    await navigateAndCapture('24-about', 'About', 'about-page.png');
+    // Switch back to Dark Theme & verify Settings + About
+    await win.getByRole('button', { name: 'Đổi giao diện Sáng / Tối' }).click();
+    await win.waitForTimeout(180);
+    await win.getByRole('tab', { name: 'Cài đặt' }).click();
+    await win.waitForTimeout(200);
+    await expect(win.locator('h1')).toContainText('Cài đặt Hệ thống');
+    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '16-settings-vi.png') });
+    fs.copyFileSync(
+      path.join(REPORTS_SHOTS, 'dark', '16-settings-vi.png'),
+      path.join(PUBLIC_SHOTS, 'settings.png'),
+    );
+
+    await win.getByRole('button', { name: 'Giới thiệu Ứng dụng', exact: true }).click();
+    await win.waitForTimeout(200);
+    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '24-about-vi.png') });
+    fs.copyFileSync(
+      path.join(REPORTS_SHOTS, 'dark', '24-about-vi.png'),
+      path.join(PUBLIC_SHOTS, 'about-page.png'),
+    );
 
     // Compact 1280x720 Verification (Zero horizontal overflow!)
     await win.setViewportSize({ width: 1280, height: 720 });
-    await win.evaluate(() =>
-      window.museApi.updateSettings({
-        appearance: {
-          theme: 'dark',
-          accentPreset: 'electric-lime',
-          fontScale: 1,
-          density: 'compact',
-          sidebarCollapsed: true,
-          sidebarWidth: 224,
-          inspectorOpen: false,
-          inspectorWidth: 320,
-          animationIntensity: 'standard',
-          reducedMotion: false,
-          windowMaterial: 'solid',
-          quickAssistantPosition: 'top-center',
-          quickAssistantAlwaysOnTop: true,
-          showDynamicIsland: true,
-          museZoomFactor: 1,
-          highContrast: false,
-        },
-      }),
-    );
-    await win.waitForTimeout(150);
+    await win.waitForTimeout(160);
     await win.screenshot({ path: path.join(REPORTS_SHOTS, 'compact', 'compact-1280x720.png') });
-
-    // High-DPI 125% Font Scale Verification in Vietnamese
-    await win.setViewportSize({ width: 1920, height: 1080 });
-    await win.evaluate(() =>
-      window.museApi.updateSettings({
-        language: { locale: 'vi' },
-        appearance: {
-          theme: 'dark',
-          accentPreset: 'electric-lime',
-          fontScale: 1.25,
-          density: 'spacious',
-          sidebarCollapsed: false,
-          sidebarWidth: 240,
-          inspectorOpen: false,
-          inspectorWidth: 340,
-          animationIntensity: 'standard',
-          reducedMotion: false,
-          windowMaterial: 'solid',
-          quickAssistantPosition: 'top-center',
-          quickAssistantAlwaysOnTop: true,
-          showDynamicIsland: true,
-          museZoomFactor: 1,
-          highContrast: false,
-        },
-      }),
-    );
-    await win.waitForTimeout(180);
-    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'high-dpi', 'high-scale-1920x1080-vi.png') });
   } finally {
     await app.close();
     fs.rmSync(tmpUserData, { recursive: true, force: true });

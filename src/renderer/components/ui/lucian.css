@@ -1038,8 +1038,8 @@
 /* ── Lucian #070 — Genuine Fanning Stack Toasts ── */
 .u070-stack {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
+  right: 16px;
+  bottom: 44px;
   z-index: 95;
   width: min(364px, calc(100vw - 36px));
   pointer-events: none;
@@ -1177,5 +1177,57 @@
   }
   75% {
     transform: translateX(4px);
+  }
+}
+
+/* ── Compact Studio Header Space Switcher (#416) & Keycap (#471) ── */
+.u416-tl.is-header {
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--ms-surface);
+}
+.u416-tl.is-header .u416-th {
+  top: 3px;
+  bottom: 3px;
+  border-radius: 999px;
+}
+.u416-tl.is-header .u416-tab {
+  height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  gap: 5px;
+}
+.u471-b.is-compact {
+  min-width: 176px;
+  max-width: 220px;
+  height: 30px;
+  padding: 0 6px 0 11px;
+}
+
+/* ── Bottom-Left Quota Usage Popover Card (1MS Studio × Lucian Spring) ── */
+.ms-quota-pop {
+  position: fixed;
+  left: 12px;
+  bottom: 40px;
+  z-index: 80;
+  width: min(376px, calc(100vw - 24px));
+  border-radius: 22px;
+  background: var(--ms-surface-elevated);
+  border: 1px solid var(--ux-line-2);
+  box-shadow:
+    0 28px 60px -20px var(--ux-shadow-strong),
+    0 4px 14px -4px var(--ux-shadow);
+  transform-origin: 24px 100%;
+  animation: ms-quota-pop-in 0.34s cubic-bezier(0.28, 1.35, 0.45, 1);
+}
+@keyframes ms-quota-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

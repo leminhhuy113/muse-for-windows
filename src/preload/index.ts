@@ -13,6 +13,7 @@ import type {
   DownloadItemRecord,
   LiveAgentExecutionState,
   MuseConnectionState,
+  MuseQuotaSnapshot,
   PermissionCategory,
   PermissionPolicy,
   RuntimeDiagnosticsInfo,
@@ -29,6 +30,7 @@ const museApi = {
     ipcRenderer.invoke(IPC_CHANNELS.APP_GET_BOOTSTRAP) as Promise<{
       settings: AppSettings;
       museState: MuseConnectionState;
+      quotaState: MuseQuotaSnapshot;
       agentState: LiveAgentExecutionState;
       pendingApprovals: ToolApprovalRequest[];
       updateState: UpdateStateSnapshot;
@@ -72,6 +74,9 @@ const museApi = {
   museOpenExternalAuth: () => ipcRenderer.invoke(IPC_CHANNELS.MUSE_OPEN_EXTERNAL_AUTH) as Promise<boolean>,
   museClearSession: () => ipcRenderer.invoke(IPC_CHANNELS.MUSE_CLEAR_SESSION) as Promise<void>,
   museGetState: () => ipcRenderer.invoke(IPC_CHANNELS.MUSE_GET_STATE) as Promise<MuseConnectionState>,
+  museGetQuota: () => ipcRenderer.invoke(IPC_CHANNELS.MUSE_GET_QUOTA) as Promise<MuseQuotaSnapshot>,
+  museSyncQuota: (interactive = true) =>
+    ipcRenderer.invoke(IPC_CHANNELS.MUSE_SYNC_QUOTA, interactive) as Promise<MuseQuotaSnapshot>,
 
   // Quick Assistant
   submitQuickPrompt: (payload: {
@@ -201,6 +206,7 @@ const museApi = {
   onEvent: <T>(channel: string, listener: (payload: T) => void): (() => void) => {
     const allowedEvents = new Set<string>([
       IPC_CHANNELS.EVENT_MUSE_STATE,
+      IPC_CHANNELS.EVENT_QUOTA_UPDATED,
       IPC_CHANNELS.EVENT_SETTINGS_UPDATED,
       IPC_CHANNELS.EVENT_APPROVAL_REQUESTED,
       IPC_CHANNELS.EVENT_APPROVAL_RESOLVED,

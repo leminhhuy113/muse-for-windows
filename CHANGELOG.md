@@ -4,6 +4,15 @@ All notable changes to **Muse for Windows** (by **1MS Studio**, powered by **1RS
 
 ---
 
+## [1.1.0] — 2026-11-26
+
+### Added & Redesigned
+- **Native 5-Space Studio Architecture (`1ms-studio.com` × Lucian UX/UI):** Eliminated browser-wrapper URL bars and double-sidebar collisions; introduced a seamless edge-to-edge **Muse** workspace with synchronized `nativeTheme.themeSource`, a **Lucian `#416` 5-Space Segmented Switcher**, a toggleable right-side **Windows Companion Dock** (1-click screen capture & file staging into `Shared`), and contextual **Lucian `#417` Collapsible Sidebars** for local spaces.
+- **Live Muse Quota Usage in Bottom-Left Status Bar & Dynamic Windows System Tray:** Added zero-privilege isolated read-only quota extraction (`MuseQuotaMonitor`) for weekly plan percentage, reset window, and additional tokens, mirrored live to the **Bottom-Left Studio Status Bar + Upward Spring Quota Popover** and a dynamically rendered **32×32 RGBA PNG Windows System Tray Icon** with localized hover tooltip & context menu.
+- **100% Pure Vietnamese (`vi`, Unicode NFC) Across All Screens, 34 Tools & System Tray:** Removed all mixed English labels, switches, badges (`MỨC RỦI RO · THẤP`), and translated all 34 `Local Agent Bridge` tool descriptions and System Tray menus.
+
+---
+
 ## [1.0.1] — 2026-11-25
 
 ### Security

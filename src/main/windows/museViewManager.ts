@@ -7,12 +7,13 @@ import path from 'node:path';
 import {
   type BrowserWindow,
   WebContentsView,
+  nativeTheme,
   session,
   shell,
 } from 'electron';
 import { BRANDING } from '@shared/branding';
 import { MUSE_SESSION_PARTITION } from '@shared/constants';
-import type { DownloadItemRecord, MuseConnectionState } from '@shared/types';
+import type { DownloadItemRecord, MuseConnectionState, MuseQuotaSnapshot } from '@shared/types';
 import {
   isAllowedMuseNavigationUrl,
   isOAuthPopupUrl,
@@ -20,6 +21,7 @@ import {
 } from '../security/originGuard';
 import type { SettingsStore } from '../sessions/settingsStore';
 import type { WorkspaceManager } from '../workspace/workspaceManager';
+import { MuseQuotaMonitor } from './museQuotaMonitor';
 
 export class MuseViewManager {
   private view: WebContentsView | null = null;
@@ -27,6 +29,7 @@ export class MuseViewManager {
   private attached = false;
   private readonly settingsStore: SettingsStore;
   private readonly workspace: WorkspaceManager;
+  private readonly quotaMonitor: MuseQuotaMonitor;
   private readonly downloads: DownloadItemRecord[] = [];
   private readonly onStateChange?: (state: MuseConnectionState) => void;
   private readonly onDownloadUpdate?: (record: DownloadItemRecord) => void;
@@ -48,15 +51,22 @@ export class MuseViewManager {
   };
 
   constructor(opts: {
+    userDataDir: string;
     settingsStore: SettingsStore;
     workspace: WorkspaceManager;
     onStateChange?: (state: MuseConnectionState) => void;
+    onQuotaChange?: (quota: MuseQuotaSnapshot) => void;
     onDownloadUpdate?: (record: DownloadItemRecord) => void;
   }) {
     this.settingsStore = opts.settingsStore;
     this.workspace = opts.workspace;
     this.onStateChange = opts.onStateChange;
     this.onDownloadUpdate = opts.onDownloadUpdate;
+    this.quotaMonitor = new MuseQuotaMonitor({
+      userDataDir: opts.userDataDir,
+      workspace: opts.workspace,
+      onQuotaChange: opts.onQuotaChange,
+    });
   }
 
   public init(parentWindow: BrowserWindow): void {
@@ -130,6 +140,7 @@ export class MuseViewManager {
     });
 
     const wc = this.view.webContents;
+    this.syncThemeBackground();
     const zoom = this.settingsStore.get().appearance.museZoomFactor;
     wc.setZoomFactor(zoom);
     this.state.zoomFactor = zoom;
@@ -204,11 +215,16 @@ export class MuseViewManager {
           syncNavState();
         })
         .catch(() => syncNavState());
+      void this.quotaMonitor.scanPassive(wc);
     });
 
     wc.on('did-navigate', syncNavState);
-    wc.on('did-navigate-in-page', syncNavState);
+    wc.on('did-navigate-in-page', () => {
+      syncNavState();
+      void this.quotaMonitor.scanPassive(wc);
+    });
     wc.on('page-title-updated', syncNavState);
+    this.quotaMonitor.attachPassiveObserver(wc, () => this.attached);
 
     wc.on('did-fail-load', (_event, errorCode, errorDescription, _validatedURL, isMainFrame) => {
       if (!isMainFrame || errorCode === -3) return; // -3 = ERR_ABORTED (benign redirect)
@@ -229,11 +245,18 @@ export class MuseViewManager {
       process.env.MUSE_E2E_TEST === '1'
         ? 'data:text/html;charset=utf-8,' +
           encodeURIComponent(
-            '<html><body style="margin:0;background:#0B0D10;color:#F5F7FA;font-family:sans-serif;display:grid;place-items:center;height:100vh"><div><h2 style="margin:0 0 8px">Muse Isolated WebContentsView Sandbox</h2><p style="color:#949BA8;margin:0">Sanitized E2E Test Surface (persist:muse-official)</p></div></body></html>',
+            '<html><head><style>:root{color-scheme:light dark}body{margin:0;background:#151A14;color:#F4F9ED;font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh}@media(prefers-color-scheme:light){body{background:#FBFDF7;color:#151A14}}#modal{display:none;margin-top:14px;padding:16px;border-radius:16px;background:rgba(128,128,128,.12)}</style></head><body><div style="text-align:center"><h2 style="margin:0 0 8px;font-weight:600">Muse</h2><button aria-label="Settings" onclick="document.getElementById(\'modal\').style.display=\'block\'" style="padding:6px 14px;border-radius:99px;border:1px solid #555;background:transparent;color:inherit">Settings</button><div id="modal"><h4>Usage</h4><div><span>Free plan</span><span>45% used</span><div>Weekly limit resets on 1 Dec</div></div><div><span>Additional tokens</span><span>0% used (1B tokens left)</span><div>Never expires</div></div><button aria-label="Close" onclick="document.getElementById(\'modal\').style.display=\'none\'">Close</button></div></div></body></html>',
           )
         : process.env.MUSE_OFFICIAL_URL || BRANDING.officialMuseUrl;
 
     void wc.loadURL(initialUrl);
+  }
+
+  public syncThemeBackground(): void {
+    if (!this.view) return;
+    const pref = this.settingsStore.get().appearance.theme;
+    const isDark = pref === 'dark' || (pref === 'system' && nativeTheme.shouldUseDarkColors);
+    this.view.setBackgroundColor(isDark ? '#151A14' : '#FBFDF7');
   }
 
   public setBounds(bounds: { visible: boolean; x: number; y: number; width: number; height: number }): void {
@@ -303,7 +326,20 @@ export class MuseViewManager {
     await museSession.clearStorageData();
     await museSession.clearAuthCache();
     this.state.sessionAuthenticatedHint = false;
+    this.quotaMonitor.clearSessionQuota();
     this.reload();
+  }
+
+  public getQuotaSnapshot(): MuseQuotaSnapshot {
+    return this.quotaMonitor.getSnapshot();
+  }
+
+  public async syncQuota(interactive = true): Promise<MuseQuotaSnapshot> {
+    return await this.quotaMonitor.syncNow(this.view?.webContents || null, interactive);
+  }
+
+  public dispose(): void {
+    this.quotaMonitor.dispose();
   }
 
   public getState(): MuseConnectionState {

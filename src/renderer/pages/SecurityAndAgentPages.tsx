@@ -34,23 +34,7 @@ import {
 } from '@renderer/components/ui/Primitives';
 import { ConfirmDialog } from '@renderer/components/ui/Overlays';
 
-const PERMISSION_CATEGORIES: Array<{
-  id: PermissionCategory;
-  label: string;
-  desc: string;
-}> = [
-  { id: 'files', label: 'Files (Workspace Read/Write)', desc: 'Read, write, copy, move, and trash sandboxed files.' },
-  { id: 'folders', label: 'Folders & Directory Listing', desc: 'Create folders and inspect workspace usage.' },
-  { id: 'applications', label: 'Windows Applications', desc: 'List, launch, focus, or politely close approved apps.' },
-  { id: 'display', label: 'Display & Screen Capture', desc: 'Enumerate displays and capture screenshots to Temp.' },
-  { id: 'browser', label: 'Assistant Browser (Playwright)', desc: 'Automate the dedicated isolated assistant browser profile.' },
-  { id: 'system', label: 'System Information & Toasts', desc: 'Read OS/CPU/RAM info and send native notifications.' },
-  { id: 'computer_use', label: 'Windows Computer Use (UIA)', desc: 'Experimental Windows UI Automation on approved apps.' },
-  { id: 'shell', label: 'Controlled Shell Execution', desc: 'Per-command explicit approval; disabled by default.' },
-  { id: 'network', label: 'Local Network Integrations', desc: 'Loopback MCP and user-configured local endpoints.' },
-];
-
-const POLICY_OPTIONS: PermissionPolicy[] = [
+const POLICY_OPTIONS: Array<'disabled' | 'deny' | 'ask' | 'readonly' | 'allow_scoped'> = [
   'disabled',
   'deny',
   'ask',
@@ -62,6 +46,58 @@ const POLICY_OPTIONS: PermissionPolicy[] = [
 export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsTabOnly?: boolean }) {
   const { t, settings, pendingApprovals, pushToast } = useAppStore();
   const [confirmRevoke, setConfirmRevoke] = useState(false);
+
+  const permissionCategories: Array<{
+    id: PermissionCategory;
+    label: string;
+    desc: string;
+  }> = [
+    {
+      id: 'files',
+      label: t.permissions.categories.filesTitle,
+      desc: t.permissions.categories.filesDesc,
+    },
+    {
+      id: 'folders',
+      label: t.permissions.categories.foldersTitle,
+      desc: t.permissions.categories.foldersDesc,
+    },
+    {
+      id: 'applications',
+      label: t.permissions.categories.applicationsTitle,
+      desc: t.permissions.categories.applicationsDesc,
+    },
+    {
+      id: 'display',
+      label: t.permissions.categories.displayTitle,
+      desc: t.permissions.categories.displayDesc,
+    },
+    {
+      id: 'browser',
+      label: t.permissions.categories.browserTitle,
+      desc: t.permissions.categories.browserDesc,
+    },
+    {
+      id: 'system',
+      label: t.permissions.categories.systemTitle,
+      desc: t.permissions.categories.systemDesc,
+    },
+    {
+      id: 'computer_use',
+      label: t.permissions.categories.computer_useTitle,
+      desc: t.permissions.categories.computer_useDesc,
+    },
+    {
+      id: 'shell',
+      label: t.permissions.categories.shellTitle,
+      desc: t.permissions.categories.shellDesc,
+    },
+    {
+      id: 'network',
+      label: t.permissions.categories.networkTitle,
+      desc: t.permissions.categories.networkDesc,
+    },
+  ];
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-7 space-y-6 overflow-y-auto h-full">
@@ -99,7 +135,6 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
         </div>
       </div>
 
-      {/* Pending Approvals Queue (Screen #12) */}
       <div className="p-6 ms-card-peach space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-[15.5px] font-semibold flex items-center gap-2">
@@ -107,7 +142,7 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
             <span>{t.permissions.pendingApprovals}</span>
           </h2>
           <StatusBadge tone={pendingApprovals.length > 0 ? 'warning' : 'success'}>
-            {pendingApprovals.length} Pending
+            {pendingApprovals.length} {t.permissions.pendingCountSuffix}
           </StatusBadge>
         </div>
 
@@ -165,7 +200,7 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
 
       {!approvalsTabOnly && (
         <div className="ms-card-raised divide-y divide-[var(--ms-border)] overflow-hidden">
-          {PERMISSION_CATEGORIES.map((cat) => {
+          {permissionCategories.map((cat) => {
             const current = settings.permissions[cat.id];
             return (
               <div
@@ -185,11 +220,11 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
                       e.target.value as PermissionPolicy,
                     )
                   }
-                  className="lx-input w-52 h-9 text-[12.5px]"
+                  className="lx-input w-56 h-9 text-[12.5px]"
                 >
                   {POLICY_OPTIONS.map((pol) => (
                     <option key={pol} value={pol}>
-                      {pol.toUpperCase()}
+                      {t.permissions.policies[pol]}
                     </option>
                   ))}
                 </select>
@@ -202,7 +237,7 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
       <ConfirmDialog
         open={confirmRevoke}
         title={t.permissions.revokeAll}
-        description="Reset all permission categories to default-deny / ask-every-time and revoke all approved folders?"
+        description={t.permissions.revokeConfirmDesc}
         confirmPhrase="REVOKE"
         confirmLabel={t.permissions.revokeAll}
         cancelLabel={t.common.cancel}
@@ -213,7 +248,7 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
   );
 }
 
-/** Screen #09 — Local Agent Bridge Status & MCP Server */
+/** Screen #09 — Local Agent Bridge Status & MCP Server (100% Localized Tool Catalog & Badges) */
 export function LocalBridgePage() {
   const { t, settings, updateSettings } = useAppStore();
   const [tools, setTools] = useState<
@@ -261,7 +296,6 @@ export function LocalBridgePage() {
         </Button>
       </div>
 
-      {/* Bridge Master Controls & Loopback MCP */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-6 ms-card-raised space-y-2 divide-y divide-[var(--ms-border)]">
           <LucianSwitch
@@ -269,8 +303,8 @@ export function LocalBridgePage() {
             onChange={(enabled) =>
               void updateSettings({ bridge: { ...settings.bridge, enabled } })
             }
-            label="Enable Local Agent Bridge"
-            description="Master gate for all local IPC and loopback MCP tool calls."
+            label={t.bridge.enableBridgeLabel}
+            description={t.bridge.enableBridgeDesc}
           />
           <LucianSwitch
             checked={settings.bridge.shellExecutionEnabled}
@@ -279,7 +313,7 @@ export function LocalBridgePage() {
                 bridge: { ...settings.bridge, shellExecutionEnabled },
               })
             }
-            label="Enable Controlled Shell Execution (shell.run)"
+            label={t.bridge.enableShellLabel}
             description={t.bridge.shellDisabledNote}
           />
         </div>
@@ -298,8 +332,8 @@ export function LocalBridgePage() {
                 bridge: { ...settings.bridge, mcpLoopbackEnabled },
               })
             }
-            label="Start Loopback MCP Endpoint"
-            description="Binds strictly to 127.0.0.1 with Host/Origin CSRF defense and 256-bit Bearer token."
+            label={t.bridge.startMcpLabel}
+            description={t.bridge.startMcpDesc}
           />
           {mcpInfo && (
             <div className="flex items-center justify-between gap-2 pt-1">
@@ -322,25 +356,28 @@ export function LocalBridgePage() {
         </pre>
       )}
 
-      {/* Registered Typed Tool Catalog */}
       <div className="ms-card-raised overflow-hidden">
         <div className="px-6 py-4 border-b border-[var(--ms-border)] font-semibold text-[14.5px]">
-          Registered Typed Tools ({tools.length})
+          {t.bridge.registeredToolsTitle} ({tools.length})
         </div>
-        <div className="divide-y divide-[var(--ms-border)] max-h-96 overflow-y-auto">
-          {tools.map((tool) => (
-            <div key={tool.name} className="px-6 py-3 flex items-center justify-between gap-3">
-              <div>
-                <code className="text-[13px] font-semibold font-mono text-[var(--ms-accent-text)]">
-                  {tool.name}
-                </code>
-                <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
-                  {tool.description}
+        <div className="divide-y divide-[var(--ms-border)] max-h-[420px] overflow-y-auto">
+          {tools.map((tool) => {
+            const localizedDesc =
+              (t.bridge.tools as Record<string, string>)[tool.name] || tool.description;
+            return (
+              <div key={tool.name} className="px-6 py-3 flex items-center justify-between gap-3">
+                <div>
+                  <code className="text-[13px] font-semibold font-mono text-[var(--ms-accent-text)]">
+                    {tool.name}
+                  </code>
+                  <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
+                    {localizedDesc}
+                  </div>
                 </div>
+                <RiskBadge risk={tool.riskLevel} />
               </div>
-              <RiskBadge risk={tool.riskLevel} />
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
@@ -364,7 +401,7 @@ export function ComputerUsePage() {
       setWindowsList(res?.windows || []);
     } catch (err) {
       pushToast({
-        title: 'Computer Use Gate',
+        title: t.computerUse.title,
         body: err instanceof Error ? err.message : String(err),
         tone: 'warning',
       });
@@ -377,7 +414,7 @@ export function ComputerUsePage() {
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <StatusBadge tone="warning">{t.common.experimental}</StatusBadge>
-            <StatusBadge tone="info">Windows UI Automation Preferred</StatusBadge>
+            <StatusBadge tone="info">{t.computerUse.uiaPreferredBadge}</StatusBadge>
           </div>
           <h1 className="text-[24px] font-semibold">{t.computerUse.title}</h1>
           <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
@@ -410,7 +447,6 @@ export function ComputerUsePage() {
           description={t.computerUse.safetyNotice}
         />
 
-        {/* Approved Applications Allowlist */}
         <div className="pt-4 border-t border-[var(--ms-border)] space-y-3">
           <div className="text-[13.5px] font-semibold">{t.computerUse.approvedAppsLabel}</div>
           <div className="flex flex-wrap gap-2">
@@ -442,7 +478,7 @@ export function ComputerUsePage() {
               type="text"
               value={newApprovedApp}
               onChange={(e) => setNewApprovedApp(e.target.value)}
-              placeholder="e.g. mspaint.exe"
+              placeholder={t.computerUse.appPlaceholder}
               className="lx-input h-9 text-[12.5px] font-mono"
             />
             <Button
@@ -460,12 +496,11 @@ export function ComputerUsePage() {
                 setNewApprovedApp('');
               }}
             >
-              Add
+              {t.computerUse.addAppBtn}
             </Button>
           </div>
         </div>
 
-        {/* Live Win32 & UIA Actions */}
         <div className="flex gap-2.5 flex-wrap pt-2">
           <Button
             size="sm"
@@ -502,13 +537,13 @@ export function ComputerUsePage() {
                   displayIndex: 0,
                 })) as { filePath?: string };
                 pushToast({
-                  title: 'Display Captured to Workspace Temp',
-                  body: res?.filePath || 'Saved',
+                  title: t.computerUse.captureSavedTitle,
+                  body: res?.filePath,
                   tone: 'success',
                 });
               } catch (err) {
                 pushToast({
-                  title: 'Capture Blocked',
+                  title: t.computerUse.captureBlockedTitle,
                   body: err instanceof Error ? err.message : String(err),
                   tone: 'warning',
                 });
@@ -531,7 +566,7 @@ export function ComputerUsePage() {
                 </code>
               </div>
               <StatusBadge tone={w.isSensitive ? 'danger' : 'info'}>
-                {w.isSensitive ? 'PROTECTED / BLOCKED' : 'OBSERVABLE'}
+                {w.isSensitive ? t.computerUse.protectedBadge : t.computerUse.observableBadge}
               </StatusBadge>
             </div>
           ))}
@@ -583,57 +618,60 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
                   : window.museApi?.pauseAgent())
               }
             >
-              {agentState.paused ? 'Resume' : 'Pause'}
+              {agentState.paused ? t.common.resume : t.common.pause}
             </Button>
             <Button size="sm" variant="danger" onClick={() => void window.museApi?.stopAgent()}>
-              Stop
+              {t.common.stop}
             </Button>
           </div>
         )}
       </div>
 
-      {/* Vertical Observable Step Timeline */}
       <div className="p-5 ms-card-raised space-y-3">
         <div className="text-[11.5px] font-semibold uppercase tracking-wider text-[var(--ms-text-muted)]">
-          Observable Tool Steps ({agentState.steps.length})
+          {t.activity.stepsTitle} ({agentState.steps.length})
         </div>
         {agentState.steps.length === 0 ? (
           <p className="text-[13px] text-[var(--ms-text-muted)] m-0 leading-relaxed">
-            Real tool invocations will stream here with exact duration and status.
+            {t.activity.stepsEmpty}
           </p>
         ) : (
           <ol className="space-y-2.5 m-0 pl-0 list-none">
-            {agentState.steps.map((step) => (
-              <li
-                key={step.id}
-                className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)]"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  {step.status === 'completed' ? (
-                    <CheckCircle2 size={15} className="text-[var(--ms-success)] shrink-0" />
-                  ) : step.status === 'running' ? (
-                    <RefreshCw
-                      size={15}
-                      className="text-[var(--ms-accent-text)] animate-spin shrink-0"
-                    />
-                  ) : (
-                    <Activity size={15} className="text-[var(--ms-danger)] shrink-0" />
-                  )}
-                  <span className="font-mono text-[12px] truncate">{step.label}</span>
-                </div>
-                <StatusBadge
-                  tone={
-                    step.status === 'completed'
-                      ? 'success'
-                      : step.status === 'running'
-                        ? 'accent'
-                        : 'danger'
-                  }
+            {agentState.steps.map((step) => {
+              const stepLabel =
+                (t.activity.stepStates as Record<string, string>)[step.status] || step.status;
+              return (
+                <li
+                  key={step.id}
+                  className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)]"
                 >
-                  {step.status}
-                </StatusBadge>
-              </li>
-            ))}
+                  <div className="flex items-center gap-2 min-w-0">
+                    {step.status === 'completed' ? (
+                      <CheckCircle2 size={15} className="text-[var(--ms-success)] shrink-0" />
+                    ) : step.status === 'running' ? (
+                      <RefreshCw
+                        size={15}
+                        className="text-[var(--ms-accent-text)] animate-spin shrink-0"
+                      />
+                    ) : (
+                      <Activity size={15} className="text-[var(--ms-danger)] shrink-0" />
+                    )}
+                    <span className="font-mono text-[12px] truncate">{step.label}</span>
+                  </div>
+                  <StatusBadge
+                    tone={
+                      step.status === 'completed'
+                        ? 'success'
+                        : step.status === 'running'
+                          ? 'accent'
+                          : 'danger'
+                    }
+                  >
+                    {stepLabel}
+                  </StatusBadge>
+                </li>
+              );
+            })}
           </ol>
         )}
       </div>
@@ -641,7 +679,7 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
       {agentState.sources.length > 0 && (
         <div className="p-5 ms-card-raised space-y-2">
           <div className="text-[11.5px] font-semibold uppercase tracking-wider text-[var(--ms-text-muted)]">
-            Traceable Context Sources
+            {t.activity.sourcesTitle}
           </div>
           {agentState.sources.map((src) => (
             <div key={src.id} className="p-3 rounded-2xl bg-[var(--ms-bg)] text-[12px]">
@@ -688,14 +726,25 @@ export function ActivityHistoryPage() {
     void loadLogs();
   }, [loadLogs]);
 
+  const categoryOptions: Array<{ id: PermissionCategory; label: string }> = [
+    { id: 'files', label: t.permissions.categories.filesTitle },
+    { id: 'folders', label: t.permissions.categories.foldersTitle },
+    { id: 'applications', label: t.permissions.categories.applicationsTitle },
+    { id: 'display', label: t.permissions.categories.displayTitle },
+    { id: 'browser', label: t.permissions.categories.browserTitle },
+    { id: 'system', label: t.permissions.categories.systemTitle },
+    { id: 'computer_use', label: t.permissions.categories.computer_useTitle },
+    { id: 'shell', label: t.permissions.categories.shellTitle },
+    { id: 'network', label: t.permissions.categories.networkTitle },
+  ];
+
   return (
     <div className="max-w-5xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-[24px] font-semibold">{t.activity.historyTitle}</h1>
           <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
-            Local SQLite audit trail — passwords, cookies, API keys, and screenshot pixels are never
-            logged.
+            {t.activity.historySubtitle}
           </p>
         </div>
 
@@ -719,7 +768,6 @@ export function ActivityHistoryPage() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[220px]">
           <Search
@@ -735,30 +783,30 @@ export function ActivityHistoryPage() {
           />
         </div>
         <select
-          aria-label="Filter category"
+          aria-label={t.activity.allCategories}
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="lx-input w-44 h-10"
+          className="lx-input w-52 h-10"
         >
-          <option value="">All Categories</option>
-          {PERMISSION_CATEGORIES.map((c) => (
+          <option value="">{t.activity.allCategories}</option>
+          {categoryOptions.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.id}
+              {c.label}
             </option>
           ))}
         </select>
         <select
-          aria-label="Filter result"
+          aria-label={t.activity.allOutcomes}
           value={resultFilter}
           onChange={(e) => setResultFilter(e.target.value)}
-          className="lx-input w-40 h-10"
+          className="lx-input w-44 h-10"
         >
-          <option value="">All Outcomes</option>
-          <option value="success">success</option>
-          <option value="denied">denied</option>
-          <option value="error">error</option>
-          <option value="timeout">timeout</option>
-          <option value="cancelled">cancelled</option>
+          <option value="">{t.activity.allOutcomes}</option>
+          <option value="success">{t.activity.outcomes.success}</option>
+          <option value="denied">{t.activity.outcomes.denied}</option>
+          <option value="error">{t.activity.outcomes.error}</option>
+          <option value="timeout">{t.activity.outcomes.timeout}</option>
+          <option value="cancelled">{t.activity.outcomes.cancelled}</option>
         </select>
       </div>
 
@@ -766,46 +814,52 @@ export function ActivityHistoryPage() {
         {entries.length === 0 ? (
           <div className="py-14 text-center text-[13.5px] text-[var(--ms-text-muted)]">
             <Shield size={26} className="mx-auto mb-2 opacity-60" />
-            No matching audit entries recorded yet.
+            {t.activity.noLogs}
           </div>
         ) : (
           <div className="divide-y divide-[var(--ms-border)]">
-            {entries.map((row) => (
-              <div key={row.id} className="p-4 flex items-center justify-between gap-4 flex-wrap">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <code className="text-[13px] font-semibold font-mono">{row.toolName}</code>
-                    <span className="text-[11.5px] text-[var(--ms-text-muted)]">
-                      by {row.requestingComponent} · {row.durationMs}ms
-                    </span>
-                  </div>
-                  <div className="text-[12.5px] text-[var(--ms-text-secondary)] truncate">
-                    Scope: {row.requestedScope} · Decision: {row.approvalDecision}
-                  </div>
-                  {row.errorDetails && (
-                    <div className="text-[11.5px] text-[var(--ms-danger)] mt-0.5">
-                      {row.errorDetails}
+            {entries.map((row) => {
+              const outcomeLabel =
+                (t.activity.outcomes as Record<string, string>)[row.executionResult] ||
+                row.executionResult;
+              return (
+                <div key={row.id} className="p-4 flex items-center justify-between gap-4 flex-wrap">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <code className="text-[13px] font-semibold font-mono">{row.toolName}</code>
+                      <span className="text-[11.5px] text-[var(--ms-text-muted)]">
+                        {t.activity.byPrefix} {row.requestingComponent} · {row.durationMs}ms
+                      </span>
                     </div>
-                  )}
+                    <div className="text-[12.5px] text-[var(--ms-text-secondary)] truncate">
+                      {t.activity.scopePrefix} {row.requestedScope} · {t.activity.decisionPrefix}{' '}
+                      {row.approvalDecision}
+                    </div>
+                    {row.errorDetails && (
+                      <div className="text-[11.5px] text-[var(--ms-danger)] mt-0.5">
+                        {row.errorDetails}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <span className="text-[11px] font-mono text-[var(--ms-text-muted)]">
+                      {formatDateTimeLocale(row.timestamp, resolvedLocale)}
+                    </span>
+                    <StatusBadge
+                      tone={
+                        row.executionResult === 'success'
+                          ? 'success'
+                          : row.executionResult === 'denied'
+                            ? 'warning'
+                            : 'danger'
+                      }
+                    >
+                      {outcomeLabel}
+                    </StatusBadge>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5 shrink-0">
-                  <span className="text-[11px] font-mono text-[var(--ms-text-muted)]">
-                    {formatDateTimeLocale(row.timestamp, resolvedLocale)}
-                  </span>
-                  <StatusBadge
-                    tone={
-                      row.executionResult === 'success'
-                        ? 'success'
-                        : row.executionResult === 'denied'
-                          ? 'warning'
-                          : 'danger'
-                    }
-                  >
-                    {row.executionResult}
-                  </StatusBadge>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -813,7 +867,7 @@ export function ActivityHistoryPage() {
       <ConfirmDialog
         open={confirmClear}
         title={t.activity.clearLogs}
-        description="Permanently delete all local SQLite audit log records?"
+        description={t.activity.clearConfirmDesc}
         confirmLabel={t.activity.clearLogs}
         cancelLabel={t.common.cancel}
         onConfirm={async () => {
@@ -840,7 +894,7 @@ export function NotificationsCenterPage() {
             variant="secondary"
             onClick={() => void window.museApi?.markAllNotificationsRead()}
           >
-            Mark All Read
+            {t.activity.notifMarkAllRead}
           </Button>
           <Button
             size="sm"
@@ -848,7 +902,7 @@ export function NotificationsCenterPage() {
             icon={<Trash2 size={14} />}
             onClick={() => void window.museApi?.clearNotifications()}
           >
-            Clear
+            {t.activity.notifClear}
           </Button>
         </div>
       </div>
@@ -857,7 +911,7 @@ export function NotificationsCenterPage() {
         {notifications.length === 0 ? (
           <div className="py-16 text-center text-[13.5px] text-[var(--ms-text-muted)]">
             <Bell size={26} className="mx-auto mb-2 opacity-60" />
-            All caught up — no recent notifications.
+            {t.activity.notifEmpty}
           </div>
         ) : (
           <div className="divide-y divide-[var(--ms-border)]">

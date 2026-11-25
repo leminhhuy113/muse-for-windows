@@ -4,15 +4,11 @@ import {
   ArrowUpRight,
   ExternalLink,
   FolderOpen,
-  Info,
   KeyRound,
   Lock,
   LogOut,
   RefreshCw,
-  ShieldCheck,
   Sparkles,
-  ZoomIn,
-  ZoomOut,
 } from 'lucide-react';
 import { BRANDING } from '@shared/branding';
 import { useAppStore } from '@renderer/stores/useAppStore';
@@ -41,7 +37,6 @@ export function OnboardingPage() {
 
   return (
     <div className="max-w-5xl mx-auto py-7 pb-12 px-7 space-y-5 overflow-y-auto h-full">
-      {/* 1ms-studio.com Signature Hero Stage */}
       <div className="p-8 ms-hero-surface flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-3.5 max-w-2xl">
           <div className="flex items-center gap-3 flex-wrap">
@@ -63,7 +58,6 @@ export function OnboardingPage() {
         </div>
       </div>
 
-      {/* Language & Theme Pickers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-6 ms-card-raised space-y-3.5">
           <div className="flex items-center justify-between">
@@ -90,14 +84,13 @@ export function OnboardingPage() {
         </div>
       </div>
 
-      {/* Sandboxed Workspace Selector */}
       <div className="p-6 ms-card-raised space-y-3.5">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2.5">
             <span className="ms-card-index">03</span>
             <h2 className="text-[15.5px] font-semibold">{t.onboarding.stepWorkspace}</h2>
           </div>
-          <StatusBadge tone="success">10 GB Default Quota · Junction Guard Active</StatusBadge>
+          <StatusBadge tone="success">{t.onboarding.quotaBadge}</StatusBadge>
         </div>
         <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)]">
           <code className="text-[12.5px] font-mono truncate">{settings.workspace.rootPath}</code>
@@ -119,7 +112,6 @@ export function OnboardingPage() {
         </div>
       </div>
 
-      {/* 1ms-studio.com Editorial Tinted Bento Modes (Raised + Peach + Lavender) */}
       <div className="space-y-3">
         <h2 className="text-[16px] font-semibold px-1">{t.onboarding.modeSummaryTitle}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[13px]">
@@ -185,7 +177,7 @@ export function AccountConnectionPage() {
   return (
     <div className="max-w-3xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div>
-        <span className="ms-eyebrow mb-2">1MS Session Isolation</span>
+        <span className="ms-eyebrow mb-2">{t.account.tag}</span>
         <h1 className="text-[26px] font-semibold mt-1">{t.account.title}</h1>
         <p className="text-[14px] text-[var(--ms-text-secondary)] mt-1.5 leading-relaxed">
           {t.account.subtitle}
@@ -201,12 +193,12 @@ export function AccountConnectionPage() {
             <div>
               <div className="text-[14.5px] font-semibold">{t.account.partitionLabel}</div>
               <code className="text-[12px] font-mono text-[var(--ms-text-muted)]">
-                persist:muse-official (Context-Isolated · Sandboxed)
+                {t.account.partitionMeta}
               </code>
             </div>
           </div>
           <StatusBadge tone={museState.sessionAuthenticatedHint ? 'success' : 'info'}>
-            {museState.sessionAuthenticatedHint ? 'Session Cookies Present' : t.account.statusReady}
+            {museState.sessionAuthenticatedHint ? t.account.cookiesPresent : t.account.statusReady}
           </StatusBadge>
         </div>
 
@@ -250,83 +242,10 @@ export function AccountConnectionPage() {
         cancelLabel={t.common.cancel}
         onConfirm={async () => {
           await window.museApi?.museClearSession();
-          pushToast({ title: 'Session Cleared', tone: 'info' });
+          pushToast({ title: t.account.sessionClearedToast, tone: 'info' });
         }}
         onCancel={() => setConfirmClear(false)}
       />
-    </div>
-  );
-}
-
-/** Screen #03 — Main Official Muse Workspace Sub-header Bar */
-export function MuseWorkspaceHeaderBar() {
-  const { t, museState, setActiveScreen } = useAppStore();
-  const displayUrl = museState.url.startsWith('data:')
-    ? 'https://muse.ai (persist:muse-official · Sandboxed)'
-    : museState.url;
-
-  return (
-    <div className="h-11 px-4 flex items-center justify-between gap-3 bg-[var(--ms-surface)] border-b border-[var(--ms-border)] text-[12px] shrink-0">
-      <div className="flex items-center gap-2 min-w-0 px-3 py-1 rounded-full bg-[var(--ms-bg)] border border-[var(--ms-border)]">
-        <ShieldCheck size={14} className="text-[var(--ms-success)] shrink-0" />
-        <span className="font-mono text-[11.5px] text-[var(--ms-text-secondary)] truncate">
-          {displayUrl}
-        </span>
-        {museState.isLoading && (
-          <span className="text-[11px] text-[var(--ms-accent-text)] font-semibold">
-            · {t.titlebar.loading}
-          </span>
-        )}
-      </div>
-
-      <div className="flex items-center gap-1.5 shrink-0">
-        <button
-          type="button"
-          onClick={() => setActiveScreen('unsupported-integration')}
-          className="text-[11.5px] font-medium text-[var(--ms-text-muted)] hover:text-[var(--ms-text-primary)] bg-transparent border-0 px-2.5 py-1 rounded-full hover:bg-[var(--ms-surface-hover)] inline-flex items-center gap-1.5 transition-colors"
-        >
-          <Info size={12} />
-          <span className="hidden lg:inline">{t.museWorkspace.unsupportedModeBLink}</span>
-        </button>
-
-        <div className="inline-flex items-center rounded-full bg-[var(--ms-bg)] border border-[var(--ms-border)] p-0.5">
-          <button
-            type="button"
-            aria-label="Zoom out"
-            onClick={() => void window.museApi?.museSetZoom(museState.zoomFactor - 0.1)}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-transparent border-0 text-[var(--ms-text-secondary)] hover:bg-[var(--ms-surface-hover)]"
-          >
-            <ZoomOut size={13} />
-          </button>
-          <button
-            type="button"
-            onClick={() => void window.museApi?.museSetZoom(1)}
-            className="px-2 h-6 rounded-full bg-transparent border-0 text-[11px] font-mono text-[var(--ms-text-secondary)] hover:bg-[var(--ms-surface-hover)]"
-            title={t.museWorkspace.zoomReset}
-          >
-            {Math.round(museState.zoomFactor * 100)}%
-          </button>
-          <button
-            type="button"
-            aria-label="Zoom in"
-            onClick={() => void window.museApi?.museSetZoom(museState.zoomFactor + 0.1)}
-            className="w-6 h-6 rounded-full flex items-center justify-center bg-transparent border-0 text-[var(--ms-text-secondary)] hover:bg-[var(--ms-surface-hover)]"
-          >
-            <ZoomIn size={13} />
-          </button>
-        </div>
-
-        <button
-          type="button"
-          onClick={() =>
-            void window.museApi?.openExternal(museState.url || BRANDING.officialMuseUrl)
-          }
-          className="px-3 h-7 rounded-full bg-[var(--ms-surface-elevated)] border border-[var(--ms-border)] text-[11.5px] font-semibold text-[var(--ms-text-primary)] hover:border-[var(--ms-border-control)] inline-flex items-center gap-1.5 transition-colors"
-        >
-          <span>{t.museWorkspace.openExternal}</span>
-          <ArrowUpRight size={12} />
-        </button>
-      </div>
     </div>
   );
 }
@@ -348,7 +267,7 @@ export function ConnectionRecoveryPage() {
         }}
         secondaryAction={
           <Button variant="secondary" onClick={() => setActiveScreen('workspace')}>
-            Open {t.nav.workspace}
+            {t.nav.workspace}
           </Button>
         }
       />
@@ -394,33 +313,33 @@ export function UnsupportedIntegrationPage() {
         items={[
           {
             id: 'mode-a',
-            title: 'Mode A — Official Muse (https://muse.ai)',
-            body: 'Full access to Feed, Ideas, Goals, Library, Connectors, and Meta’s Cloud Computer (Secure VM) inside an isolated sandboxed WebContentsView.',
+            title: t.recovery.accModeATitle,
+            body: t.recovery.accModeABody,
           },
           {
             id: 'shared-files',
-            title: 'Shared Workspace File Exchange',
-            body: 'Stage files cleanly in %USERPROFILE%\\Documents\\Muse\\Shared and upload or download artifacts directly with official Muse.',
+            title: t.recovery.accSharedTitle,
+            body: t.recovery.accSharedBody,
           },
           {
             id: 'loopback-mcp',
-            title: 'Loopback MCP Server (127.0.0.1)',
-            body: 'Connect local desktop MCP clients (such as Muse Code CLI) to 34 typed Windows tools using 256-bit Bearer token authentication.',
+            title: t.recovery.accMcpTitle,
+            body: t.recovery.accMcpBody,
           },
           {
             id: 'mode-c',
-            title: 'Mode C — Optional Independent Local Agent',
-            body: 'Connect local Ollama or an OpenAI-compatible key encrypted via Windows DPAPI to run local tools through the Permission Center.',
+            title: t.recovery.accModeCTitle,
+            body: t.recovery.accModeCBody,
           },
         ]}
       />
 
       <div className="flex gap-3 pt-2">
         <Button variant="primary" onClick={() => setActiveScreen('muse')}>
-          Return to {t.nav.muse}
+          {t.recovery.returnMuseBtn}
         </Button>
         <Button variant="secondary" onClick={() => setActiveScreen('integrations')}>
-          Open {t.nav.integrations}
+          {t.recovery.openIntegrationsBtn}
         </Button>
       </div>
     </div>

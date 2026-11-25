@@ -31,6 +31,8 @@ export const IPC_CHANNELS = {
   MUSE_OPEN_EXTERNAL_AUTH: 'muse:view:open-external-auth',
   MUSE_CLEAR_SESSION: 'muse:view:clear-session',
   MUSE_GET_STATE: 'muse:view:get-state',
+  MUSE_GET_QUOTA: 'muse:view:get-quota',
+  MUSE_SYNC_QUOTA: 'muse:view:sync-quota',
 
   // Quick Assistant
   QUICK_SUBMIT_PROMPT: 'muse:quick:submit-prompt',
@@ -89,6 +91,7 @@ export const IPC_CHANNELS = {
 
   // Push events (Main -> Trusted Local Renderer)
   EVENT_MUSE_STATE: 'muse:event:muse-state',
+  EVENT_QUOTA_UPDATED: 'muse:event:quota-updated',
   EVENT_SETTINGS_UPDATED: 'muse:event:settings-updated',
   EVENT_APPROVAL_REQUESTED: 'muse:event:approval-requested',
   EVENT_APPROVAL_RESOLVED: 'muse:event:approval-resolved',

@@ -211,6 +211,21 @@ export interface MuseConnectionState {
   lastSyncedAt: string;
 }
 
+export interface MuseQuotaSnapshot {
+  synced: boolean;
+  syncing: boolean;
+  planLabel: string | null;
+  weeklyPercentUsed: number | null;
+  weeklyResetLabel: string | null;
+  additionalPercentUsed: number | null;
+  additionalTokensLeft: string | null;
+  additionalSubtitle: string | null;
+  workspaceUsedBytes: number;
+  workspaceQuotaBytes: number;
+  syncedAt: string | null;
+  source: 'none' | 'cache' | 'relay' | 'dom';
+}
+
 export interface WorkspaceFileEntry {
   name: string;
   relativePath: string;

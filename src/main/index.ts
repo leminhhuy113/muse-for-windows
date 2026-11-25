@@ -143,9 +143,10 @@ if (!isSingleInstance) {
       settingsStore,
       onApprovalRequested: (req) => {
         windowManager.broadcast(IPC_CHANNELS.EVENT_APPROVAL_REQUESTED, req);
+        const isVi = settingsStore.get().language.locale === 'vi';
         notificationStore.push({
-          title: `Permission Requested: ${req.toolName}`,
-          body: `${req.requestingComponent} -> ${req.targetResource}`,
+          title: isVi ? `Yêu cầu quyền công cụ: ${req.toolName}` : `Permission Requested: ${req.toolName}`,
+          body: `${req.requestingComponent} → ${req.targetResource}`,
           level: 'warning',
           targetScreen: 'tool-approval',
           nativeToast: settingsStore.get().notifications.notifyOnApproval,
@@ -196,16 +197,22 @@ if (!isSingleInstance) {
     const mainWin = windowManager.createMainWindow();
 
     museViewManager = new MuseViewManager({
+      userDataDir,
       settingsStore,
       workspace: workspaceManager,
       onStateChange: (mState) => {
         windowManager.broadcast(IPC_CHANNELS.EVENT_MUSE_STATE, mState);
       },
+      onQuotaChange: (qState) => {
+        trayManager?.updateConfig({ quota: qState });
+        windowManager.broadcast(IPC_CHANNELS.EVENT_QUOTA_UPDATED, qState);
+      },
       onDownloadUpdate: (dl) => {
         windowManager.broadcast(IPC_CHANNELS.EVENT_DOWNLOAD_UPDATED, dl);
         if (dl.state === 'completed') {
+          const isVi = settingsStore.get().language.locale === 'vi';
           notificationStore.push({
-            title: 'Download Completed',
+            title: isVi ? 'Tải tệp hoàn tất' : 'Download Completed',
             body: dl.fileName,
             level: 'success',
             targetScreen: 'downloads',
@@ -221,6 +228,10 @@ if (!isSingleInstance) {
         onToggleMainWindow: () => windowManager.toggleMainWindow(),
         onOpenQuickAssistant: () => windowManager.toggleQuickAssistant(),
         onNavigateScreen: (s) => windowManager.focusAndNavigate(s),
+        onSyncQuota: () => {
+          windowManager.focusAndNavigate('muse');
+          void museViewManager.syncQuota(true);
+        },
         onEmergencyStop: () => {
           void localBridge.emergencyStopAll();
           agentRunner.stop();
@@ -230,7 +241,11 @@ if (!isSingleInstance) {
           app.quit();
         },
       });
-      trayManager.init();
+      trayManager.init({
+        localePref: initialSettings.language.locale,
+        shortcuts: initialSettings.shortcuts,
+        quota: museViewManager.getQuotaSnapshot(),
+      });
     }
 
     shortcutManager = new ShortcutManager();
@@ -245,6 +260,7 @@ if (!isSingleInstance) {
 
     nativeTheme.on('updated', () => {
       windowManager.syncTitleBarTheme();
+      museViewManager.syncThemeBackground();
     });
 
     app.on('render-process-gone', (_event, _wc, details) => {
@@ -269,6 +285,7 @@ if (!isSingleInstance) {
       return {
         settings: s,
         museState: museViewManager.getState(),
+        quotaState: museViewManager.getQuotaSnapshot(),
         agentState: localBridge.getExecutionState(),
         pendingApprovals: permissionManager.getPendingRequests(),
         updateState: updateManager.getState(),
@@ -343,6 +360,12 @@ if (!isSingleInstance) {
       });
       applyShortcuts(updated);
       windowManager.syncTitleBarTheme();
+      museViewManager.syncThemeBackground();
+      trayManager?.updateConfig({
+        localePref: updated.language.locale,
+        shortcuts: updated.shortcuts,
+        quota: museViewManager.getQuotaSnapshot(),
+      });
       updateManager.setChannel(updated.updates.channel);
       if (process.platform === 'win32' && app.isPackaged) {
         try {
@@ -421,6 +444,10 @@ if (!isSingleInstance) {
     });
     registerSecureHandler(IPC_CHANNELS.MUSE_CLEAR_SESSION, () => museViewManager.clearSessionData());
     registerSecureHandler(IPC_CHANNELS.MUSE_GET_STATE, () => museViewManager.getState());
+    registerSecureHandler(IPC_CHANNELS.MUSE_GET_QUOTA, () => museViewManager.getQuotaSnapshot());
+    registerSecureHandler(IPC_CHANNELS.MUSE_SYNC_QUOTA, (_e, interactive = true) =>
+      museViewManager.syncQuota(z.boolean().parse(interactive)),
+    );
 
     // Quick Assistant Prompt Handoff (Mode A legitimate clipboard + focus handoff, or Mode C local agent)
     registerSecureHandler(IPC_CHANNELS.QUICK_SUBMIT_PROMPT, async (_e, rawPayload: unknown) => {
@@ -689,6 +716,7 @@ if (!isSingleInstance) {
 
   app.on('before-quit', async () => {
     windowManager?.markQuitting();
+    museViewManager?.dispose();
     shortcutManager?.dispose();
     trayManager?.destroy();
     await mcpServer?.stop();

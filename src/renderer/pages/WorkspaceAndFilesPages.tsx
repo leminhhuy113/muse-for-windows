@@ -78,7 +78,7 @@ export function LocalWorkspacePage() {
       const finalName = clean.includes('.') ? relTarget : `${relTarget}.md`;
       await window.museApi.createWorkspaceFile(
         finalName,
-        `# ${clean}\n\nCreated in Muse for Windows (1MS Studio).\n`,
+        `# ${clean}\n\n${t.app.name} — 1MS Studio.\n`,
       );
     }
     setNewItemName('');
@@ -94,13 +94,13 @@ export function LocalWorkspacePage() {
       const res = await window.museApi.migrateWorkspaceRoot(dest);
       pushToast({
         title: t.workspace.migrateWorkspace,
-        body: `Verified SHA-256 copy of ${res.copiedFiles} files -> ${res.newRoot}`,
+        body: `${t.workspace.migrateSuccessBody} ${res.copiedFiles} → ${res.newRoot}`,
         tone: 'success',
       });
       await refreshWorkspace();
     } catch (err) {
       pushToast({
-        title: 'Migration Rolled Back Safely',
+        title: t.workspace.migrateRollbackTitle,
         body: err instanceof Error ? err.message : String(err),
         tone: 'danger',
       });
@@ -109,7 +109,6 @@ export function LocalWorkspacePage() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      {/* Top Workspace Header */}
       <div className="px-7 py-5 border-b border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-[22px] font-semibold">{t.workspace.title}</h1>
@@ -144,7 +143,7 @@ export function LocalWorkspacePage() {
               if (res) {
                 pushToast({
                   title: t.workspace.cleanTemp,
-                  body: `${res.deletedFiles} files (${formatBytesLocale(res.freedBytes, resolvedLocale)})`,
+                  body: `${res.deletedFiles} (${formatBytesLocale(res.freedBytes, resolvedLocale)})`,
                   tone: 'success',
                 });
                 await refreshWorkspace();
@@ -162,7 +161,6 @@ export function LocalWorkspacePage() {
             {t.workspace.approvedFoldersTitle}
           </Button>
 
-          {/* Quick Create Pill Menu */}
           <div className="relative">
             <Button
               size="sm"
@@ -170,10 +168,10 @@ export function LocalWorkspacePage() {
               icon={<Plus size={14} />}
               onClick={() => setCreateMenuOpen((o) => !o)}
             >
-              New / Import
+              {t.workspace.newImportBtn}
             </Button>
             {createMenuOpen && (
-              <div className="absolute right-0 top-10 z-30 w-52 p-2 rounded-2xl bg-[var(--ms-surface-elevated)] border border-[var(--ms-border-control)] shadow-xl space-y-1">
+              <div className="absolute right-0 top-10 z-30 w-56 p-2 rounded-2xl bg-[var(--ms-surface-elevated)] border border-[var(--ms-border-control)] shadow-xl space-y-1">
                 <button
                   type="button"
                   onClick={() => {
@@ -214,7 +212,6 @@ export function LocalWorkspacePage() {
         </div>
       </div>
 
-      {/* Main Split Content */}
       <div className="flex-1 overflow-y-auto p-7 space-y-4">
         {usage && (
           <WorkspaceStorageMeter
@@ -225,11 +222,12 @@ export function LocalWorkspacePage() {
           />
         )}
 
-        {/* 1ms-studio.com Pill Subfolder Chips & Rounded Search */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <nav aria-label="Workspace folders" className="flex items-center gap-2 flex-wrap">
+          <nav aria-label={t.workspace.title} className="flex items-center gap-2 flex-wrap">
             {WORKSPACE_SUBFOLDERS.map((sub) => {
               const active = activeSubfolder.startsWith(sub) && !searchQuery;
+              const subLabel =
+                (t.workspace.subfolders as Record<string, string>)[sub] || sub;
               return (
                 <button
                   key={sub}
@@ -244,7 +242,7 @@ export function LocalWorkspacePage() {
                       : 'bg-[var(--ms-surface-elevated)] text-[var(--ms-text-secondary)] border-[var(--ms-border)] hover:border-[var(--ms-border-control)]'
                   }`}
                 >
-                  {sub}
+                  {subLabel}
                 </button>
               );
             })}
@@ -271,7 +269,11 @@ export function LocalWorkspacePage() {
               type="text"
               value={newItemName}
               onChange={(e) => setNewItemName(e.target.value)}
-              placeholder={newItemType === 'folder' ? 'Folder name…' : 'note.md'}
+              placeholder={
+                newItemType === 'folder'
+                  ? t.workspace.folderNamePlaceholder
+                  : t.workspace.fileNamePlaceholder
+              }
               className="lx-input flex-1"
               autoFocus
             />
@@ -284,7 +286,6 @@ export function LocalWorkspacePage() {
           </div>
         )}
 
-        {/* File Table + Detail Side Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 ms-card-raised overflow-hidden">
             {files.length === 0 ? (
@@ -350,12 +351,11 @@ export function LocalWorkspacePage() {
             )}
           </div>
 
-          {/* Detail Inspector */}
           <aside className="p-5 ms-card-raised space-y-3">
             <h2 className="text-[14.5px] font-semibold">{t.workspace.previewTitle}</h2>
             {!selectedFile ? (
               <p className="text-[13px] text-[var(--ms-text-muted)] leading-relaxed">
-                Select a file to inspect metadata and safe UTF-8 text preview.
+                {t.workspace.previewHint}
               </p>
             ) : (
               <div className="space-y-3 text-[12.5px]">
@@ -366,7 +366,7 @@ export function LocalWorkspacePage() {
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--ms-text-muted)]">Size:</span>
+                  <span className="text-[var(--ms-text-muted)]">{t.workspace.sizeLabel}</span>
                   <strong>{formatBytesLocale(selectedFile.sizeBytes, resolvedLocale)}</strong>
                 </div>
                 <Button
@@ -379,7 +379,7 @@ export function LocalWorkspacePage() {
                 </Button>
                 {previewText !== null && (
                   <pre className="p-3.5 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-64 whitespace-pre-wrap">
-                    {previewText || '(Empty file)'}
+                    {previewText || t.workspace.emptyFileContent}
                   </pre>
                 )}
               </div>
@@ -388,7 +388,7 @@ export function LocalWorkspacePage() {
         </div>
 
         <div className="text-[11.5px] text-[var(--ms-text-muted)] font-mono">
-          Root: {settings.workspace.rootPath}
+          {t.workspace.rootLabel} {settings.workspace.rootPath}
         </div>
       </div>
     </div>
@@ -402,10 +402,10 @@ export function FolderPermissionsPage() {
   const handleApproveFolder = async (access: 'readonly' | 'readwrite') => {
     try {
       await window.museApi?.addApprovedFolder(access);
-      pushToast({ title: 'Folder Approved', tone: 'success' });
+      pushToast({ title: t.workspace.folderApprovedToast, tone: 'success' });
     } catch (err) {
       pushToast({
-        title: 'Blocked Sensitive Folder',
+        title: t.workspace.folderBlockedToast,
         body: err instanceof Error ? err.message : String(err),
         tone: 'danger',
       });
@@ -418,34 +418,33 @@ export function FolderPermissionsPage() {
         <div>
           <h1 className="text-[24px] font-semibold">{t.workspace.approvedFoldersTitle}</h1>
           <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
-            System folders, browser profiles, SSH/GPG keys, and password managers are permanently
-            blocked.
+            {t.workspace.approvedFoldersSubtitle}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button variant="secondary" onClick={() => void handleApproveFolder('readonly')}>
-            + {t.workspace.addApprovedFolder} (Read-Only)
+            + {t.workspace.addReadOnly}
           </Button>
           <Button variant="primary" onClick={() => void handleApproveFolder('readwrite')}>
-            + {t.workspace.addApprovedFolder} (Read/Write)
+            + {t.workspace.addReadWrite}
           </Button>
         </div>
       </div>
 
       <div className="p-6 ms-card-raised space-y-3">
-        <div className="flex items-center justify-between gap-3 pb-3.5 border-b border-[var(--ms-border)]">
+        <div className="flex items-center justify-between gap-3 pb-3.5 border-b border-[var(--ms-border)] flex-wrap">
           <div>
-            <div className="text-[14.5px] font-semibold">Primary Muse Sandbox Root</div>
+            <div className="text-[14.5px] font-semibold">{t.workspace.primarySandboxTitle}</div>
             <code className="text-[12px] font-mono text-[var(--ms-text-muted)]">
               {settings.workspace.rootPath}
             </code>
           </div>
-          <StatusBadge tone="accent">Default Sandbox · Quota Enforced</StatusBadge>
+          <StatusBadge tone="accent">{t.workspace.defaultSandboxBadge}</StatusBadge>
         </div>
 
         {settings.workspace.approvedFolders.length === 0 ? (
           <p className="text-[13.5px] text-[var(--ms-text-muted)] py-4 m-0">
-            No additional folders outside the primary workspace have been approved.
+            {t.workspace.noApprovedFolders}
           </p>
         ) : (
           settings.workspace.approvedFolders.map((folder) => (
@@ -461,7 +460,9 @@ export function FolderPermissionsPage() {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <StatusBadge tone={folder.access === 'readonly' ? 'info' : 'warning'}>
-                  {folder.access.toUpperCase()}
+                  {folder.access === 'readonly'
+                    ? t.workspace.accessReadOnly
+                    : t.workspace.accessReadWrite}
                 </StatusBadge>
                 <Button
                   size="sm"
@@ -489,11 +490,11 @@ export function DownloadsPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-[24px] font-semibold">{t.nav.downloads}</h1>
           <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
-            Files downloaded from official Muse are routed safely to your Workspace Downloads folder.
+            {t.workspace.downloadsSubtitle}
           </p>
         </div>
         <Button
@@ -507,11 +508,11 @@ export function DownloadsPage() {
 
       <div className="ms-card-raised overflow-hidden">
         {downloads.length === 0 ? (
-          <div className="py-16 text-center space-y-2">
+          <div className="py-16 text-center space-y-2 px-4">
             <Download size={28} className="mx-auto text-[var(--ms-text-muted)]" />
-            <div className="text-[14.5px] font-semibold">No downloads in this session</div>
+            <div className="text-[14.5px] font-semibold">{t.workspace.downloadsEmptyTitle}</div>
             <p className="text-[13px] text-[var(--ms-text-muted)]">
-              Artifacts exported or downloaded inside Muse will appear here with live progress.
+              {t.workspace.downloadsEmptySub}
             </p>
           </div>
         ) : (
@@ -532,7 +533,7 @@ export function DownloadsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <StatusBadge tone={d.state === 'completed' ? 'success' : 'info'}>
-                    {d.state}
+                    {d.state === 'completed' ? t.activity.stepStates.completed : t.common.loading}
                   </StatusBadge>
                   {d.state === 'completed' && (
                     <Button
@@ -540,7 +541,7 @@ export function DownloadsPage() {
                       variant="secondary"
                       onClick={() => void window.museApi?.revealDownload(d.savePath)}
                     >
-                      Reveal
+                      {t.workspace.revealBtn}
                     </Button>
                   )}
                 </div>

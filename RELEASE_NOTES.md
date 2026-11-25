@@ -1,22 +1,23 @@
-# Muse for Windows v1.0.1 — Security Patch Release Notes (`1MS Studio · 1RS v1.2`)
+# Muse for Windows v1.1.0 — Release Notes (`1MS Studio · 1RS v1.2`)
 
-**Prepared Date:** 2026-11-25  
+**Date:** 2026-11-26  
 **Developer:** 1MS Studio (`https://1ms-studio.com/`)  
 **Standard:** 1RS v1.2  
 **License:** MIT License
 
 ---
 
-## Security Patch Summary (`v1.0.1`)
+## Highlights in `v1.1.0`
 
-**Muse for Windows v1.0.1** is a targeted production dependency security patch over `v1.0.0` with zero UI modifications:
-
-1. **`electron-updater` upgraded `6.6.2` -> `6.8.11` (resolving `builder-util-runtime` `9.7.0`):**
-   - Fixes **`GHSA-p2f4-r6v6-j797` / `CVE-2026-54673`** (High): prevents cross-origin redirects from leaking `PRIVATE-TOKEN` or mixed-case `Authorization` headers in `builder-util-runtime < 9.7.0`.
-2. **`zod` upgraded `3.25.28` -> `4.6.7` (Zod 4 compatibility verified):**
-   - Fixes **`GHSA-mrhx-c7xc-m3w5` / `CVE-2023-54404`** (High): prevents memory exhaustion when validating oversized constrained collections in `zod < 4.6.6`, with explicit collection upper bounds and Zod 4 `z.url()` validation across all IPC boundaries.
-3. **Mandatory Production Vulnerability Gate (`npm audit --omit=dev --audit-level=high`):**
-   - Enforced without error suppression before local Windows packaging (`npm run dist:win:*`), CI (`ci.yml`), Security Audit (`security.yml`), and Release (`release.yml`).
+1. **Seamless Native 1MS Studio Workstation UX (Zero Web-Wrapper Chrome):**
+   - Removed the browser address bar above `muse.ai` and eliminated the 15-item sidebar collision next to Muse’s own rail.
+   - Synchronized Electron `nativeTheme.themeSource` (`dark` / `light` / `system`) directly with `https://muse.ai` and Windows Snap Layouts (`titleBarOverlay`).
+   - Added **Lucian `#416` 5-Space Segmented Switcher** (`Muse`, `Trợ lý Nhanh`, `Không gian Tệp`, `Tác tử Windows`, `Cài đặt`), right-side **Windows Companion Dock** (1-click screen capture & file staging), and contextual **Lucian `#417` Collapsible Sidebars**.
+2. **Live Quota Usage in Bottom-Left Status Bar & Windows System Tray Icon:**
+   - Zero-privilege read-only `MuseQuotaMonitor` (`sandbox: true`, `contextIsolation: true`, `nodeIntegration: false`, zero preload) captures your active plan (`Free plan` / `Power plan` / `Maximum plan`), weekly usage percentage, reset schedule, and additional token balance, caching sanitized metrics locally.
+   - Displays a real-time **Bottom-Left Quota Pill & Spring Popover Card** plus a **dynamic 32×32 RGBA PNG Windows Tray Icon** with a color-coded bottom gauge bar, multi-line hover tooltip, and localized right-click Quota menu.
+3. **100% Pure Vietnamese Localization (`Tiếng Việt` Unicode NFC):**
+   - Eliminated 100% of mixed English/Vietnamese text across all 28 screens, switches, risk badges, all 34 `Local Agent Bridge` tool descriptions, and the Windows System Tray menu.
 
 ---
 
@@ -24,10 +25,10 @@
 
 | Artifact | Platform & Architecture | Status |
 |---|---|---|
-| `Muse-for-Windows-1MS-Studio-v1.0.1-Setup-x64.exe` | Windows 10 / 11 `x64` (Per-user NSIS Installer) | **Built & Runtime-Verified on Windows 11 x64** |
-| `Muse-for-Windows-1MS-Studio-v1.0.1-Portable-x64.exe` | Windows 10 / 11 `x64` (Standalone Portable) | **Built & Runtime-Verified on Windows 11 x64** |
-| `Muse-for-Windows-1MS-Studio-v1.0.1-Setup-arm64.exe` | Windows 11 `ARM64` (Per-user NSIS Installer) | **Cross-compiled only — Not executed on physical ARM64 device** |
-| `Muse-for-Windows-1MS-Studio-v1.0.1-Portable-arm64.exe` | Windows 11 `ARM64` (Standalone Portable) | **Cross-compiled only — Not executed on physical ARM64 device** |
+| `Muse-for-Windows-1MS-Studio-v1.1.0-Setup-x64.exe` | Windows 10 / 11 `x64` (Per-user NSIS Installer) | **Built & Runtime-Verified on Windows 11 x64** |
+| `Muse-for-Windows-1MS-Studio-v1.1.0-Portable-x64.exe` | Windows 10 / 11 `x64` (Standalone Portable) | **Built & Runtime-Verified on Windows 11 x64** |
+| `Muse-for-Windows-1MS-Studio-v1.1.0-Setup-arm64.exe` | Windows 11 `ARM64` (Per-user NSIS Installer) | **Cross-compiled only — Not executed on physical ARM64 device** |
+| `Muse-for-Windows-1MS-Studio-v1.1.0-Portable-arm64.exe` | Windows 11 `ARM64` (Standalone Portable) | **Cross-compiled only — Not executed on physical ARM64 device** |
 | `SHA256SUMS.txt` & `SBOM.cdx.json` | Integrity Checksums & CycloneDX 1.5 SBOM | **Verified** |
 
 ---

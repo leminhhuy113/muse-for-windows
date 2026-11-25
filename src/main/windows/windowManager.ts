@@ -46,6 +46,9 @@ export class WindowManager {
 
   private resolveThemeColors(): { color: string; symbolColor: string; resolved: ResolvedTheme } {
     const pref = this.settingsStore.get().appearance.theme;
+    if (nativeTheme.themeSource !== pref) {
+      nativeTheme.themeSource = pref;
+    }
     const isDark = pref === 'dark' || (pref === 'system' && nativeTheme.shouldUseDarkColors);
     return isDark
       ? { color: '#151A14', symbolColor: '#F4F9ED', resolved: 'dark' }

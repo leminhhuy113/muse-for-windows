@@ -28,8 +28,8 @@ export function createDefaultSettings(defaultWorkspaceRoot?: string): AppSetting
       accentPreset: 'electric-lime',
       fontScale: 1,
       density: 'comfortable',
-      sidebarCollapsed: true,
-      sidebarWidth: 224,
+      sidebarCollapsed: false,
+      sidebarWidth: 232,
       inspectorOpen: false,
       inspectorWidth: 340,
       animationIntensity: 'standard',
@@ -42,7 +42,7 @@ export function createDefaultSettings(defaultWorkspaceRoot?: string): AppSetting
       highContrast: false,
     },
     language: {
-      locale: 'system',
+      locale: 'vi',
     },
     workspace: {
       rootPath,

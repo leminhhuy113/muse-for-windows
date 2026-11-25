@@ -13,6 +13,7 @@ import type {
   DownloadItemRecord,
   LiveAgentExecutionState,
   MuseConnectionState,
+  MuseQuotaSnapshot,
   ResolvedLocale,
   ResolvedTheme,
   ToolApprovalRequest,
@@ -36,10 +37,10 @@ const FALLBACK_SETTINGS: AppSettings = {
     accentPreset: 'electric-lime',
     fontScale: 1,
     density: 'comfortable',
-    sidebarCollapsed: true,
-    sidebarWidth: 224,
+    sidebarCollapsed: false,
+    sidebarWidth: 232,
     inspectorOpen: false,
-    inspectorWidth: 340,
+    inspectorWidth: 320,
     animationIntensity: 'standard',
     reducedMotion: false,
     windowMaterial: 'solid',
@@ -49,7 +50,7 @@ const FALLBACK_SETTINGS: AppSettings = {
     museZoomFactor: 1,
     highContrast: false,
   },
-  language: { locale: 'system' },
+  language: { locale: 'vi' },
   workspace: {
     rootPath: 'C:\\Users\\Public\\Documents\\Muse',
     quotaBytes: DEFAULT_WORKSPACE_LIMIT_BYTES,
@@ -151,6 +152,7 @@ interface AppStoreState {
   t: TranslationDictionary;
   settings: AppSettings;
   museState: MuseConnectionState;
+  quotaState: MuseQuotaSnapshot;
   agentState: LiveAgentExecutionState;
   pendingApprovals: ToolApprovalRequest[];
   downloads: DownloadItemRecord[];
@@ -165,6 +167,7 @@ interface AppStoreState {
   setCommandPaletteOpen: (open: boolean) => void;
   updateSettings: (patch: Partial<AppSettings>) => Promise<void>;
   resetSettings: () => Promise<void>;
+  syncQuota: (interactive?: boolean) => Promise<MuseQuotaSnapshot | null>;
   pushToast: (toast: Omit<ToastEntry, 'id'>) => void;
   dismissToast: (id: string) => void;
 }
@@ -192,6 +195,20 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
     sessionExpiredHint: false,
     zoomFactor: 1,
     lastSyncedAt: new Date().toISOString(),
+  },
+  quotaState: {
+    synced: false,
+    syncing: false,
+    planLabel: null,
+    weeklyPercentUsed: null,
+    weeklyResetLabel: null,
+    additionalPercentUsed: null,
+    additionalTokensLeft: null,
+    additionalSubtitle: null,
+    workspaceUsedBytes: 0,
+    workspaceQuotaBytes: DEFAULT_WORKSPACE_LIMIT_BYTES,
+    syncedAt: null,
+    source: 'none',
   },
   agentState: {
     active: false,
@@ -268,6 +285,7 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
       initialized: true,
       settings: data.settings,
       museState: data.museState,
+      quotaState: data.quotaState,
       agentState: data.agentState,
       pendingApprovals: data.pendingApprovals,
       updateState: data.updateState,
@@ -290,6 +308,10 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
       } else if (mState.sessionExpiredHint && get().activeScreen === 'muse') {
         set({ activeScreen: 'recovery-session' });
       }
+    });
+
+    window.museApi.onEvent<MuseQuotaSnapshot>(IPC_CHANNELS.EVENT_QUOTA_UPDATED, (qState) => {
+      set({ quotaState: qState });
     });
 
     window.museApi.onEvent<AppSettings>(IPC_CHANNELS.EVENT_SETTINGS_UPDATED, (nextSettings) => {
@@ -391,6 +413,14 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
       title: get().t.settings.reset1ms,
       tone: 'success',
     });
+  },
+
+  syncQuota: async (interactive = true) => {
+    if (!window.museApi) return null;
+    set((s) => ({ quotaState: { ...s.quotaState, syncing: true } }));
+    const next = await window.museApi.museSyncQuota(interactive);
+    set({ quotaState: next });
+    return next;
   },
 
   pushToast: (toast) => {

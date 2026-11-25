@@ -210,3 +210,18 @@ export const QuickPromptSubmissionSchema = z.object({
   targetMode: z.enum(['mode-a', 'mode-c']),
   attachments: z.array(z.string().max(1024)).max(10).default([]),
 });
+
+export const MuseQuotaSnapshotSchema = z.object({
+  synced: z.boolean(),
+  syncing: z.boolean(),
+  planLabel: z.string().max(120).nullable(),
+  weeklyPercentUsed: z.number().min(0).max(100).nullable(),
+  weeklyResetLabel: z.string().max(200).nullable(),
+  additionalPercentUsed: z.number().min(0).max(100).nullable(),
+  additionalTokensLeft: z.string().max(120).nullable(),
+  additionalSubtitle: z.string().max(160).nullable(),
+  workspaceUsedBytes: z.number().min(0),
+  workspaceQuotaBytes: z.number().min(1),
+  syncedAt: z.string().nullable(),
+  source: z.enum(['none', 'cache', 'relay', 'dom']),
+});

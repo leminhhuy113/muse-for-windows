@@ -72,7 +72,8 @@ export function SettingsHubPage({
         <div>
           <h1 className="text-[24px] font-semibold">{t.settings.title}</h1>
           <p className="text-[12.5px] text-[var(--ms-text-muted)] mt-0.5">
-            {t.settings.savedJustNow} · 1MS Studio Design DNA · Schema v{settings.schemaVersion}
+            {t.settings.savedJustNow} · {t.settings.subtitleMeta}
+            {settings.schemaVersion}
           </p>
         </div>
 
@@ -86,7 +87,7 @@ export function SettingsHubPage({
                 await window.museApi?.copyText(json);
                 pushToast({
                   title: t.settings.exportConfig,
-                  body: 'Copied safe secret-free JSON to clipboard.',
+                  body: t.settings.exportCopiedBody,
                   tone: 'success',
                 });
               }
@@ -106,7 +107,7 @@ export function SettingsHubPage({
       </div>
 
       <LucianTabs
-        ariaLabel="Settings sections"
+        ariaLabel={t.settings.title}
         activeTab={activeTab}
         onChange={handleTabSwitch}
         tabs={[
@@ -118,7 +119,6 @@ export function SettingsHubPage({
         ]}
       />
 
-      {/* #16 General & Startup */}
       {activeTab === 'general' && (
         <div className="p-6 ms-card-raised divide-y divide-[var(--ms-border)]">
           <LucianSwitch
@@ -126,32 +126,32 @@ export function SettingsHubPage({
             onChange={(launchWithWindows) =>
               void updateSettings({ general: { ...settings.general, launchWithWindows } })
             }
-            label="Launch with Windows"
-            description="Disabled by default. Starts Muse for Windows quietly on user sign-in."
+            label={t.settings.generalItems.launchTitle}
+            description={t.settings.generalItems.launchDesc}
           />
           <LucianSwitch
             checked={settings.general.minimizeToTray}
             onChange={(minimizeToTray) =>
               void updateSettings({ general: { ...settings.general, minimizeToTray } })
             }
-            label="Minimize to System Tray"
-            description="Keep Muse ready in the Windows notification area when minimized."
+            label={t.settings.generalItems.minTrayTitle}
+            description={t.settings.generalItems.minTrayDesc}
           />
           <LucianSwitch
             checked={settings.general.closeToTray}
             onChange={(closeToTray) =>
               void updateSettings({ general: { ...settings.general, closeToTray } })
             }
-            label="Close Button Hides to System Tray"
-            description="Closing the main window hides it to Tray; use Tray -> Quit to exit completely."
+            label={t.settings.generalItems.closeTrayTitle}
+            description={t.settings.generalItems.closeTrayDesc}
           />
           <LucianSwitch
             checked={settings.notifications.enabled}
             onChange={(enabled) =>
               void updateSettings({ notifications: { ...settings.notifications, enabled } })
             }
-            label="Enable Native Windows Notifications"
-            description="Deliver download completion and permission alerts via Windows Action Center."
+            label={t.settings.generalItems.notifTitle}
+            description={t.settings.generalItems.notifDesc}
           />
           <LucianSwitch
             checked={settings.browserAutomation.enabled}
@@ -160,21 +160,21 @@ export function SettingsHubPage({
                 browserAutomation: { ...settings.browserAutomation, enabled },
               })
             }
-            label="Enable Dedicated Assistant Browser Profile (Playwright)"
-            description="Isolated profile separate from your personal Edge/Chrome browser."
+            label={t.settings.generalItems.browserTitle}
+            description={t.settings.generalItems.browserDesc}
           />
         </div>
       )}
 
-      {/* #17 Appearance & 1ms-studio.com Live Display Settings */}
       {activeTab === 'appearance' && (
         <div className="p-6 ms-card-raised space-y-5">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="text-[14.5px] font-semibold">Color Theme (1ms-studio.com Palette)</div>
+              <div className="text-[14.5px] font-semibold">
+                {t.settings.appearanceItems.themeTitle}
+              </div>
               <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
-                Botanical Olive Dark (#151A14) & Sage-Cream Light (#F5FBE9), synced with Windows
-                Snap Layouts.
+                {t.settings.appearanceItems.themeDesc}
               </div>
             </div>
             <ThemeModeSelector
@@ -187,18 +187,36 @@ export function SettingsHubPage({
 
           <div className="pt-5 border-t border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="text-[14.5px] font-semibold">1MS Studio Accent Preset</div>
+              <div className="text-[14.5px] font-semibold">
+                {t.settings.appearanceItems.accentTitle}
+              </div>
               <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
-                Contrast-verified accents across Dark and Light botanical surfaces.
+                {t.settings.appearanceItems.accentDesc}
               </div>
             </div>
             <div className="flex gap-2 flex-wrap">
               {(
                 [
-                  { id: 'electric-lime', label: '1MS Lime (#C7F34B)', swatch: '#C7F34B' },
-                  { id: 'ice-cyan', label: 'Arctic Mint', swatch: '#7FE3F5' },
-                  { id: 'emerald-signal', label: 'Forest Signal', swatch: '#98D5A4' },
-                  { id: 'warm-amber', label: 'Terracotta Sun', swatch: '#FFD18A' },
+                  {
+                    id: 'electric-lime',
+                    label: t.settings.appearanceItems.presetLime,
+                    swatch: '#C7F34B',
+                  },
+                  {
+                    id: 'ice-cyan',
+                    label: t.settings.appearanceItems.presetCyan,
+                    swatch: '#7FE3F5',
+                  },
+                  {
+                    id: 'emerald-signal',
+                    label: t.settings.appearanceItems.presetEmerald,
+                    swatch: '#98D5A4',
+                  },
+                  {
+                    id: 'warm-amber',
+                    label: t.settings.appearanceItems.presetAmber,
+                    swatch: '#FFD18A',
+                  },
                 ] as Array<{ id: AccentPresetId; label: string; swatch: string }>
               ).map((preset) => (
                 <button
@@ -228,7 +246,8 @@ export function SettingsHubPage({
           <div className="pt-5 border-t border-[var(--ms-border)] grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="text-[13.5px] font-semibold block mb-2">
-                Manrope Font Scale ({Math.round(settings.appearance.fontScale * 100)}%)
+                {t.settings.appearanceItems.fontScaleLabel} (
+                {Math.round(settings.appearance.fontScale * 100)}%)
               </label>
               <input
                 type="range"
@@ -246,7 +265,9 @@ export function SettingsHubPage({
             </div>
 
             <div>
-              <label className="text-[13.5px] font-semibold block mb-2">UI Density</label>
+              <label className="text-[13.5px] font-semibold block mb-2">
+                {t.settings.appearanceItems.densityLabel}
+              </label>
               <select
                 value={settings.appearance.density}
                 onChange={(e) =>
@@ -259,9 +280,11 @@ export function SettingsHubPage({
                 }
                 className="lx-input h-10"
               >
-                <option value="compact">Compact (34px rows)</option>
-                <option value="comfortable">Comfortable (38px rows — Default)</option>
-                <option value="spacious">Spacious (44px rows)</option>
+                <option value="compact">{t.settings.appearanceItems.densityCompact}</option>
+                <option value="comfortable">
+                  {t.settings.appearanceItems.densityComfortable}
+                </option>
+                <option value="spacious">{t.settings.appearanceItems.densitySpacious}</option>
               </select>
             </div>
           </div>
@@ -274,8 +297,8 @@ export function SettingsHubPage({
                   appearance: { ...settings.appearance, showDynamicIsland },
                 })
               }
-              label="Show Floating Agent Dynamic Island"
-              description="Displays a compact interruptible pill whenever a local tool or agent runs."
+              label={t.settings.appearanceItems.islandTitle}
+              description={t.settings.appearanceItems.islandDesc}
             />
             <LucianSwitch
               checked={settings.appearance.reducedMotion}
@@ -284,8 +307,8 @@ export function SettingsHubPage({
                   appearance: { ...settings.appearance, reducedMotion },
                 })
               }
-              label="Reduced Motion"
-              description="Clamps transitions to instant states in addition to OS accessibility settings."
+              label={t.settings.appearanceItems.reducedMotionTitle}
+              description={t.settings.appearanceItems.reducedMotionDesc}
             />
             <LucianSwitch
               checked={settings.appearance.highContrast}
@@ -294,23 +317,19 @@ export function SettingsHubPage({
                   appearance: { ...settings.appearance, highContrast },
                 })
               }
-              label="High Contrast Borders & Text"
-              description="Reinforces contrast ratios across panels and labels."
+              label={t.settings.appearanceItems.contrastTitle}
+              description={t.settings.appearanceItems.contrastDesc}
             />
           </div>
         </div>
       )}
 
-      {/* #19 Multi-Language Settings */}
       {activeTab === 'language' && (
         <div className="p-6 ms-card-raised space-y-5">
           <div>
-            <h2 className="text-[17px] font-semibold mb-1">
-              Multilingual Interface (VI · EN · 简体中文 · 日本語 · 한국어)
-            </h2>
+            <h2 className="text-[17px] font-semibold mb-1">{t.settings.languageItems.heading}</h2>
             <p className="text-[13.5px] text-[var(--ms-text-secondary)] leading-relaxed">
-              Rendered with bundled local Manrope Variable (Vietnamese + Latin subsets) and CJK
-              system fallbacks with strict Unicode NFC normalization.
+              {t.settings.languageItems.desc}
             </p>
           </div>
           <LanguageSelector
@@ -319,29 +338,29 @@ export function SettingsHubPage({
           />
           <div className="p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[13px] space-y-1.5">
             <div>
-              <strong>Active Resolved Locale:</strong> <code>{resolvedLocale}</code>
+              <strong>{t.settings.languageItems.resolvedLabel}</strong>{' '}
+              <code>{resolvedLocale}</code>
             </div>
             <div>
-              <strong>Sample Storage Formatting:</strong>{' '}
+              <strong>{t.settings.languageItems.sampleStorage}</strong>{' '}
               {formatBytesLocale(10 * 1024 * 1024 * 1024, resolvedLocale)}
             </div>
             <div>
-              <strong>Sample Timestamp Formatting:</strong>{' '}
+              <strong>{t.settings.languageItems.sampleTime}</strong>{' '}
               {formatDateTimeLocale(new Date().toISOString(), resolvedLocale)}
             </div>
           </div>
         </div>
       )}
 
-      {/* #18 Keyboard Shortcuts */}
       {activeTab === 'shortcuts' && (
         <div className="p-6 ms-card-raised space-y-4">
           {(Object.keys(DEFAULT_SHORTCUTS) as Array<keyof ShortcutBindings>).map((key) => (
             <div key={key} className="flex items-center justify-between gap-4 flex-wrap">
               <div>
-                <div className="text-[14px] font-semibold">{key}</div>
+                <div className="text-[14px] font-semibold">{t.settings.shortcutItems[key]}</div>
                 <div className="text-[12px] text-[var(--ms-text-muted)]">
-                  Default: {DEFAULT_SHORTCUTS[key]}
+                  {t.settings.shortcutItems.defaultPrefix} {DEFAULT_SHORTCUTS[key]}
                 </div>
               </div>
               <input
@@ -363,7 +382,7 @@ export function SettingsHubPage({
                 void updateSettings({ shortcuts: { ...DEFAULT_SHORTCUTS } });
               }}
             >
-              Reset Shortcuts
+              {t.settings.shortcutItems.resetBtn}
             </Button>
             <Button
               size="sm"
@@ -376,24 +395,27 @@ export function SettingsHubPage({
         </div>
       )}
 
-      {/* #20 Privacy & Security */}
       {activeTab === 'privacy' && (
         <div className="p-6 ms-card-raised space-y-4">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <div className="text-[14.5px] font-semibold">Zero Telemetry Guarantee</div>
+              <div className="text-[14.5px] font-semibold">
+                {t.settings.privacyItems.zeroTelemetryTitle}
+              </div>
               <div className="text-[13px] text-[var(--ms-text-secondary)]">
-                Muse for Windows collects zero analytics, crash telemetry, or conversation logs.
+                {t.settings.privacyItems.zeroTelemetryDesc}
               </div>
             </div>
-            <StatusBadge tone="success">TELEMETRY PERMANENTLY OFF</StatusBadge>
+            <StatusBadge tone="success">{t.settings.privacyItems.zeroTelemetryBadge}</StatusBadge>
           </div>
 
           <div className="pt-4 border-t border-[var(--ms-border)] flex items-center justify-between gap-4">
             <div>
-              <div className="text-[14px] font-semibold">Local SQLite Audit Retention (Days)</div>
+              <div className="text-[14px] font-semibold">
+                {t.settings.privacyItems.retentionTitle}
+              </div>
               <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
-                Older local audit entries are pruned automatically at startup.
+                {t.settings.privacyItems.retentionDesc}
               </div>
             </div>
             <input
@@ -418,7 +440,7 @@ export function SettingsHubPage({
   );
 }
 
-/** Screen #21 — Integrations (Mode A, Mode B, Mode C — 1ms-studio.com Editorial Tinted Cards) */
+/** Screen #21 — Integrations (Mode A, Mode B, Mode C) */
 export function IntegrationsPage() {
   const { t, settings, updateSettings, setActiveScreen, pushToast } = useAppStore();
   const [apiKeyInput, setApiKeyInput] = useState('');
@@ -427,21 +449,21 @@ export function IntegrationsPage() {
     <div className="max-w-5xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <h1 className="text-[24px] font-semibold">{t.integrations.title}</h1>
 
-      {/* Mode A */}
       <div className="p-6 ms-card-raised space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span className="ms-card-index">01</span>
             <h2 className="text-[16.5px] font-semibold">{t.integrations.modeATitle}</h2>
           </div>
-          <StatusBadge tone="accent">{t.common.verified} · PRIMARY</StatusBadge>
+          <StatusBadge tone="accent">
+            {t.common.verified} · {t.integrations.primaryBadge}
+          </StatusBadge>
         </div>
         <p className="text-[13.5px] text-[var(--ms-text-secondary)] m-0 leading-relaxed">
           {t.onboarding.modeADesc}
         </p>
       </div>
 
-      {/* Mode B */}
       <div className="p-6 ms-card-peach space-y-3.5">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2.5">
@@ -455,19 +477,18 @@ export function IntegrationsPage() {
         </p>
         <div className="flex gap-2.5 flex-wrap">
           <Button size="sm" variant="secondary" onClick={() => setActiveScreen('local-bridge')}>
-            Configure Loopback MCP (127.0.0.1)
+            {t.integrations.configureMcpBtn}
           </Button>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setActiveScreen('unsupported-integration')}
           >
-            Read Security & Upstream Explanation
+            {t.integrations.readSecurityBtn}
           </Button>
         </div>
       </div>
 
-      {/* Mode C */}
       <div className="p-6 ms-card-lavender space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -486,13 +507,15 @@ export function IntegrationsPage() {
               integrations: { ...settings.integrations, modeCEnabled },
             })
           }
-          label="Enable Optional Independent Local Agent"
-          description="Clearly separated from official Muse; uses shared Permission Center and SQLite Audit Log."
+          label={t.integrations.enableModeCLabel}
+          description={t.integrations.enableModeCDesc}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           <div>
-            <label className="text-[12.5px] font-semibold block mb-1.5">Provider Adapter</label>
+            <label className="text-[12.5px] font-semibold block mb-1.5">
+              {t.integrations.providerLabel}
+            </label>
             <select
               value={settings.integrations.modeCProvider}
               onChange={(e) =>
@@ -509,12 +532,12 @@ export function IntegrationsPage() {
               }
               className="lx-input"
             >
-              <option value="ollama">Local Ollama (127.0.0.1)</option>
-              <option value="openai-compatible">OpenAI-Compatible HTTPS</option>
+              <option value="ollama">{t.integrations.providerOllama}</option>
+              <option value="openai-compatible">{t.integrations.providerOpenAi}</option>
             </select>
           </div>
           <ValidatedInput
-            label="Endpoint Base URL"
+            label={t.integrations.baseUrlLabel}
             value={settings.integrations.modeCBaseUrl}
             onChange={(e) =>
               void updateSettings({
@@ -523,7 +546,7 @@ export function IntegrationsPage() {
             }
           />
           <ValidatedInput
-            label="Model Name"
+            label={t.integrations.modelNameLabel}
             value={settings.integrations.modeCModel}
             onChange={(e) =>
               void updateSettings({
@@ -538,12 +561,12 @@ export function IntegrationsPage() {
             <div className="flex-1 min-w-[240px]">
               <ValidatedInput
                 type="password"
-                label="Independent API Key (Encrypted via Windows DPAPI safeStorage)"
+                label={t.integrations.apiKeyLabel}
                 value={apiKeyInput}
                 onChange={(e) => setApiKeyInput(e.target.value)}
                 placeholder={
                   settings.integrations.modeCHasApiKey
-                    ? '•••••••• (Stored encrypted in DPAPI)'
+                    ? t.integrations.apiKeyStoredPlaceholder
                     : 'sk-...'
                 }
               />
@@ -555,7 +578,7 @@ export function IntegrationsPage() {
               onClick={async () => {
                 await window.museApi?.setModeCApiKey(apiKeyInput);
                 setApiKeyInput('');
-                pushToast({ title: 'API Key Encrypted via Windows DPAPI', tone: 'success' });
+                pushToast({ title: t.integrations.apiKeySavedToast, tone: 'success' });
               }}
             >
               {t.integrations.saveApiKey}
@@ -577,13 +600,16 @@ export function UpdateCenterPage() {
   const { t, settings, updateState, resolvedLocale, updateSettings } = useAppStore();
   const [checking, setChecking] = useState(false);
 
+  const statusLabel =
+    (t.updates.statuses as Record<string, string>)[updateState.status] || updateState.status;
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-[24px] font-semibold">{t.updates.title}</h1>
           <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
-            GitHub Releases Provider: <code>leminhhuy113/muse-for-windows</code>
+            {t.updates.providerLabel} <code>leminhhuy113/muse-for-windows</code>
           </p>
         </div>
 
@@ -617,12 +643,12 @@ export function UpdateCenterPage() {
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <div className="text-[15px] font-semibold">
-              Current Version: v{updateState.currentVersion} ({updateState.channel})
+              {t.updates.currentVersionPrefix} v{updateState.currentVersion}
             </div>
             <div className="text-[12.5px] text-[var(--ms-text-muted)]">
               {updateState.checkedAt
-                ? `Last checked: ${formatDateTimeLocale(updateState.checkedAt, resolvedLocale)}`
-                : 'Not checked yet in this session'}
+                ? `${t.updates.lastCheckedPrefix} ${formatDateTimeLocale(updateState.checkedAt, resolvedLocale)}`
+                : t.updates.notCheckedYet}
             </div>
           </div>
           <StatusBadge
@@ -634,12 +660,12 @@ export function UpdateCenterPage() {
                   : 'info'
             }
           >
-            {updateState.status.toUpperCase()}
+            {statusLabel}
           </StatusBadge>
         </div>
 
         <div className="flex items-center justify-between gap-4 pt-4 border-t border-[var(--ms-border)]">
-          <span className="text-[13.5px] font-semibold">Release Channel</span>
+          <span className="text-[13.5px] font-semibold">{t.updates.channelLabel}</span>
           <select
             value={settings.updates.channel}
             onChange={(e) =>
@@ -647,11 +673,11 @@ export function UpdateCenterPage() {
                 updates: { ...settings.updates, channel: e.target.value as ReleaseChannel },
               })
             }
-            className="lx-input w-48 h-9"
+            className="lx-input w-52 h-9"
           >
-            <option value="stable">stable (Default)</option>
-            <option value="beta">beta</option>
-            <option value="alpha">alpha</option>
+            <option value="stable">{t.updates.channelStable}</option>
+            <option value="beta">{t.updates.channelBeta}</option>
+            <option value="alpha">{t.updates.channelAlpha}</option>
           </select>
         </div>
 
@@ -668,7 +694,7 @@ export function UpdateCenterPage() {
             icon={<Download size={14} />}
             onClick={() => void window.museApi?.installUpdate()}
           >
-            Install & Restart
+            {t.updates.installRestart}
           </Button>
         )}
       </div>
@@ -703,19 +729,25 @@ export function DiagnosticsPage() {
       {diag && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-5 ms-card-raised">
-            <div className="text-[12px] text-[var(--ms-text-muted)]">Shell Memory (RSS / Heap)</div>
+            <div className="text-[12px] text-[var(--ms-text-muted)]">
+              {t.diagnostics.memoryLabel}
+            </div>
             <div className="text-[22px] font-semibold mt-1">
               {diag.memoryUsageMb.rss} MB / {diag.memoryUsageMb.heapUsed} MB
             </div>
           </div>
           <div className="p-5 ms-card-peach">
-            <div className="text-[12px] text-[var(--ms-text-muted)]">Platform & Architecture</div>
+            <div className="text-[12px] text-[var(--ms-text-muted)]">
+              {t.diagnostics.platformLabel}
+            </div>
             <div className="text-[22px] font-semibold mt-1">
               {diag.platform} · {diag.arch}
             </div>
           </div>
           <div className="p-5 ms-card-lavender">
-            <div className="text-[12px] text-[var(--ms-text-muted)]">Electron / Chromium</div>
+            <div className="text-[12px] text-[var(--ms-text-muted)]">
+              {t.diagnostics.runtimeLabel}
+            </div>
             <div className="text-[22px] font-semibold mt-1">
               v{diag.electronVersion} / {diag.chromeVersion.split('.')[0]}
             </div>
@@ -726,7 +758,7 @@ export function DiagnosticsPage() {
       <div className="p-5 ms-card-raised">
         <div className="flex items-center gap-2 text-[13.5px] font-semibold mb-2.5">
           <Terminal size={15} className="text-[var(--ms-accent-text)]" />
-          <span>Sanitized Runtime Snapshot</span>
+          <span>{t.diagnostics.snapshotTitle}</span>
         </div>
         <pre className="m-0 p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-96">
           {reportJson || t.common.loading}
@@ -736,7 +768,7 @@ export function DiagnosticsPage() {
   );
 }
 
-/** Screen #24 — Mandatory About & System Information Page (1ms-studio.com Studio Signature) */
+/** Screen #24 — Mandatory About & System Information Page */
 export function AboutPage() {
   const { t, resolvedLocale, setActiveScreen } = useAppStore();
   const [diag, setDiag] = useState<RuntimeDiagnosticsInfo | null>(null);
@@ -746,7 +778,7 @@ export function AboutPage() {
   }, []);
 
   const sysSummary = diag
-    ? `${BRANDING.productName} v${BRANDING.version} (Build ${BRANDING.buildNumber})\nDeveloper: ${BRANDING.developer} (${BRANDING.websiteUrl}) · Standard: ${BRANDING.designStandard}\nOS: ${diag.platform} ${diag.osRelease} (${diag.arch})\nElectron: ${diag.electronVersion} · Chromium: ${diag.chromeVersion} · Node.js: ${diag.nodeVersion}`
+    ? `${BRANDING.productName} v${BRANDING.version} (${t.about.buildPrefix} ${BRANDING.buildNumber})\n${t.about.developedBy} (${BRANDING.websiteUrl})\nOS: ${diag.platform} ${diag.osRelease} (${diag.arch})\nElectron: ${diag.electronVersion} · Chromium: ${diag.chromeVersion} · Node.js: ${diag.nodeVersion}`
     : `${BRANDING.productName} v${BRANDING.version}`;
 
   return (
@@ -755,15 +787,15 @@ export function AboutPage() {
         <div className="space-y-2.5">
           <StudioWordmark />
           <div className="flex items-center gap-2.5 pt-1">
-            <h1 className="text-[28px] font-semibold">{BRANDING.productName}</h1>
+            <h1 className="text-[28px] font-semibold">{t.app.name}</h1>
             <StatusBadge tone="accent">v{BRANDING.version}</StatusBadge>
           </div>
           <div className="text-[14px] font-medium text-[var(--ms-text-secondary)]">
-            Developed by {BRANDING.developer} · Powered by {BRANDING.designStandard}
+            {t.about.developedBy}
           </div>
           <div className="text-[12px] font-mono text-[var(--ms-text-muted)]">
-            Build {BRANDING.buildNumber} · Channel: {diag?.releaseChannel || BRANDING.releaseChannel} ·{' '}
-            {BRANDING.license}
+            {t.about.buildPrefix} {BRANDING.buildNumber} · {t.about.channelPrefix}{' '}
+            {diag?.releaseChannel || BRANDING.releaseChannel} · {BRANDING.license}
           </div>
         </div>
 
@@ -800,54 +832,51 @@ export function AboutPage() {
         </Button>
       </div>
 
-      {/* Actual Runtime Versions */}
       <div className="p-5 ms-card-raised grid grid-cols-2 md:grid-cols-4 gap-4 text-[12.5px]">
         <div>
-          <div className="text-[var(--ms-text-muted)]">Operating System</div>
+          <div className="text-[var(--ms-text-muted)]">{t.about.osLabel}</div>
           <strong className="font-mono">
             {diag ? `${diag.platform} (${diag.osRelease})` : 'win32'}
           </strong>
         </div>
         <div>
-          <div className="text-[var(--ms-text-muted)]">Architecture</div>
+          <div className="text-[var(--ms-text-muted)]">{t.about.archLabel}</div>
           <strong className="font-mono">{diag?.arch || 'x64'}</strong>
         </div>
         <div>
-          <div className="text-[var(--ms-text-muted)]">Electron / Chromium</div>
+          <div className="text-[var(--ms-text-muted)]">{t.about.electronLabel}</div>
           <strong className="font-mono">
             {diag ? `${diag.electronVersion} / ${diag.chromeVersion}` : '—'}
           </strong>
         </div>
         <div>
-          <div className="text-[var(--ms-text-muted)]">Node.js Runtime</div>
+          <div className="text-[var(--ms-text-muted)]">{t.about.nodeLabel}</div>
           <strong className="font-mono">{diag?.nodeVersion || '—'}</strong>
         </div>
       </div>
 
-      {/* Lucian #044 Open Source Acknowledgements Accordion */}
       <LucianAccordion
         items={[
           {
             id: 'lic-1ms',
-            title: 'Muse for Windows — MIT License (1MS Studio)',
-            body: 'Copyright © 2026 1MS Studio (https://1ms-studio.com · github.com/leminhhuy113/muse-for-windows).',
+            title: t.about.lic1msTitle,
+            body: t.about.lic1msBody,
           },
           {
             id: 'lic-lucian',
-            title: 'Lucian UX/UI Prompt (Seokwoooo/lucian-uxui v1.2.0)',
-            body: 'MIT License — Copyright © 2026 Seokwoooo (https://lucianlabs.dev/uxui-prompt). Ported sidebar #417, account menu #037, segmented tabs #416/#047, command palette #046, 3D keycap #471, stretch switch #433, accordion #044, language dropdown #267, and fanning toasts #070.',
+            title: t.about.licLucianTitle,
+            body: t.about.licLucianBody,
           },
           {
             id: 'lic-fonts',
-            title: 'Manrope Variable & Lucide Icons',
-            body: '@fontsource-variable/manrope (SIL Open Font License 1.1, Latin + Vietnamese subsets) and lucide-react (ISC License).',
+            title: t.about.licFontsTitle,
+            body: t.about.licFontsBody,
           },
         ]}
       />
 
-      {/* Mandatory Unofficial Disclaimer */}
       <div className="p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12px] text-[var(--ms-text-secondary)] leading-relaxed">
-        <strong>Independent Project Disclaimer:</strong>{' '}
+        <strong>{t.about.disclaimerPrefix}</strong>{' '}
         {resolvedLocale === 'vi'
           ? BRANDING.unofficialDisclaimerVi
           : BRANDING.unofficialDisclaimerEn}

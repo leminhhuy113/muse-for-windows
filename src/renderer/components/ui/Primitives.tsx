@@ -23,6 +23,7 @@ import type {
   ThemeMode,
 } from '@shared/types';
 import { formatBytesLocale } from '@renderer/locales';
+import { useAppStore } from '@renderer/stores/useAppStore';
 
 /** 1ms-studio.com Botanical Emblem SVG */
 export function BrandLogo({ size = 26 }: { size?: number }) {
@@ -227,13 +228,18 @@ export function StatusBadge({
 }
 
 export function RiskBadge({ risk }: { risk: RiskLevel }) {
+  const riskLabels = useAppStore((s) => s.t.risk);
   const toneMap: Record<RiskLevel, 'success' | 'info' | 'warning' | 'danger'> = {
     low: 'success',
     medium: 'info',
     high: 'warning',
     critical: 'danger',
   };
-  return <StatusBadge tone={toneMap[risk]}>RISK · {risk.toUpperCase()}</StatusBadge>;
+  return (
+    <StatusBadge tone={toneMap[risk]}>
+      {riskLabels.prefix} · {riskLabels[risk]}
+    </StatusBadge>
+  );
 }
 
 /** Lucian #433 — Genuine Stretch-on-Press Switch */
@@ -376,11 +382,13 @@ export function LucianTabs<T extends string>({
   activeTab,
   onChange,
   ariaLabel,
+  compact = false,
 }: {
-  tabs: Array<{ id: T; label: string; count?: number }>;
+  tabs: Array<{ id: T; label: string; icon?: React.ReactNode; count?: number }>;
   activeTab: T;
   onChange: (id: T) => void;
   ariaLabel: string;
+  compact?: boolean;
 }) {
   const ids = tabs.map((t) => t.id);
   const { trackRef, thumbRef } = useJellyThumb(activeTab, ids);
@@ -390,7 +398,7 @@ export function LucianTabs<T extends string>({
       ref={trackRef}
       role="tablist"
       aria-label={ariaLabel}
-      className="ux u416-tl flex-wrap"
+      className={`ux u416-tl ms-no-drag ${compact ? 'is-header' : 'flex-wrap'}`}
       onKeyDown={(e) => {
         const cur = Math.max(0, ids.indexOf(activeTab));
         const next =
@@ -415,6 +423,7 @@ export function LucianTabs<T extends string>({
           onClick={() => onChange(t.id)}
           className="u416-tab"
         >
+          {t.icon}
           <span>{t.label}</span>
           {typeof t.count === 'number' && (
             <span className="px-1.5 py-0.2 rounded-full bg-[var(--ms-bg)] text-[11px] text-[var(--ms-text-muted)]">
@@ -435,16 +444,17 @@ export function ThemeModeSelector({
   value: ThemeMode;
   onChange: (mode: ThemeMode) => void;
 }) {
+  const t = useAppStore((s) => s.t);
   const items: Array<{ id: ThemeMode; label: string; icon: React.ReactNode }> = [
-    { id: 'dark', label: 'Dark', icon: <Moon size={14} aria-hidden="true" /> },
-    { id: 'light', label: 'Light', icon: <Sun size={14} aria-hidden="true" /> },
-    { id: 'system', label: 'System', icon: <Monitor size={14} aria-hidden="true" /> },
+    { id: 'dark', label: t.themeModes.dark, icon: <Moon size={14} aria-hidden="true" /> },
+    { id: 'light', label: t.themeModes.light, icon: <Sun size={14} aria-hidden="true" /> },
+    { id: 'system', label: t.themeModes.system, icon: <Monitor size={14} aria-hidden="true" /> },
   ];
   const ids = items.map((i) => i.id);
   const { trackRef, thumbRef } = useJellyThumb(value, ids);
 
   return (
-    <div ref={trackRef} role="radiogroup" aria-label="Theme mode" className="ux u416-tl">
+    <div ref={trackRef} role="radiogroup" aria-label={t.onboarding.stepTheme} className="ux u416-tl">
       <span ref={thumbRef} className="u416-th" aria-hidden="true" />
       {items.map((item) => (
         <button
@@ -464,14 +474,20 @@ export function ThemeModeSelector({
   );
 }
 
-const LOCALE_OPTIONS: Array<{ id: AppLocalePreference; code: string; label: string }> = [
-  { id: 'system', code: 'AUTO', label: 'System / Hệ thống' },
-  { id: 'vi', code: 'VI', label: 'Tiếng Việt' },
-  { id: 'en', code: 'EN', label: 'English' },
-  { id: 'zh', code: 'ZH', label: '简体中文' },
-  { id: 'ja', code: 'JA', label: '日本語' },
-  { id: 'ko', code: 'KO', label: '한국어' },
-];
+function getLocaleOptions(systemLabel: string): Array<{
+  id: AppLocalePreference;
+  code: string;
+  label: string;
+}> {
+  return [
+    { id: 'system', code: 'AUTO', label: systemLabel },
+    { id: 'vi', code: 'VI', label: 'Tiếng Việt' },
+    { id: 'en', code: 'EN', label: 'English' },
+    { id: 'zh', code: 'ZH', label: '简体中文' },
+    { id: 'ja', code: 'JA', label: '日本語' },
+    { id: 'ko', code: 'KO', label: '한국어' },
+  ];
+}
 
 /** Lucian #267 — Multi-Language Selector Grid */
 export function LanguageSelector({
@@ -481,9 +497,12 @@ export function LanguageSelector({
   value: AppLocalePreference;
   onChange: (locale: AppLocalePreference) => void;
 }) {
+  const t = useAppStore((s) => s.t);
+  const options = getLocaleOptions(t.settings.languageItems.systemOption);
+
   return (
-    <div role="radiogroup" aria-label="Language" className="flex flex-wrap gap-2">
-      {LOCALE_OPTIONS.map((opt) => {
+    <div role="radiogroup" aria-label={t.onboarding.stepLanguage} className="flex flex-wrap gap-2">
+      {options.map((opt) => {
         const active = value === opt.id;
         return (
           <button
@@ -517,8 +536,10 @@ export function HeaderLanguageDropdown({
   resolvedLocale: ResolvedLocale;
   onChange: (locale: AppLocalePreference) => void;
 }) {
+  const t = useAppStore((s) => s.t);
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const options = getLocaleOptions(t.settings.languageItems.systemOption);
 
   useEffect(() => {
     if (!open) return;
@@ -539,15 +560,15 @@ export function HeaderLanguageDropdown({
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label="Choose interface language"
+        aria-label={t.titlebar.languageMenu}
         onClick={() => setOpen((o) => !o)}
         className="u267-gb"
       >
         <Globe size={13} aria-hidden="true" />
         <span>{badgeCode}</span>
       </button>
-      <div role="listbox" aria-label="Interface languages" className="u267-dd">
-        {LOCALE_OPTIONS.map((opt) => {
+      <div role="listbox" aria-label={t.titlebar.languageMenu} className="u267-dd">
+        {options.map((opt) => {
           const active = value === opt.id;
           return (
             <button
@@ -561,7 +582,7 @@ export function HeaderLanguageDropdown({
               }}
               className={`u267-op ${active ? 'is-on' : ''}`}
             >
-              <span className="text-[11px] font-mono opacity-70 w-8">{opt.code}</span>
+              <span className="text-[11px] font-mono opacity-70 w-9">{opt.code}</span>
               <span className="flex-1 truncate">{opt.label}</span>
               {active && <Check size={13} aria-hidden="true" />}
             </button>
@@ -620,6 +641,7 @@ export function WorkspaceStorageMeter({
   bySubfolder: Record<string, number>;
   locale: ResolvedLocale;
 }) {
+  const t = useAppStore((s) => s.t);
   const safeQuota = Math.max(quotaBytes, 1);
   const colors: Record<string, string> = {
     Workspace: 'var(--ms-lime)',
@@ -628,12 +650,15 @@ export function WorkspaceStorageMeter({
     Output: 'var(--ms-warning)',
     Temporary: 'var(--ms-text-muted)',
   };
+  const labelFor = (folder: string) =>
+    (t.workspace.subfolders as Record<string, string>)[folder] || folder;
 
   return (
     <div className="p-5 ms-card">
       <div className="flex items-center justify-between text-[13.5px] mb-2.5">
         <span className="font-semibold text-[var(--ms-text-primary)]">
-          {formatBytesLocale(totalBytes, locale)} / {formatBytesLocale(quotaBytes, locale)}
+          {t.workspace.storageUsed}: {formatBytesLocale(totalBytes, locale)} /{' '}
+          {formatBytesLocale(quotaBytes, locale)}
         </span>
         <span className="text-[12px] font-semibold text-[var(--ms-accent-text)]">
           {Math.min(100, (totalBytes / safeQuota) * 100).toFixed(1)}%
@@ -656,7 +681,7 @@ export function WorkspaceStorageMeter({
                 width: `${Math.min(100, pct)}%`,
                 background: colors[folder] || 'var(--ms-lime)',
               }}
-              title={`${folder}: ${formatBytesLocale(bytes, locale)}`}
+              title={`${labelFor(folder)}: ${formatBytesLocale(bytes, locale)}`}
             />
           );
         })}
@@ -668,7 +693,7 @@ export function WorkspaceStorageMeter({
               className="w-2.5 h-2.5 rounded-full"
               style={{ background: colors[folder] || 'var(--ms-lime)' }}
             />
-            <span>{folder}:</span>
+            <span>{labelFor(folder)}:</span>
             <strong className="text-[var(--ms-text-primary)]">
               {formatBytesLocale(bytes, locale)}
             </strong>
@@ -760,16 +785,18 @@ export function ErrorRecoveryCard({
 /** Lucian #471 — Genuine 3D Keycap Command K Button */
 export function CommandKButton({
   label,
+  compact = false,
   onClick,
 }: {
   label: string;
+  compact?: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="ux u471-b ms-no-drag"
+      className={`ux u471-b ms-no-drag ${compact ? 'is-compact' : ''}`}
       aria-label={`${label} (Ctrl+K)`}
       aria-keyshortcuts="Control+K"
     >
