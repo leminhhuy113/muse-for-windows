@@ -7,6 +7,6 @@ d477a25a6073158ca44702abcb9e0ef10cf8ff99386a8ec2b7331a3683548846  Muse-for-Windo
 9192dbc8555145d56a13af603c2c78161d3a870c1bc5c6c2dd83375bc24faf18  Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe.blockmap
 59b2576215c47bfb4b07ee3d8f22a2296e5687876527b13b6a302da206ed9dfa  Muse-for-Windows-1MS-Studio-v1.0.0-Setup.exe
 c8ddebd9db38f1df1f99e5c347060132f1b9ea06d840676987ba10ed2f0d891f  Muse-for-Windows-1MS-Studio-v1.0.0-Setup.exe.blockmap
-83b611d170a2c562879a0967c73c5454d426920f4bd92db867a5fba412130c47  Muse-for-Windows-1MS-Studio-v1.0.0-Source.zip
-3bb9d15bbd2648a46cb727648f00494cf94e37623f958b5194cc5b9b37880988  SBOM.cdx.json
+a9f393c505bebfa8aac9f827bdc203eac253eba7d33aafe89dc2b75b5f31e2b9  Muse-for-Windows-1MS-Studio-v1.0.0-Source.zip
+e113020447aa5081a1bf82d6c50179e2fe7220d6373ac4bfa01dd4752458584b  SBOM.cdx.json
 c38157f03e6d4bae24c53472ea5311acba1a18c5b8c2b949d5b47aa11792ecca  latest.yml
