@@ -1,56 +1,72 @@
-/* Lucian UX/UI Prompt #004, #008, #017, #031, #032, #038, #046, #070, #086, #090, #092, #224, #250, #269, #273, #289, #355, #408, #415, #416, #417, #429, #432, #433, #434, #435, #436, #437, #438, #439, #440, #447, #448, #451, #452, #453, #454, #455, #456, #457, #458, #459, #466, #470, #471, #472, #475 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
+/* Lucian UX/UI Prompt #008, #037, #040, #044, #046, #047, #070, #090, #250, #267, #269, #416, #417, #433, #434, #439, #447, #458, #459, #471, #472 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
 
-/* ── 1RS v1.2 Button & Stateful Action (#004, #008, #438, #471) ── */
+/* ── 1ms-studio.com Pill Buttons & Actions ── */
 .ms-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--ms-space-2);
+  gap: 8px;
   height: var(--ms-row-height);
-  padding: 0 var(--ms-space-4);
-  border-radius: var(--ms-radius-md);
+  padding: 0 20px;
+  border-radius: var(--ms-radius-pill);
   border: 1px solid transparent;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.25;
+  font-family: var(--ms-font-brand);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   transition:
-    background-color var(--ms-duration-fast) var(--ms-ease-out),
-    border-color var(--ms-duration-fast) var(--ms-ease-out),
-    color var(--ms-duration-fast) var(--ms-ease-out),
-    transform var(--ms-duration-instant) var(--ms-ease-out);
+    background-color var(--ms-duration-fast) var(--ux-ease),
+    border-color var(--ms-duration-fast) var(--ux-ease),
+    color var(--ms-duration-fast) var(--ux-ease),
+    filter var(--ms-duration-fast) var(--ux-ease),
+    transform var(--ms-duration-normal) var(--ux-spring),
+    box-shadow var(--ms-duration-fast) var(--ux-ease);
+}
+.ms-btn:hover:not(:disabled) {
+  transform: translateY(-1.5px);
 }
 .ms-btn:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 .ms-btn:disabled {
-  opacity: 0.48;
+  opacity: 0.46;
 }
 .ms-btn-sm {
-  height: 30px;
-  padding: 0 var(--ms-space-3);
-  font-size: 12px;
-  border-radius: var(--ms-radius-sm);
+  height: 32px;
+  padding: 0 14px;
+  font-size: 12.5px;
 }
 .ms-btn-lg {
-  height: 42px;
-  padding: 0 var(--ms-space-5);
-  font-size: 14px;
+  height: 46px;
+  padding: 0 26px;
+  font-size: 14.5px;
 }
 .ms-btn-primary {
-  background-color: var(--ms-accent);
-  color: var(--ms-accent-fg);
+  background-color: var(--ms-action-bg);
+  color: var(--ms-action-fg);
+  box-shadow: 0 10px 24px -14px var(--ux-shadow-strong);
 }
 .ms-btn-primary:hover:not(:disabled) {
-  background-color: var(--ms-accent-hover);
+  filter: brightness(0.95);
+}
+.ms-btn-lime {
+  background-color: var(--ms-lime);
+  color: var(--ms-lime-ink);
+  box-shadow: 0 10px 24px -14px var(--ux-shadow-strong);
+}
+.ms-btn-lime:hover:not(:disabled) {
+  filter: brightness(0.95);
 }
 .ms-btn-secondary {
   background-color: var(--ms-surface-elevated);
   color: var(--ms-text-primary);
-  border-color: var(--ms-border);
+  border-color: var(--ms-border-control);
 }
 .ms-btn-secondary:hover:not(:disabled) {
-  background-color: var(--ms-surface-hover);
+  background-color: var(--ms-bg);
+  border-color: var(--ms-accent);
 }
 .ms-btn-ghost {
   background-color: transparent;
@@ -59,260 +75,1004 @@
 .ms-btn-ghost:hover:not(:disabled) {
   background-color: var(--ms-surface-hover);
   color: var(--ms-text-primary);
+  transform: none;
 }
 .ms-btn-danger {
   background-color: var(--ms-danger-subtle);
   color: var(--ms-danger);
-  border-color: var(--ms-danger);
+  border-color: color-mix(in srgb, var(--ms-danger) 45%, transparent);
 }
 .ms-btn-danger:hover:not(:disabled) {
   background-color: var(--ms-danger);
   color: var(--ms-bg);
 }
 
-/* ── Command K Keycap Pill (#471) ── */
-.lx-cmdk {
+/* ── 1ms-studio.com Brand Mark (`1ms` + lime dot) ── */
+.ms-brand-lockup {
   display: inline-flex;
   align-items: center;
-  gap: var(--ms-space-2);
-  height: 28px;
-  padding: 0 10px;
-  border-radius: var(--ms-radius-sm);
-  background: var(--ux-surface-2);
-  border: 1px solid var(--ux-line-2);
-  color: var(--ux-ink-2);
-  font-size: 12px;
-  transition:
-    border-color var(--ms-duration-fast) var(--ux-ease),
-    color var(--ms-duration-fast) var(--ux-ease),
-    transform var(--ms-duration-instant) var(--ux-spring);
+  gap: 10px;
 }
-.lx-cmdk:hover {
+.ms-brand-word {
+  position: relative;
+  display: inline-block;
+  font-family: var(--ms-font-display);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.085em;
+  line-height: 1;
+  color: var(--ms-text-primary);
+}
+.ms-brand-word::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -7px;
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: var(--ms-lime);
+}
+.ms-brand-sub {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--ms-text-secondary);
+}
+
+/* ── Lucian #417 — Genuine Collapsible Sidebar with Springing Pill & Edge Toggle ── */
+.u417 {
+  position: relative;
+  height: 100%;
+  flex-shrink: 0;
   color: var(--ux-ink);
-  border-color: var(--ux-accent);
+  z-index: 25;
 }
-.lx-cmdk:active {
-  transform: scale(0.96);
+.u417-sb {
+  position: relative;
+  width: var(--u417-w, 236px);
+  height: 100%;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  background: var(--ux-surface);
+  box-shadow:
+    0 0 0 1px var(--ux-line),
+    0 1px 2px var(--ux-shadow),
+    0 20px 40px -24px var(--ux-shadow-strong);
+  transition: width 0.6s cubic-bezier(0.3, 1.3, 0.45, 1);
+}
+.u417.is-rail .u417-sb {
+  width: 64px;
+}
+.u417-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding-left: 6px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.u417-mk {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--ms-bg);
+  box-shadow: inset 0 0 0 1px var(--ux-line);
+}
+.u417-lb {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    opacity 0.3s var(--ux-ease) 0.1s,
+    transform 0.45s var(--ux-ease) 0.08s;
+}
+.u417.is-rail .u417-lb {
+  opacity: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+  transition:
+    opacity 0.15s,
+    transform 0.25s;
+}
+.u417-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+.u417-scroll::-webkit-scrollbar {
+  display: none;
+}
+.u417-nav {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.u417-pl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--ph, 38px);
+  border-radius: 12px;
+  background: var(--ux-surface-2);
+  box-shadow:
+    inset 0 0 0 1px var(--ux-line),
+    0 6px 14px -10px var(--ux-shadow-strong);
+  transform: translateY(var(--py, 0px));
+  transition:
+    transform 0.55s cubic-bezier(0.3, 1.45, 0.5, 1),
+    height 0.35s var(--ux-ease);
+  pointer-events: none;
+}
+.u417-it {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  height: 38px;
+  padding: 0 10px 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--ux-ink-3);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  transition: color 0.2s var(--ux-ease);
+}
+.u417.is-rail .u417-it {
+  padding: 0 0 0 13px;
+}
+.u417-it:hover {
+  color: var(--ux-ink);
+}
+.u417-it[aria-current='page'] {
+  color: var(--ux-ink);
+}
+.u417-it svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  transition:
+    transform 0.45s var(--ux-spring),
+    color 0.2s var(--ux-ease);
+}
+.u417-it[aria-current='page'] svg {
+  color: var(--ux-accent);
+}
+.u417-it:active svg {
+  transform: scale(0.85);
+}
+.u417-it .u417-lb {
+  flex: 1;
+}
+.u417-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ms-lime);
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.25s var(--ux-ease),
+    transform 0.45s var(--ux-spring);
+}
+:root[data-theme='light'] .u417-dot {
+  background: var(--ms-accent);
+}
+.u417-it[aria-current='page'] .u417-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+.u417.is-rail .u417-dot {
+  display: none;
+}
+.u417-bd {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 99px;
+  background: var(--ms-lime);
+  color: var(--ms-lime-ink);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--ux-surface);
+  animation: u417-pop 0.5s cubic-bezier(0.3, 1.8, 0.5, 1);
+}
+.u417.is-rail .u417-bd {
+  right: auto;
+  left: 25px;
+  top: 5px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  font-size: 9px;
+  line-height: 15px;
+}
+@keyframes u417-pop {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.u417-it:focus-visible {
+  outline: 2px solid var(--ux-accent);
+  outline-offset: -2px;
+}
+.u417-tg {
+  position: absolute;
+  right: -12px;
+  top: 20px;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ux-surface-2);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 4px 10px -3px var(--ux-shadow-strong);
+  color: var(--ux-ink-2);
+  transition:
+    transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1),
+    color 0.2s,
+    background-color 0.2s;
+}
+.u417-tg:hover {
+  color: var(--ux-ink);
+  background: var(--ux-surface);
+  transform: scale(1.12);
+}
+.u417-tg svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.55s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.u417.is-rail .u417-tg svg {
+  transform: rotate(180deg);
+}
+
+/* ── Lucian #037 — Genuine Account Switcher Chip & Upward Spring Menu ── */
+.u037-wrap {
+  position: relative;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ux-line);
+  flex-shrink: 0;
+}
+.u037-menu {
+  position: absolute;
+  left: 0;
+  width: 240px;
+  bottom: calc(100% + 8px);
+  z-index: 60;
+  padding: 8px;
+  border-radius: 20px;
+  background: var(--ms-surface-elevated);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 28px 56px -22px var(--ux-shadow-strong);
+  transform-origin: 24px 100%;
+  opacity: 0;
+  transform: translateY(10px) scale(0.92);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s var(--ux-ease),
+    transform 0.45s var(--ux-spring),
+    visibility 0s 0.45s;
+}
+.u037-wrap.is-open .u037-menu {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.2s var(--ux-ease),
+    transform 0.5s var(--ux-spring);
+}
+.u037-sec {
+  margin: 4px 10px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ux-ink-3);
+}
+.u037-list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.u037-hl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--h, 42px);
+  border-radius: 12px;
+  background: var(--ux-surface-2);
+  transform: translateY(var(--y, 0px));
+  opacity: 0;
+  transition:
+    transform 0.3s var(--ux-spring),
+    height 0.3s var(--ux-spring),
+    opacity 0.2s;
+  pointer-events: none;
+}
+.u037-list.is-hl .u037-hl {
+  opacity: 1;
+}
+.u037-it {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 42px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--ux-ink);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s var(--ux-ease),
+    transform 0.45s var(--ux-spring);
+}
+.u037-wrap.is-open .u037-it {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 32ms);
+}
+.u037-sep {
+  height: 1px;
+  margin: 6px 8px;
+  background: var(--ux-line);
+}
+.u037-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--ux-surface-2);
+  color: var(--ux-ink);
+  text-align: left;
+  box-shadow: inset 0 0 0 1px var(--ux-line);
+  transition:
+    transform 0.4s var(--ux-spring),
+    box-shadow 0.25s var(--ux-ease);
+}
+.u037-chip:hover {
+  box-shadow: inset 0 0 0 1px var(--ux-line-2);
+}
+.u037-chip:active {
+  transform: scale(0.98);
+}
+.u037-ws {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--ms-lime);
+  color: var(--ms-lime-ink);
+}
+.u417.is-rail .u037-chip {
+  padding: 0;
+  justify-content: center;
+}
+.u037-car {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+  color: var(--ux-ink-3);
+  transition: transform 0.45s var(--ux-spring);
+}
+.u037-wrap.is-open .u037-car {
+  transform: rotate(180deg);
+}
+
+/* ── Lucian #471 — Genuine 3D Keycap Command K Button ── */
+.u471-b {
+  --u471-k: 1;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 236px;
+  height: 34px;
+  padding: 0 7px 0 13px;
+  border: 0;
+  border-radius: var(--ms-radius-pill);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--ms-surface-elevated);
+  color: var(--ux-ink-2);
+  text-align: left;
+  box-shadow:
+    0 0 0 1px var(--ux-line),
+    0 6px 16px -12px var(--ux-shadow-strong);
+  transform: scale(var(--u471-k));
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.7, 0.5, 1),
+    box-shadow 0.3s var(--ux-ease),
+    color 0.2s;
+}
+.u471-b:hover {
+  color: var(--ux-ink);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 10px 20px -12px var(--ux-shadow-strong);
+}
+.u471-b:active {
+  --u471-k: 0.975;
+}
+.u471-l {
+  flex: 1;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.u471-ks {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: flex;
+  gap: 3px;
+}
+.u471-k {
+  position: relative;
+  display: block;
+  min-width: 22px;
+  height: 22px;
+  font-family: var(--ms-font-brand);
+}
+.u471-k.is-wide {
+  min-width: 31px;
+}
+.u471-k::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2px;
+  bottom: 0;
+  border-radius: 7px;
+  background: var(--ms-bg);
+  box-shadow: 0 0 0 1px var(--ux-line);
+}
+.u471-t {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 7px;
+  background: var(--ux-surface);
+  box-shadow: inset 0 0 0 1px var(--ux-line);
+  color: var(--ux-ink-2);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(0);
+  transition: transform 0.35s cubic-bezier(0.3, 1.9, 0.5, 1);
+}
+.u471-b:active .u471-t {
+  transform: translateY(2px);
+  color: var(--ux-accent);
 }
 .lx-kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 19px;
-  padding: 0 5px;
-  border-radius: var(--ms-radius-xs);
-  background: var(--ux-page);
-  border: 1px solid var(--ux-line-2);
+  min-width: 22px;
+  height: 21px;
+  padding: 0 6px;
+  border-radius: 7px;
+  background: var(--ux-surface-2);
+  box-shadow: inset 0 -1px 0 var(--ux-line-2), inset 0 0 0 1px var(--ux-line);
   color: var(--ux-ink-2);
   font-family: var(--ms-font-mono);
   font-size: 10.5px;
   font-weight: 700;
 }
 
-/* ── Collapsible Navigation Rail (#417) ── */
-.lx-rail {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--ux-surface);
-  border-right: 1px solid var(--ux-line-2);
-  transition: width var(--ms-duration-slow) var(--ux-ease);
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.lx-rail-item {
+/* ── Lucian #267 — Genuine Header Globe Language Dropdown (1ms-studio.com style) ── */
+.u267-wrap {
   position: relative;
+}
+.u267-gb {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--ms-radius-pill);
+  background: var(--ms-surface-elevated);
+  box-shadow: inset 0 0 0 1px var(--ux-line);
+  color: var(--ux-ink-2);
+  font-size: 11.5px;
+  font-weight: 700;
+  transition:
+    color 0.2s,
+    box-shadow 0.2s;
+}
+.u267-gb:hover {
+  color: var(--ux-ink);
+  box-shadow: inset 0 0 0 1px var(--ux-line-2);
+}
+.u267-dd {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  z-index: 70;
+  width: 176px;
+  padding: 6px;
+  border-radius: 16px;
+  background: var(--ms-surface-elevated);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 18px 38px -14px var(--ux-shadow-strong);
+  transform-origin: 90% 0;
+  transform: scale(0.9) translateY(-4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1),
+    opacity 0.15s,
+    visibility 0s 0.25s;
+}
+.u267-wrap.is-open .u267-dd {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    transform 0.28s cubic-bezier(0.3, 1.5, 0.5, 1),
+    opacity 0.15s;
+}
+.u267-op {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 36px;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
   padding: 0 10px;
-  margin: 2px 8px;
-  border-radius: var(--ms-radius-md);
   border: 0;
-  background: transparent;
-  color: var(--ux-ink-2);
-  font-size: 13px;
+  border-radius: 10px;
+  background: none;
+  color: var(--ux-ink);
+  font-size: 12.5px;
+  font-weight: 600;
   text-align: left;
-  transition:
-    background-color var(--ms-duration-fast) var(--ux-ease),
-    color var(--ms-duration-fast) var(--ux-ease);
 }
-.lx-rail-item:hover {
-  background: var(--ux-surface-3);
-  color: var(--ux-ink);
+.u267-op:hover {
+  background: var(--ux-surface-2);
 }
-.lx-rail-item[aria-current='page'] {
-  background: var(--ux-accent-soft);
-  color: var(--ux-ink);
-  font-weight: 700;
-  box-shadow: inset 3px 0 0 var(--ux-accent);
-}
-.lx-rail-item[aria-current='page'] svg {
+.u267-op.is-on {
   color: var(--ms-accent-text);
+  background: var(--ux-accent-soft);
 }
 
-/* ── Command Palette (#046) ── */
+/* ── Lucian #416 & #047 — Genuine Jelly-Stretching Segmented Control & Tabs ── */
+.u416-tl {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 16px;
+  background: var(--ux-surface-2);
+  box-shadow: inset 0 0 0 1px var(--ux-line);
+}
+.u416-th {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: var(--l, 4px);
+  right: var(--r, 4px);
+  border-radius: 12px;
+  background: var(--ms-surface-elevated);
+  box-shadow:
+    0 0 0 1px var(--ux-line),
+    0 4px 12px -6px var(--ux-shadow-strong);
+  transition:
+    left var(--tl, 0.5s) cubic-bezier(0.3, 1.25, 0.45, 1),
+    right var(--tr, 0.5s) cubic-bezier(0.3, 1.25, 0.45, 1);
+  pointer-events: none;
+}
+.u416-tab {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ux-ink-3);
+  white-space: nowrap;
+  transition:
+    color 0.25s,
+    transform 0.25s var(--ux-spring);
+}
+.u416-tab:hover {
+  color: var(--ux-ink-2);
+}
+.u416-tab:active {
+  transform: scale(0.95);
+}
+.u416-tab[aria-selected='true'],
+.u416-tab[aria-checked='true'] {
+  color: var(--ux-ink);
+}
+
+/* ── Lucian #433 — Genuine Stretch-on-Press Switch ── */
+.u433-sw-btn {
+  position: relative;
+  flex: none;
+  width: 50px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ux-surface-3);
+  box-shadow: inset 0 0 0 1px var(--ux-line-2);
+  transition:
+    background-color 0.3s var(--ux-ease),
+    box-shadow 0.3s var(--ux-ease);
+}
+.u433-sw-btn::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.22),
+    0 3px 8px -2px rgba(0, 0, 0, 0.28);
+  transition:
+    transform 0.55s cubic-bezier(0.3, 1.5, 0.5, 1),
+    width 0.3s cubic-bezier(0.3, 1.5, 0.5, 1),
+    background-color 0.25s;
+}
+.u433-sw-btn[aria-checked='true'] {
+  background: var(--ms-lime);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ms-lime-ink) 18%, transparent);
+}
+.u433-sw-btn[aria-checked='true']::after {
+  transform: translateX(22px);
+  background: var(--ms-lime-ink);
+}
+.u433-sw-btn.is-press::after {
+  width: 28px;
+}
+.u433-sw-btn.is-press[aria-checked='true']::after {
+  transform: translateX(16px);
+}
+
+/* ── Lucian #046 — Genuine Command Palette with Gliding Highlight Bar ── */
 .lx-palette-backdrop {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(0, 0, 0, 0.56);
+  background: rgba(15, 20, 14, 0.62);
   display: flex;
   align-items: flex-start;
   justify-content: center;
   padding-top: 76px;
   animation: lx-fade-in var(--ms-duration-fast) var(--ux-ease);
 }
-.lx-palette-card {
+.u046-pal {
   width: min(560px, calc(100vw - 32px));
   max-height: min(460px, calc(100vh - 120px));
   display: flex;
   flex-direction: column;
-  border-radius: var(--ms-radius-xl);
-  background: var(--ux-surface-2);
-  border: 1px solid var(--ux-line-2);
-  box-shadow: 0 24px 56px -16px var(--ux-shadow-strong);
+  border-radius: 24px;
+  background: var(--ms-surface-elevated);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 34px 60px -28px var(--ux-shadow-strong);
   overflow: hidden;
-  animation: lx-scale-in var(--ms-duration-normal) var(--ux-ease);
+  animation: lx-scale-in var(--ms-duration-normal) var(--ux-spring);
 }
-.lx-palette-option {
+.u046-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 54px;
+  padding: 0 16px 0 18px;
+  border-bottom: 1px solid var(--ux-line);
+}
+.u046-field:focus-within {
+  box-shadow: inset 0 -2px 0 var(--ux-accent);
+}
+.u046-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+}
+.u046-hl {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 0;
+  height: var(--oh, 44px);
+  border-radius: 14px;
+  background: var(--ux-accent-soft);
+  transform: translateY(var(--y, 8px));
+  transition:
+    transform 0.38s var(--ux-spring),
+    height 0.25s var(--ux-ease),
+    opacity 0.2s;
+  pointer-events: none;
+}
+.u046-op {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  min-height: 40px;
-  padding: 6px 12px;
+  height: 44px;
+  padding: 0 10px;
   border: 0;
-  border-radius: var(--ms-radius-md);
+  border-radius: 14px;
   background: transparent;
   color: var(--ux-ink-2);
   text-align: left;
   font-size: 13.5px;
-  transition:
-    background-color var(--ms-duration-instant) var(--ux-ease),
-    color var(--ms-duration-instant) var(--ux-ease);
+  font-weight: 600;
+  transition: color 0.15s;
 }
-.lx-palette-option[aria-selected='true'] {
-  background: var(--ux-accent-soft);
+.u046-op[aria-selected='true'] {
   color: var(--ux-ink);
-  box-shadow: inset 3px 0 0 var(--ux-accent);
 }
-.lx-palette-option mark {
-  background: transparent;
+.u046-op mark {
+  background: none;
   color: var(--ms-accent-text);
-  font-weight: 700;
+  font-weight: 800;
 }
-
-/* ── Tactile Switch & Checkbox (#433) ── */
-.lx-switch {
-  position: relative;
-  width: 40px;
-  height: 22px;
-  border-radius: 999px;
-  border: 1px solid var(--ux-line-2);
-  background: var(--ux-surface-3);
-  padding: 0;
-  flex-shrink: 0;
-  transition:
-    background-color var(--ms-duration-normal) var(--ux-ease),
-    border-color var(--ms-duration-normal) var(--ux-ease);
-}
-.lx-switch[aria-checked='true'] {
-  background: var(--ms-accent);
-  border-color: var(--ms-accent);
-}
-.lx-switch-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--ux-ink);
-  transition: transform var(--ms-duration-normal) var(--ux-spring);
-}
-.lx-switch[aria-checked='true'] .lx-switch-thumb {
-  transform: translateX(18px);
-  background: var(--ms-accent-fg);
-}
-
-/* ── Segmented Tabs (#416) ── */
-.lx-tabs {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: var(--ms-radius-lg);
-  background: var(--ux-surface);
-  border: 1px solid var(--ux-line-2);
-}
-.lx-tab {
+.u046-ic {
+  width: 30px;
   height: 30px;
-  padding: 0 12px;
-  border-radius: var(--ms-radius-sm);
-  border: 0;
-  background: transparent;
+  flex: none;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--ux-surface);
+  box-shadow: inset 0 0 0 1px var(--ux-line);
   color: var(--ux-ink-2);
-  font-size: 12.5px;
-  font-weight: 700;
-  transition:
-    background-color var(--ms-duration-normal) var(--ux-ease),
-    color var(--ms-duration-normal) var(--ux-ease);
 }
-.lx-tab[aria-selected='true'] {
-  background: var(--ux-surface-2);
-  color: var(--ux-ink);
-  box-shadow: 0 1px 3px var(--ux-shadow), inset 0 -2px 0 var(--ux-accent);
+.u046-op[aria-selected='true'] .u046-ic {
+  color: var(--ms-accent-text);
 }
 
-/* ── Dynamic Island Floating Agent Pill (#459) ── */
+/* ── Lucian #044 — Genuine Editorial Numbered Accordion (1ms-studio.com FAQ style) ── */
+.u044-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.u044-it {
+  border-radius: 20px;
+  background: var(--ms-surface);
+  box-shadow: 0 0 0 1px var(--ux-line);
+  transition:
+    box-shadow 0.3s var(--ux-ease),
+    transform 0.35s var(--ux-spring);
+}
+.u044-it.open {
+  background: var(--ms-surface-elevated);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 20px 38px -24px var(--ux-shadow-strong);
+  transform: translateY(-1px);
+}
+.u044-q {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 18px;
+  border: 0;
+  background: none;
+  color: var(--ux-ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+}
+.u044-n {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ms-accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.u044-pm {
+  position: relative;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ux-surface-2);
+  transition:
+    background-color 0.35s var(--ux-ease),
+    transform 0.45s var(--ux-spring);
+}
+.u044-q:hover .u044-pm {
+  transform: scale(1.08);
+}
+.u044-pm::before,
+.u044-pm::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 2px;
+  margin: -1px 0 0 -5.5px;
+  border-radius: 2px;
+  background: var(--ux-ink);
+  transition:
+    transform 0.5s var(--ux-spring),
+    background-color 0.3s;
+}
+.u044-pm::after {
+  transform: rotate(90deg);
+}
+.u044-it.open .u044-pm {
+  background: var(--ms-lime);
+}
+.u044-it.open .u044-pm::before,
+.u044-it.open .u044-pm::after {
+  background: var(--ms-lime-ink);
+}
+.u044-it.open .u044-pm::after {
+  transform: rotate(180deg);
+}
+.u044-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ux-ease);
+}
+.u044-it.open .u044-body {
+  grid-template-rows: 1fr;
+}
+.u044-body > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.u044-a {
+  padding: 0 20px 18px 44px;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--ux-ink-2);
+}
+
+/* ── Lucian #459 — Genuine Dynamic Island Floating Agent Pill ── */
 .lx-island {
   position: fixed;
-  top: 46px;
+  top: 52px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 80;
-  background: #0b0d10;
-  color: #f5f7fa;
-  border: 1px solid #282d36;
-  border-radius: 20px;
-  box-shadow: 0 14px 32px -10px rgba(0, 0, 0, 0.75);
+  background: #10140f;
+  color: #f4f9ed;
+  border: 1px solid rgba(199, 243, 75, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.78);
   transition:
-    width var(--ms-duration-slow) var(--ux-spring),
-    border-radius var(--ms-duration-slow) var(--ux-ease);
+    width 0.55s var(--ux-spring),
+    border-radius 0.55s var(--ux-ease);
 }
 
-/* ── Stacking Toasts (#070 / #435 / #470) ── */
-.lx-toast-stack {
+/* ── Lucian #070 — Genuine Fanning Stack Toasts ── */
+.u070-stack {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
+  right: 18px;
+  bottom: 18px;
   z-index: 95;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 8px;
-  width: min(360px, calc(100vw - 32px));
+  width: min(364px, calc(100vw - 36px));
   pointer-events: none;
 }
-.lx-toast {
+.u070-t {
   pointer-events: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
   padding: 12px 14px;
-  border-radius: var(--ms-radius-lg);
-  background: var(--ux-surface-2);
-  border: 1px solid var(--ux-line-2);
-  box-shadow: 0 14px 30px -12px var(--ux-shadow-strong);
+  border-radius: 20px;
+  background: var(--ms-surface-elevated);
+  box-shadow:
+    0 0 0 1px var(--ux-line-2),
+    0 18px 34px -18px var(--ux-shadow-strong);
+  transform-origin: 50% 100%;
+  transform: translateY(var(--y, 0px)) scale(var(--s, 1));
+  opacity: var(--o, 1);
+  transition:
+    transform 0.5s var(--ux-spring),
+    opacity 0.35s var(--ux-ease);
   animation: lx-slide-up var(--ms-duration-moderate) var(--ux-spring);
 }
 
-/* ── Storage Meter (#472) ── */
+/* ── Storage Meter (#472), Agent Orb (#458) & Inputs (#434 — 1ms-studio.com 14px radius) ── */
 .lx-meter-bar {
   display: flex;
-  height: 10px;
+  height: 11px;
   width: 100%;
   border-radius: 999px;
   overflow: hidden;
@@ -324,77 +1084,98 @@
   transition: width var(--ms-duration-slow) var(--ux-ease);
 }
 
-/* ── Shimmer Skeleton (#439) & Agent Orb (#458) ── */
-.lx-skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--ux-surface-2) 25%,
-    var(--ux-surface-3) 50%,
-    var(--ux-surface-2) 75%
-  );
-  background-size: 200% 100%;
-  animation: lx-shimmer 1.4s ease-in-out infinite;
-  border-radius: var(--ms-radius-sm);
-}
-
 .lx-orb {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, var(--ms-accent), var(--ms-success));
-  box-shadow: 0 0 16px var(--ms-accent-subtle);
+  background: radial-gradient(circle at 35% 35%, #dff6b1, #c7f34b 60%, #416315);
+  box-shadow: 0 0 18px rgba(199, 243, 75, 0.25);
   animation: lx-breathe 2.4s ease-in-out infinite;
 }
 .lx-orb[data-active='true'] {
   animation-duration: 0.95s;
 }
 
-/* ── Input Shake (#434) ── */
 .lx-input {
   width: 100%;
-  height: var(--ms-row-height);
-  padding: 0 12px;
-  border-radius: var(--ms-radius-md);
-  border: 1px solid var(--ms-border);
-  background: var(--ms-bg);
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid var(--ms-border-control);
+  background: var(--ms-surface-elevated);
   color: var(--ms-text-primary);
   font-size: 13.5px;
-  transition: border-color var(--ms-duration-fast) var(--ms-ease-out);
+  transition:
+    border-color var(--ms-duration-fast) var(--ux-ease),
+    box-shadow var(--ms-duration-fast) var(--ux-ease);
 }
 .lx-input-search {
-  padding-left: 34px;
+  padding-left: 36px;
 }
 .lx-input:focus {
   outline: none;
   border-color: var(--ms-accent);
+  box-shadow: 0 0 0 3px var(--ms-accent-subtle);
 }
 .lx-input[aria-invalid='true'] {
   border-color: var(--ms-danger);
   animation: lx-shake 260ms ease-in-out;
 }
+.ms-bare-input:focus,
+.ms-bare-input:focus-visible,
+.ux .ms-bare-input:focus,
+.ux .ms-bare-input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 @keyframes lx-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes lx-scale-in {
-  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 @keyframes lx-slide-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
-}
-@keyframes lx-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes lx-breathe {
-  0%, 100% { transform: scale(0.94); opacity: 0.85; }
-  50% { transform: scale(1.06); opacity: 1; }
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.88;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
 }
 @keyframes lx-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }

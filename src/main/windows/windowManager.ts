@@ -48,8 +48,8 @@ export class WindowManager {
     const pref = this.settingsStore.get().appearance.theme;
     const isDark = pref === 'dark' || (pref === 'system' && nativeTheme.shouldUseDarkColors);
     return isDark
-      ? { color: '#0B0D10', symbolColor: '#F5F7FA', resolved: 'dark' }
-      : { color: '#F5F6F8', symbolColor: '#15171C', resolved: 'light' };
+      ? { color: '#151A14', symbolColor: '#F4F9ED', resolved: 'dark' }
+      : { color: '#F5FBE9', symbolColor: '#151A14', resolved: 'light' };
   }
 
   private loadRendererEntry(win: BrowserWindow, query = ''): void {
@@ -84,7 +84,7 @@ export class WindowManager {
       titleBarOverlay: {
         color: themeColors.color,
         symbolColor: themeColors.symbolColor,
-        height: 38,
+        height: 44,
       },
       autoHideMenuBar: true,
       show: false,
@@ -199,7 +199,7 @@ export class WindowManager {
       this.mainWindow.setTitleBarOverlay({
         color: colors.color,
         symbolColor: colors.symbolColor,
-        height: 38,
+        height: 44,
       });
       this.mainWindow.setBackgroundColor(colors.color);
     } catch {

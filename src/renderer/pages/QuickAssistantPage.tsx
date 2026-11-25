@@ -1,7 +1,8 @@
-/* Lucian UX/UI Prompt #451, #452, #456, #457, #458 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
+/* Lucian UX/UI Prompt #451, #452, #456, #458 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowUp,
+  ArrowUpRight,
   ClipboardPaste,
   FolderOpen,
   Mic,
@@ -61,9 +62,17 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
   };
 
   const handleVoiceToggle = () => {
-    const SpeechRec =
-      (window as unknown as { webkitSpeechRecognition?: new () => { lang: string; start: () => void; stop: () => void; onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void; onend: () => void } })
-        .webkitSpeechRecognition;
+    const SpeechRec = (
+      window as unknown as {
+        webkitSpeechRecognition?: new () => {
+          lang: string;
+          start: () => void;
+          stop: () => void;
+          onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void;
+          onend: () => void;
+        };
+      }
+    ).webkitSpeechRecognition;
     if (!SpeechRec) {
       pushToast({
         title: 'Voice Mode',
@@ -137,22 +146,30 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
     <div
       className={`ux flex flex-col ${
         standalone
-          ? 'h-screen w-screen p-4 bg-[var(--ms-surface)] border border-[var(--ms-border)] rounded-xl'
-          : 'max-w-3xl mx-auto py-8 px-6'
+          ? 'h-screen w-screen p-5 bg-[var(--ms-surface)] border border-[var(--ms-border)] rounded-[24px]'
+          : 'max-w-4xl mx-auto py-8 px-7 overflow-y-auto h-full'
       }`}
     >
       {/* Header */}
-      <div className={`flex items-center justify-between gap-3 mb-3 ${standalone ? 'ms-drag-region' : ''}`}>
-        <div className="flex items-center gap-2.5">
-          <div className="lx-orb" data-active={String(submitting || voiceActive)} aria-hidden="true" />
+      <div
+        className={`flex items-center justify-between gap-3 mb-4 ${standalone ? 'ms-drag-region' : ''}`}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="lx-orb"
+            data-active={String(submitting || voiceActive)}
+            aria-hidden="true"
+          />
           <div>
-            <div className="text-[14px] font-bold flex items-center gap-2">
+            <div className="text-[18px] font-semibold flex items-center gap-2.5 flex-wrap">
               <span>{t.quickAssistant.title}</span>
               <StatusBadge tone={targetMode === 'mode-a' ? 'accent' : 'info'}>
                 {targetMode === 'mode-a' ? 'Mode A · Official Muse' : 'Mode C · Local Agent'}
               </StatusBadge>
             </div>
-            <div className="text-[11.5px] text-[var(--ms-text-muted)]">{t.quickAssistant.escHint}</div>
+            <div className="text-[12px] text-[var(--ms-text-muted)] mt-0.5">
+              {t.quickAssistant.escHint}
+            </div>
           </div>
         </div>
 
@@ -164,18 +181,20 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
                 m === 'mode-a' && settings.integrations.modeCEnabled ? 'mode-c' : 'mode-a',
               )
             }
-            className="lx-cmdk"
+            className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-[var(--ms-surface-elevated)] border border-[var(--ms-border)] text-[12px] font-semibold hover:border-[var(--ms-border-control)] transition-colors"
             title="Switch provider target"
           >
             <Sparkles size={13} className="text-[var(--ms-accent-text)]" />
-            <span>{targetMode === 'mode-a' ? 'Muse (muse.ai)' : settings.integrations.modeCModel}</span>
+            <span>
+              {targetMode === 'mode-a' ? 'Muse (muse.ai)' : settings.integrations.modeCModel}
+            </span>
           </button>
           {standalone && (
             <button
               type="button"
               aria-label={t.common.close}
               onClick={() => window.museApi?.hideQuickAssistant()}
-              className="w-7 h-7 rounded-md flex items-center justify-center bg-transparent border-0 text-[var(--ms-text-muted)] hover:bg-[var(--ms-surface-hover)]"
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-transparent border-0 text-[var(--ms-text-muted)] hover:bg-[var(--ms-surface-hover)]"
             >
               <X size={15} />
             </button>
@@ -183,8 +202,8 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
         </div>
       </div>
 
-      {/* Lucian #452 Prompt Box + #451 Mention + #456 Ghost Suggestion */}
-      <div className="relative rounded-xl bg-[var(--ms-bg)] border border-[var(--ms-border)] focus-within:border-[var(--ms-accent)] p-3.5 transition-colors">
+      {/* 1ms-studio.com Rounded Composer Card (#452 + #451 + #456) */}
+      <div className="relative p-5 ms-card-raised focus-within:border-[var(--ms-accent)] transition-colors">
         <div className="relative">
           <textarea
             ref={textareaRef}
@@ -197,7 +216,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
             }}
             onKeyDown={handleKeyDown}
             placeholder={t.quickAssistant.placeholder}
-            className="w-full resize-none bg-transparent border-0 outline-none text-[14px] text-[var(--ms-text-primary)] leading-relaxed"
+            className="ms-bare-input w-full resize-none bg-transparent border-0 outline-none text-[15px] text-[var(--ms-text-primary)] leading-relaxed"
           />
           {ghostCompletion && (
             <div className="text-[12px] text-[var(--ms-text-muted)] mt-1 flex items-center gap-1.5">
@@ -209,7 +228,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
 
         {/* Mention Picker (#451) */}
         {mentionMenuOpen && (
-          <div className="mt-2 p-1.5 rounded-lg bg-[var(--ms-surface-elevated)] border border-[var(--ms-border)] flex items-center gap-2">
+          <div className="mt-2 p-2 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => {
@@ -217,7 +236,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
                 setMentionMenuOpen(false);
                 textareaRef.current?.focus();
               }}
-              className="px-2.5 py-1 rounded bg-[var(--ms-accent-subtle)] text-[var(--ms-accent-text)] text-[12px] font-bold border-0"
+              className="px-3 py-1 rounded-full bg-[var(--ms-accent-subtle)] text-[var(--ms-accent-text)] text-[12px] font-semibold border-0"
             >
               @workspace (Local Sandbox Context)
             </button>
@@ -228,7 +247,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
                 setMentionMenuOpen(false);
                 textareaRef.current?.focus();
               }}
-              className="px-2.5 py-1 rounded bg-[var(--ms-surface-hover)] text-[var(--ms-text-primary)] text-[12px] border-0"
+              className="px-3 py-1 rounded-full bg-[var(--ms-surface-hover)] text-[var(--ms-text-primary)] text-[12px] font-medium border-0"
             >
               @shared (Staged Files)
             </button>
@@ -236,11 +255,11 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
         )}
 
         {attachments.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
+          <div className="flex flex-wrap gap-1.5 mt-2.5">
             {attachments.map((file) => (
               <span
                 key={file}
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[var(--ms-surface-elevated)] border border-[var(--ms-border)] text-[11.5px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px]"
               >
                 <Paperclip size={11} />
                 <span>{file}</span>
@@ -249,7 +268,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-2 pt-2.5 mt-2 border-t border-[var(--ms-border-subtle)]">
+        <div className="flex items-center justify-between gap-2 pt-3 mt-3 border-t border-[var(--ms-border)]">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Button
               size="sm"
@@ -269,7 +288,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
             </Button>
             <Button
               size="sm"
-              variant={voiceActive ? 'primary' : 'ghost'}
+              variant={voiceActive ? 'lime' : 'ghost'}
               onClick={handleVoiceToggle}
               icon={<Mic size={14} />}
             >
@@ -285,58 +304,71 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
             onClick={handleSubmit}
             icon={<ArrowUp size={14} />}
           >
-            {targetMode === 'mode-a' ? t.quickAssistant.submitToMuse : t.quickAssistant.runLocalAgent}
+            {targetMode === 'mode-a'
+              ? t.quickAssistant.submitToMuse
+              : t.quickAssistant.runLocalAgent}
           </Button>
         </div>
       </div>
 
-      {/* Quick Local Actions */}
+      {/* 1ms-studio.com Editorial Tinted Quick Cards */}
       {!standalone && (
         <div className="mt-6">
-          <h3 className="text-[12px] uppercase tracking-wider text-[var(--ms-text-muted)] mb-2.5">
+          <div className="text-[12px] font-semibold text-[var(--ms-text-muted)] mb-3">
             {t.quickAssistant.recentActions}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
             <button
               type="button"
               onClick={() => setActiveScreen('muse')}
-              className="p-3.5 rounded-lg bg-[var(--ms-surface)] border border-[var(--ms-border)] hover:bg-[var(--ms-surface-hover)] text-left flex items-center gap-3"
+              className="p-4 ms-card-raised hover:border-[var(--ms-accent)] text-left flex items-center justify-between gap-3 transition-colors"
             >
-              <BrandLogo size={22} />
-              <div>
-                <div className="text-[13px] font-bold">{t.nav.muse}</div>
-                <div className="text-[11.5px] text-[var(--ms-text-muted)]">https://muse.ai</div>
+              <div className="flex items-center gap-3 min-w-0">
+                <BrandLogo size={26} />
+                <div className="min-w-0">
+                  <div className="text-[13.5px] font-semibold truncate">{t.nav.muse}</div>
+                  <div className="text-[11.5px] text-[var(--ms-text-muted)]">https://muse.ai</div>
+                </div>
               </div>
+              <ArrowUpRight size={15} className="text-[var(--ms-text-muted)] shrink-0" />
             </button>
+
             <button
               type="button"
               onClick={() => setActiveScreen('workspace')}
-              className="p-3.5 rounded-lg bg-[var(--ms-surface)] border border-[var(--ms-border)] hover:bg-[var(--ms-surface-hover)] text-left flex items-center gap-3"
+              className="p-4 ms-card-peach hover:border-[var(--ms-accent)] text-left flex items-center justify-between gap-3 transition-colors"
             >
-              <FolderOpen size={20} className="text-[var(--ms-accent-text)] shrink-0" />
-              <div>
-                <div className="text-[13px] font-bold">{t.nav.workspace}</div>
-                <div className="text-[11.5px] text-[var(--ms-text-muted)]">10 GB Sandboxed</div>
+              <div className="flex items-center gap-3 min-w-0">
+                <FolderOpen size={22} className="text-[var(--ms-accent-text)] shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-[13.5px] font-semibold truncate">{t.nav.workspace}</div>
+                  <div className="text-[11.5px] text-[var(--ms-text-muted)]">10 GB Sandboxed</div>
+                </div>
               </div>
+              <ArrowUpRight size={15} className="text-[var(--ms-text-muted)] shrink-0" />
             </button>
+
             <button
               type="button"
               onClick={() => setActiveScreen('permissions')}
-              className="p-3.5 rounded-lg bg-[var(--ms-surface)] border border-[var(--ms-border)] hover:bg-[var(--ms-surface-hover)] text-left flex items-center gap-3"
+              className="p-4 ms-card-lavender hover:border-[var(--ms-accent)] text-left flex items-center justify-between gap-3 transition-colors"
             >
-              <ShieldCheck size={20} className="text-[var(--ms-success)] shrink-0" />
-              <div>
-                <div className="text-[13px] font-bold">{t.nav.permissions}</div>
-                <div className="text-[11.5px] text-[var(--ms-text-muted)]">Default-Deny Gate</div>
+              <div className="flex items-center gap-3 min-w-0">
+                <ShieldCheck size={22} className="text-[var(--ms-success)] shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-[13.5px] font-semibold truncate">{t.nav.permissions}</div>
+                  <div className="text-[11.5px] text-[var(--ms-text-muted)]">Default-Deny Gate</div>
+                </div>
               </div>
+              <ArrowUpRight size={15} className="text-[var(--ms-text-muted)] shrink-0" />
             </button>
           </div>
         </div>
       )}
 
       {lastResult && (
-        <div className="mt-4 p-4 rounded-lg bg-[var(--ms-surface)] border border-[var(--ms-border)] text-[13px] whitespace-pre-wrap overflow-y-auto max-h-56">
-          <div className="flex items-center gap-1.5 text-[11.5px] font-bold text-[var(--ms-accent-text)] mb-1">
+        <div className="mt-4 p-4 ms-card-raised text-[13px] whitespace-pre-wrap overflow-y-auto max-h-56">
+          <div className="flex items-center gap-1.5 text-[11.5px] font-semibold text-[var(--ms-accent-text)] mb-1">
             <Terminal size={13} />
             <span>Execution Output</span>
           </div>

@@ -1,4 +1,4 @@
-/* Lucian UX/UI Prompt #004, #032, #038, #092, #273, #415, #429, #440, #470, #472, #475 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
+/* Lucian UX/UI Prompt #415, #429, #472, #475 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
 import { useCallback, useEffect, useState } from 'react';
 import {
   Download,
@@ -110,10 +110,10 @@ export function LocalWorkspacePage() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Top Workspace Header */}
-      <div className="px-6 py-4 bg-[var(--ms-surface)] border-b border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap">
+      <div className="px-7 py-5 border-b border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-[20px] font-bold">{t.workspace.title}</h1>
-          <p className="text-[12.5px] text-[var(--ms-text-secondary)] mt-0.5">
+          <h1 className="text-[22px] font-semibold">{t.workspace.title}</h1>
+          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-0.5">
             {t.workspace.subtitle}
           </p>
         </div>
@@ -162,7 +162,7 @@ export function LocalWorkspacePage() {
             {t.workspace.approvedFoldersTitle}
           </Button>
 
-          {/* Lucian #475 Morphing Quick Create */}
+          {/* Quick Create Pill Menu */}
           <div className="relative">
             <Button
               size="sm"
@@ -173,14 +173,14 @@ export function LocalWorkspacePage() {
               New / Import
             </Button>
             {createMenuOpen && (
-              <div className="absolute right-0 top-9 z-30 w-48 p-1.5 rounded-lg bg-[var(--ms-surface-elevated)] border border-[var(--ms-border)] shadow-xl space-y-1">
+              <div className="absolute right-0 top-10 z-30 w-52 p-2 rounded-2xl bg-[var(--ms-surface-elevated)] border border-[var(--ms-border-control)] shadow-xl space-y-1">
                 <button
                   type="button"
                   onClick={() => {
                     setNewItemType('file');
                     setCreateMenuOpen(false);
                   }}
-                  className="w-full px-2.5 py-1.5 rounded text-left text-[12.5px] bg-transparent border-0 hover:bg-[var(--ms-surface-hover)] flex items-center gap-2"
+                  className="w-full px-3 py-2 rounded-xl text-left text-[12.5px] font-medium bg-transparent border-0 hover:bg-[var(--ms-surface-hover)] flex items-center gap-2"
                 >
                   <FilePlus2 size={14} />
                   <span>{t.workspace.newFile}</span>
@@ -191,7 +191,7 @@ export function LocalWorkspacePage() {
                     setNewItemType('folder');
                     setCreateMenuOpen(false);
                   }}
-                  className="w-full px-2.5 py-1.5 rounded text-left text-[12.5px] bg-transparent border-0 hover:bg-[var(--ms-surface-hover)] flex items-center gap-2"
+                  className="w-full px-3 py-2 rounded-xl text-left text-[12.5px] font-medium bg-transparent border-0 hover:bg-[var(--ms-surface-hover)] flex items-center gap-2"
                 >
                   <FolderPlus size={14} />
                   <span>{t.workspace.newFolder}</span>
@@ -203,7 +203,7 @@ export function LocalWorkspacePage() {
                     const n = await window.museApi?.importWorkspaceFiles(activeSubfolder);
                     if (n) await refreshWorkspace();
                   }}
-                  className="w-full px-2.5 py-1.5 rounded text-left text-[12.5px] bg-transparent border-0 hover:bg-[var(--ms-surface-hover)] flex items-center gap-2"
+                  className="w-full px-3 py-2 rounded-xl text-left text-[12.5px] font-medium bg-transparent border-0 hover:bg-[var(--ms-surface-hover)] flex items-center gap-2"
                 >
                   <Upload size={14} />
                   <span>{t.workspace.importFiles}</span>
@@ -215,7 +215,7 @@ export function LocalWorkspacePage() {
       </div>
 
       {/* Main Split Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-7 space-y-4">
         {usage && (
           <WorkspaceStorageMeter
             totalBytes={usage.totalBytes}
@@ -225,45 +225,48 @@ export function LocalWorkspacePage() {
           />
         )}
 
-        {/* Subfolder Breadcrumb Tabs (#415) & Search (#429) */}
+        {/* 1ms-studio.com Pill Subfolder Chips & Rounded Search */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <nav aria-label="Workspace folders" className="flex items-center gap-1.5 flex-wrap">
-            {WORKSPACE_SUBFOLDERS.map((sub) => (
-              <button
-                key={sub}
-                type="button"
-                onClick={() => {
-                  setActiveSubfolder(sub);
-                  setSearchQuery('');
-                }}
-                className={`px-3 h-8 rounded-md text-[12.5px] font-bold border ${
-                  activeSubfolder.startsWith(sub) && !searchQuery
-                    ? 'bg-[var(--ms-accent-subtle)] text-[var(--ms-accent-text)] border-[var(--ms-accent)]/40'
-                    : 'bg-[var(--ms-surface)] text-[var(--ms-text-secondary)] border-[var(--ms-border)] hover:bg-[var(--ms-surface-hover)]'
-                }`}
-              >
-                {sub}
-              </button>
-            ))}
+          <nav aria-label="Workspace folders" className="flex items-center gap-2 flex-wrap">
+            {WORKSPACE_SUBFOLDERS.map((sub) => {
+              const active = activeSubfolder.startsWith(sub) && !searchQuery;
+              return (
+                <button
+                  key={sub}
+                  type="button"
+                  onClick={() => {
+                    setActiveSubfolder(sub);
+                    setSearchQuery('');
+                  }}
+                  className={`px-4 h-9 rounded-full text-[12.5px] font-semibold border transition-colors ${
+                    active
+                      ? 'bg-[var(--ms-action-bg)] text-[var(--ms-action-fg)] border-transparent'
+                      : 'bg-[var(--ms-surface-elevated)] text-[var(--ms-text-secondary)] border-[var(--ms-border)] hover:border-[var(--ms-border-control)]'
+                  }`}
+                >
+                  {sub}
+                </button>
+              );
+            })}
           </nav>
 
           <div className="relative w-64">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ms-text-muted)]"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--ms-text-muted)]"
             />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.workspace.searchPlaceholder}
-              className="lx-input lx-input-search h-8 text-[12.5px]"
+              className="lx-input lx-input-search h-9 text-[12.5px]"
             />
           </div>
         </div>
 
         {newItemType && (
-          <div className="p-3 rounded-lg bg-[var(--ms-surface)] border border-[var(--ms-accent)]/50 flex items-center gap-2">
+          <div className="p-3.5 ms-card-raised flex items-center gap-2">
             <input
               type="text"
               value={newItemName}
@@ -281,23 +284,23 @@ export function LocalWorkspacePage() {
           </div>
         )}
 
-        {/* File Table + Detail Side Panel (#273) */}
+        {/* File Table + Detail Side Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] overflow-hidden">
+          <div className="lg:col-span-2 ms-card-raised overflow-hidden">
             {files.length === 0 ? (
-              <div className="py-14 px-6 text-center space-y-2">
+              <div className="py-16 px-6 text-center space-y-2">
                 <FolderOpen size={32} className="mx-auto text-[var(--ms-text-muted)]" />
-                <div className="text-[14px] font-bold">{t.workspace.emptyTitle}</div>
-                <p className="text-[12.5px] text-[var(--ms-text-secondary)] max-w-md mx-auto">
+                <div className="text-[14.5px] font-semibold">{t.workspace.emptyTitle}</div>
+                <p className="text-[13px] text-[var(--ms-text-secondary)] max-w-md mx-auto">
                   {t.workspace.emptySubtitle}
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-[var(--ms-border-subtle)]">
+              <div className="divide-y divide-[var(--ms-border)]">
                 {files.map((f) => (
                   <div
                     key={f.absolutePath}
-                    className={`flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-[var(--ms-surface-hover)] ${
+                    className={`flex items-center justify-between gap-3 px-5 py-3 hover:bg-[var(--ms-surface-hover)] transition-colors ${
                       selectedFile?.absolutePath === f.absolutePath
                         ? 'bg-[var(--ms-accent-subtle)]'
                         : ''
@@ -309,19 +312,19 @@ export function LocalWorkspacePage() {
                       className="flex items-center gap-3 min-w-0 flex-1 bg-transparent border-0 p-0 text-left"
                     >
                       {f.isDirectory ? (
-                        <Folder size={17} className="text-[var(--ms-accent-text)] shrink-0" />
+                        <Folder size={18} className="text-[var(--ms-accent-text)] shrink-0" />
                       ) : (
-                        <FileText size={17} className="text-[var(--ms-text-secondary)] shrink-0" />
+                        <FileText size={18} className="text-[var(--ms-text-secondary)] shrink-0" />
                       )}
                       <div className="min-w-0">
-                        <div className="text-[13px] font-bold truncate">{f.name}</div>
-                        <div className="text-[11px] text-[var(--ms-text-muted)]">
+                        <div className="text-[13.5px] font-semibold truncate">{f.name}</div>
+                        <div className="text-[11.5px] text-[var(--ms-text-muted)]">
                           {f.relativePath} · {formatDateTimeLocale(f.modifiedAt, resolvedLocale)}
                         </div>
                       </div>
                     </button>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-2.5 shrink-0">
                       {!f.isDirectory && (
                         <span className="text-[11.5px] font-mono text-[var(--ms-text-muted)]">
                           {formatBytesLocale(f.sizeBytes, resolvedLocale)}
@@ -336,7 +339,7 @@ export function LocalWorkspacePage() {
                           if (selectedFile?.absolutePath === f.absolutePath) setSelectedFile(null);
                           await refreshWorkspace();
                         }}
-                        className="w-7 h-7 rounded flex items-center justify-center bg-transparent border-0 text-[var(--ms-text-muted)] hover:text-[var(--ms-danger)] hover:bg-[var(--ms-danger-subtle)]"
+                        className="w-8 h-8 rounded-full flex items-center justify-center bg-transparent border-0 text-[var(--ms-text-muted)] hover:text-[var(--ms-danger)] hover:bg-[var(--ms-danger-subtle)]"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -347,17 +350,17 @@ export function LocalWorkspacePage() {
             )}
           </div>
 
-          {/* Detail Inspector (#273) */}
-          <aside className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-3">
-            <h2 className="text-[14px] font-bold">{t.workspace.previewTitle}</h2>
+          {/* Detail Inspector */}
+          <aside className="p-5 ms-card-raised space-y-3">
+            <h2 className="text-[14.5px] font-semibold">{t.workspace.previewTitle}</h2>
             {!selectedFile ? (
-              <p className="text-[12.5px] text-[var(--ms-text-muted)]">
+              <p className="text-[13px] text-[var(--ms-text-muted)] leading-relaxed">
                 Select a file to inspect metadata and safe UTF-8 text preview.
               </p>
             ) : (
               <div className="space-y-3 text-[12.5px]">
                 <div>
-                  <div className="font-bold text-[13.5px] break-all">{selectedFile.name}</div>
+                  <div className="font-semibold text-[14px] break-all">{selectedFile.name}</div>
                   <div className="text-[var(--ms-text-muted)] font-mono text-[11px] mt-0.5 break-all">
                     {selectedFile.relativePath}
                   </div>
@@ -375,7 +378,7 @@ export function LocalWorkspacePage() {
                   {t.workspace.openInExplorer}
                 </Button>
                 {previewText !== null && (
-                  <pre className="p-3 rounded-lg bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-64 whitespace-pre-wrap">
+                  <pre className="p-3.5 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-64 whitespace-pre-wrap">
                     {previewText || '(Empty file)'}
                   </pre>
                 )}
@@ -410,12 +413,13 @@ export function FolderPermissionsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
+    <div className="max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold">{t.workspace.approvedFoldersTitle}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">
-            System folders, browser profiles, SSH/GPG keys, and password managers are permanently blocked.
+          <h1 className="text-[24px] font-semibold">{t.workspace.approvedFoldersTitle}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
+            System folders, browser profiles, SSH/GPG keys, and password managers are permanently
+            blocked.
           </p>
         </div>
         <div className="flex gap-2">
@@ -428,10 +432,10 @@ export function FolderPermissionsPage() {
         </div>
       </div>
 
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-3">
-        <div className="flex items-center justify-between gap-3 pb-3 border-b border-[var(--ms-border)]">
+      <div className="p-6 ms-card-raised space-y-3">
+        <div className="flex items-center justify-between gap-3 pb-3.5 border-b border-[var(--ms-border)]">
           <div>
-            <div className="text-[14px] font-bold">Primary Muse Sandbox Root</div>
+            <div className="text-[14.5px] font-semibold">Primary Muse Sandbox Root</div>
             <code className="text-[12px] font-mono text-[var(--ms-text-muted)]">
               {settings.workspace.rootPath}
             </code>
@@ -440,17 +444,17 @@ export function FolderPermissionsPage() {
         </div>
 
         {settings.workspace.approvedFolders.length === 0 ? (
-          <p className="text-[13px] text-[var(--ms-text-muted)] py-4 m-0">
+          <p className="text-[13.5px] text-[var(--ms-text-muted)] py-4 m-0">
             No additional folders outside the primary workspace have been approved.
           </p>
         ) : (
           settings.workspace.approvedFolders.map((folder) => (
             <div
               key={folder.path}
-              className="flex items-center justify-between gap-3 py-2.5 border-b last:border-0 border-[var(--ms-border-subtle)]"
+              className="flex items-center justify-between gap-3 py-3 border-b last:border-0 border-[var(--ms-border)]"
             >
               <div className="min-w-0">
-                <div className="text-[13.5px] font-bold">{folder.label}</div>
+                <div className="text-[14px] font-semibold">{folder.label}</div>
                 <code className="text-[11.5px] font-mono text-[var(--ms-text-muted)] break-all">
                   {folder.path}
                 </code>
@@ -484,11 +488,11 @@ export function DownloadsPage() {
   const { t, downloads, resolvedLocale } = useAppStore();
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
+    <div className="max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-[22px] font-bold">{t.nav.downloads}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">
+          <h1 className="text-[24px] font-semibold">{t.nav.downloads}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
             Files downloaded from official Muse are routed safely to your Workspace Downloads folder.
           </p>
         </div>
@@ -501,25 +505,25 @@ export function DownloadsPage() {
         </Button>
       </div>
 
-      <div className="rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] overflow-hidden">
+      <div className="ms-card-raised overflow-hidden">
         {downloads.length === 0 ? (
-          <div className="py-14 text-center space-y-2">
+          <div className="py-16 text-center space-y-2">
             <Download size={28} className="mx-auto text-[var(--ms-text-muted)]" />
-            <div className="text-[14px] font-bold">No downloads in this session</div>
-            <p className="text-[12.5px] text-[var(--ms-text-muted)]">
+            <div className="text-[14.5px] font-semibold">No downloads in this session</div>
+            <p className="text-[13px] text-[var(--ms-text-muted)]">
               Artifacts exported or downloaded inside Muse will appear here with live progress.
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-[var(--ms-border-subtle)]">
+          <div className="divide-y divide-[var(--ms-border)]">
             {downloads.map((d) => (
               <div key={d.id} className="p-4 flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
-                  <div className="text-[13.5px] font-bold truncate">{d.fileName}</div>
+                  <div className="text-[14px] font-semibold truncate">{d.fileName}</div>
                   <div className="text-[11.5px] text-[var(--ms-text-muted)] font-mono truncate">
                     {d.savePath}
                   </div>
-                  <div className="text-[11.5px] text-[var(--ms-text-secondary)] mt-1">
+                  <div className="text-[12px] text-[var(--ms-text-secondary)] mt-1">
                     {formatBytesLocale(d.receivedBytes, resolvedLocale)}
                     {d.totalBytes > 0
                       ? ` / ${formatBytesLocale(d.totalBytes, resolvedLocale)}`

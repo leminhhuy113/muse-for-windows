@@ -25,15 +25,15 @@
 
 | Asset Name | Size | SHA-256 Checksum | Verified Download URL (`HTTP 200`) |
 |---|---|---|---|
-| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe` | `91,023,318 B` | `78a766a5fb6e8b1bdb37fc32e969971cd756b06aa3df79ba311ad4398c1151eb` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe` |
-| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe.blockmap` | `95,843 B` | `9192dbc8555145d56a13af603c2c78161d3a870c1bc5c6c2dd83375bc24faf18` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe.blockmap` |
-| `Muse-for-Windows-1MS-Studio-v1.0.0-Portable-x64.exe` | `90,787,148 B` | `0d8dc3ed47f68cbde098f81bea28dcc8ca6cedb04ccbb309515e4869161eec1f` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Portable-x64.exe` |
-| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe` *(Unverified Hardware)* | `92,971,704 B` | `d477a25a6073158ca44702abcb9e0ef10cf8ff99386a8ec2b7331a3683548846` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe` |
-| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe.blockmap` | `97,863 B` | `26296810998852d62a0060ccae1d050714b070e496694a863afd93db24161649` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe.blockmap` |
-| `Muse-for-Windows-1MS-Studio-v1.0.0-Portable-arm64.exe` *(Unverified Hardware)* | `92,735,910 B` | `57fd02dc5377780e99fd97393085ca49edf34e39b193f4bb596f5bd8d0af82f6` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Portable-arm64.exe` |
-| `latest.yml` | `743 B` | `c38157f03e6d4bae24c53472ea5311acba1a18c5b8c2b949d5b47aa11792ecca` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/latest.yml` |
-| `SHA256SUMS.txt` | `1,334 B` | `03fad475c7dc1a4fb904a5191e3dddc582709b77fb45aa51ca1498683e1440c8` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/SHA256SUMS.txt` |
-| `SBOM.cdx.json` | `154,623 B` | `e113020447aa5081a1bf82d6c50179e2fe7220d6373ac4bfa01dd4752458584b` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/SBOM.cdx.json` |
+| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe` | `91 MB` | `15eb2e0370f2be1499e2bcc6fd3b8de53ee687d78605ddf7033ca4a84195fc18` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe` |
+| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe.blockmap` | `96 KB` | `5d8a202ffabd6e6ec1bb0a74af51e20b3f81a16fb41e88b7c518ea58602018c7` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-x64.exe.blockmap` |
+| `Muse-for-Windows-1MS-Studio-v1.0.0-Portable-x64.exe` | `90.8 MB` | `14c1dd4fdfdce8b9e3d7cdf7bdf5b4b4974b3f44b1d34a91ccac80ecfb4720a4` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Portable-x64.exe` |
+| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe` *(Unverified Hardware)* | `93 MB` | `1cf4799e3c75cb04618d4c66c0c87e475b0ab876d7d97ecb4e58b4cf289c5ece` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe` |
+| `Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe.blockmap` | `98 KB` | `6bb650e8f373c396674bdf9943da259a94ca6c47acb841ea7f446b24586066e5` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Setup-arm64.exe.blockmap` |
+| `Muse-for-Windows-1MS-Studio-v1.0.0-Portable-arm64.exe` *(Unverified Hardware)* | `92.7 MB` | `b55785030a57bdaad8141cca714dcef4e84f53b109ffd69fcad2ffd9befd56f4` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Portable-arm64.exe` |
+| `latest.yml` | `743 B` | `bde193af3f498634e50fb2883714b4b3a0f99b582e62a552b9a4e11965b4a39c` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/latest.yml` |
+| `SHA256SUMS.txt` | `1.3 KB` | `Verified` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/SHA256SUMS.txt` |
+| `SBOM.cdx.json` | `155 KB` | `9544d72a4aa4ed5f4e1e3790805021378af9818797a4e5ed7af653f2943829dd` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/SBOM.cdx.json` |
 | `Muse-for-Windows-1MS-Studio-v1.0.0-Source.zip` | `3,336,858 B` | `a9f393c505bebfa8aac9f827bdc203eac253eba7d33aafe89dc2b75b5f31e2b9` | `https://github.com/leminhhuy113/muse-for-windows/releases/download/v1.0.0/Muse-for-Windows-1MS-Studio-v1.0.0-Source.zip` |
 
 ---

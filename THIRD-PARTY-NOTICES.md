@@ -1,6 +1,6 @@
 # Third-Party Notices & Open-Source Acknowledgements
 
-**Muse for Windows** (`v1.0.0`) is developed by **1MS Studio** under the **MIT License** and incorporates or adapts the following permissively licensed open-source software, fonts, and component systems:
+**Muse for Windows** (`v1.0.0`) is developed by **1MS Studio** (`https://1ms-studio.com/`) under the **MIT License** and incorporates or adapts the following permissively licensed open-source software, fonts, and component systems:
 
 ---
 
@@ -8,12 +8,12 @@
 - **Author:** Seokwoooo
 - **URL:** `https://lucianlabs.dev/uxui-prompt/` · `https://github.com/Seokwoooo/lucian-uxui`
 - **License:** MIT License (`Copyright (c) 2026 Seokwoooo`)
-- **Usage:** Interactive component patterns, motion curves, and `--ux-*` token contract adapted in `src/renderer/components/ui/` with original attribution headers preserved.
+- **Usage:** Genuine interactive elements (`#417`, `#037`, `#044`, `#046`, `#047`, `#070`, `#267`, `#416`, `#433`, `#459`, `#471`, `#472`, etc.) and `--ux-*` token contract ported in `src/renderer/components/ui/` and `src/renderer/layouts/DesktopShell.tsx` with original MIT attribution headers preserved.
 
-## 2. Play Typeface (`@fontsource/play`)
-- **Designer:** Jonas Hecksher
+## 2. Manrope Variable Typeface (`@fontsource-variable/manrope`) & Play (`@fontsource/play`)
+- **Designers:** Mikhail Sharanda (Manrope) · Jonas Hecksher (Play)
 - **License:** SIL Open Font License 1.1 (`OFL-1.1`)
-- **Usage:** Bundled locally (`latin` and `vietnamese` WOFF2 subsets, weights `400` and `700`).
+- **Usage:** Bundled locally (`latin` and `vietnamese` variable `200..800` WOFF2 subsets).
 
 ## 3. Lucide Icons (`lucide-react`)
 - **URL:** `https://lucide.dev/`

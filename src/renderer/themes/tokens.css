@@ -1,47 +1,59 @@
-/* 1MS Studio Design System — 1RS v1.2 Token Stylesheet
- * Integrates @fontsource/play (OFL-1.1, Latin + Vietnamese), 1MS Studio tokens (--ms-*),
- * and Lucian UX/UI Prompt theme tokens (--ux-*, MIT License (c) 2026 Seokwoooo).
+/* 1MS Studio Design System — 1ms-studio.com Botanical Editorial DNA × Lucian UX/UI
+ * Font: Manrope Variable (200..800, Vietnamese + Latin subsets) matching https://1ms-studio.com/
+ * Lucian UX/UI Prompt theme tokens (--ux-*, MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/)
  */
 @import 'tailwindcss';
+@import '@fontsource-variable/manrope/index.css';
 @import '@fontsource/play/latin-400.css';
 @import '@fontsource/play/vietnamese-400.css';
-@import '@fontsource/play/latin-700.css';
-@import '@fontsource/play/vietnamese-700.css';
 
 :root,
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --ms-font-brand: 'Play', 'Segoe UI', 'Microsoft YaHei UI', 'Yu Gothic UI', 'Malgun Gothic', system-ui, -apple-system, sans-serif;
-  --ms-font-mono: 'Cascadia Mono', 'Consolas', ui-monospace, monospace;
+  --ms-font-brand: 'Manrope Variable', 'Manrope', 'Segoe UI', 'Microsoft YaHei UI', 'Yu Gothic UI',
+    'Malgun Gothic', system-ui, -apple-system, sans-serif;
+  --ms-font-display: 'Manrope Variable', 'Manrope', 'Segoe UI', sans-serif;
+  --ms-font-mono: ui-monospace, 'Cascadia Mono', 'SFMono-Regular', 'Consolas', monospace;
   --ms-font-scale: 1;
 
-  /* 1MS Studio Dark Semantic Palette */
-  --ms-bg: #0b0d10;
-  --ms-surface: #12151a;
-  --ms-surface-elevated: #1b1f26;
-  --ms-surface-hover: #20242b;
-  --ms-border: #282d36;
-  --ms-border-subtle: #1e232b;
-  --ms-text-primary: #f5f7fa;
-  --ms-text-secondary: #949ba8;
-  --ms-text-muted: #858d9c;
+  /* Exact https://1ms-studio.com/ Dark Theme Tokens (html[data-theme="dark"]) */
+  --ms-bg: #151a14;
+  --ms-surface: #1f271d;
+  --ms-surface-elevated: #283224;
+  --ms-surface-soft: #283224;
+  --ms-surface-hover: #34402e;
+  --ms-peach: #342a22;
+  --ms-lavender: #2d2838;
 
-  --ms-accent: #faff69;
-  --ms-accent-hover: #e5ec4b;
-  --ms-accent-text: #faff69;
-  --ms-accent-subtle: rgba(250, 255, 105, 0.12);
-  --ms-accent-fg: #101208;
+  --ms-border: #3b4933;
+  --ms-border-subtle: #2e3a28;
+  --ms-border-control: #7e8b6f;
 
-  --ms-success: #34d399;
-  --ms-success-subtle: rgba(52, 211, 153, 0.14);
-  --ms-warning: #fbbf24;
-  --ms-warning-subtle: rgba(251, 191, 36, 0.14);
-  --ms-danger: #f87171;
-  --ms-danger-subtle: rgba(248, 113, 113, 0.14);
-  --ms-info: #60a5fa;
-  --ms-info-subtle: rgba(96, 165, 250, 0.14);
+  --ms-text-primary: #f4f9ed;
+  --ms-text-secondary: #cbd5c1;
+  --ms-text-muted: #abb99e;
 
-  /* Spacing & Radii */
+  --ms-lime: #c7f34b;
+  --ms-lime-ink: #151a14;
+  --ms-action-bg: #c7f34b;
+  --ms-action-fg: #151a14;
+
+  --ms-accent: #c7f34b;
+  --ms-accent-hover: #b5e238;
+  --ms-accent-text: #c7f34b;
+  --ms-accent-subtle: #344621;
+  --ms-accent-fg: #151a14;
+
+  --ms-success: #98d5a4;
+  --ms-success-subtle: rgba(152, 213, 164, 0.16);
+  --ms-warning: #ffd18a;
+  --ms-warning-subtle: rgba(255, 209, 138, 0.16);
+  --ms-danger: #ffa59a;
+  --ms-danger-subtle: rgba(255, 165, 154, 0.16);
+  --ms-info: #9ec5ff;
+  --ms-info-subtle: rgba(158, 197, 255, 0.16);
+
+  /* Spacing & Organic 1ms-studio.com Radii */
   --ms-space-1: 4px;
   --ms-space-2: 8px;
   --ms-space-3: 12px;
@@ -52,37 +64,39 @@
   --ms-space-10: 40px;
   --ms-space-12: 48px;
 
-  --ms-radius-xs: 4px;
-  --ms-radius-sm: 6px;
-  --ms-radius-md: 8px;
-  --ms-radius-lg: 10px;
-  --ms-radius-xl: 12px;
+  --ms-radius-xs: 8px;
+  --ms-radius-sm: 12px;
+  --ms-radius-md: 14px;
+  --ms-radius-lg: 18px;
+  --ms-radius-xl: 24px;
+  --ms-radius-card: 28px;
+  --ms-radius-pill: 9999px;
 
-  /* Motion */
-  --ms-duration-instant: 80ms;
-  --ms-duration-fast: 120ms;
-  --ms-duration-normal: 180ms;
-  --ms-duration-moderate: 220ms;
-  --ms-duration-slow: 280ms;
-  --ms-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ms-ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
-  --ms-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+  /* Motion (Exact 1ms-studio.com & Lucian UX/UI curves) */
+  --ms-duration-instant: 90ms;
+  --ms-duration-fast: 150ms;
+  --ms-duration-normal: 240ms;
+  --ms-duration-moderate: 360ms;
+  --ms-duration-slow: 550ms;
+  --ms-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ms-ease-in-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ms-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
 
   /* Layout Metrics */
-  --ms-titlebar-height: 38px;
-  --ms-row-height: 36px;
-  --ms-panel-pad: 16px;
+  --ms-titlebar-height: 44px;
+  --ms-row-height: 38px;
+  --ms-panel-pad: 20px;
 
-  /* Mapped Lucian UX/UI Tokens (--ux-*) */
+  /* Exact 1ms-studio.com <-> Lucian UX/UI (--ux-*) Token Mapping */
   --ux-page: var(--ms-bg);
   --ux-surface: var(--ms-surface);
-  --ux-surface-2: var(--ms-surface-elevated);
+  --ux-surface-2: var(--ms-surface-soft);
   --ux-surface-3: var(--ms-surface-hover);
   --ux-ink: var(--ms-text-primary);
   --ux-ink-2: var(--ms-text-secondary);
   --ux-ink-3: var(--ms-text-muted);
-  --ux-line: var(--ms-border-subtle);
-  --ux-line-2: var(--ms-border);
+  --ux-line: var(--ms-border);
+  --ux-line-2: var(--ms-border-control);
   --ux-accent: var(--ms-accent);
   --ux-accent-2: var(--ms-info);
   --ux-accent-soft: var(--ms-accent-subtle);
@@ -90,205 +104,347 @@
   --ux-mint: var(--ms-success);
   --ux-warn: var(--ms-warning);
   --ux-danger: var(--ms-danger);
-  --ux-glass: rgba(27, 31, 38, 0.85);
-  --ux-glass-line: rgba(255, 255, 255, 0.12);
-  --ux-shadow: rgba(0, 0, 0, 0.42);
-  --ux-shadow-strong: rgba(0, 0, 0, 0.72);
-  --ux-grad: linear-gradient(120deg, var(--ms-accent), var(--ms-success));
-  --ux-ease: var(--ms-ease-out);
-  --ux-spring: var(--ms-spring);
+  --ux-glass: rgba(31, 39, 29, 0.88);
+  --ux-glass-line: rgba(199, 243, 75, 0.18);
+  --ux-shadow: rgba(0, 0, 0, 0.35);
+  --ux-shadow-strong: rgba(0, 0, 0, 0.6);
+  --ux-grad: linear-gradient(120deg, #dff6b1, #c7f34b 55%, #a8cf3b);
+  --ux-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ux-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
 }
 
+/* Exact https://1ms-studio.com/ Light Theme (:root:not([data-theme=dark])) */
 :root[data-theme='light'] {
   color-scheme: light;
-  --ms-bg: #f5f6f8;
-  --ms-surface: #ffffff;
+  --ms-bg: #f5fbe9;
+  --ms-surface: #fbfdf7;
   --ms-surface-elevated: #ffffff;
-  --ms-surface-hover: #eaedf1;
-  --ms-border: #dde1e6;
-  --ms-border-subtle: #e8ecef;
-  --ms-text-primary: #15171c;
-  --ms-text-secondary: #555d68;
-  --ms-text-muted: #636b78;
+  --ms-surface-soft: #edf5df;
+  --ms-surface-hover: #eaf1e1;
+  --ms-peach: #ffebdc;
+  --ms-lavender: #f1eafb;
 
-  --ms-accent: #c7ce32;
-  --ms-accent-hover: #b2b926;
-  --ms-accent-text: #5c6108;
-  --ms-accent-subtle: rgba(199, 206, 50, 0.18);
-  --ms-accent-fg: #101208;
+  --ms-border: #dce5d2;
+  --ms-border-subtle: #e5eedc;
+  --ms-border-control: #7e8b6f;
 
-  --ms-success: #059669;
-  --ms-success-subtle: rgba(5, 150, 105, 0.12);
-  --ms-warning: #b45309;
-  --ms-warning-subtle: rgba(180, 83, 9, 0.12);
-  --ms-danger: #dc2626;
-  --ms-danger-subtle: rgba(220, 38, 38, 0.12);
-  --ms-info: #2563eb;
-  --ms-info-subtle: rgba(37, 99, 235, 0.12);
+  --ms-text-primary: #151a14;
+  --ms-text-secondary: #535a4f;
+  --ms-text-muted: #64705a;
 
-  --ux-glass: rgba(255, 255, 255, 0.88);
-  --ux-glass-line: rgba(21, 23, 28, 0.12);
-  --ux-shadow: rgba(21, 23, 28, 0.09);
-  --ux-shadow-strong: rgba(21, 23, 28, 0.2);
+  --ms-lime: #c7f34b;
+  --ms-lime-ink: #151a14;
+  --ms-action-bg: #181d27;
+  --ms-action-fg: #ffffff;
+
+  --ms-accent: #416315;
+  --ms-accent-hover: #334f0f;
+  --ms-accent-text: #416315;
+  --ms-accent-subtle: #e9f6cf;
+  --ms-accent-fg: #ffffff;
+
+  --ms-success: #2c6a35;
+  --ms-success-subtle: rgba(44, 106, 53, 0.13);
+  --ms-warning: #8b5200;
+  --ms-warning-subtle: rgba(139, 82, 0, 0.13);
+  --ms-danger: #b42318;
+  --ms-danger-subtle: rgba(180, 35, 24, 0.12);
+  --ms-info: #1d5bbf;
+  --ms-info-subtle: rgba(29, 91, 191, 0.12);
+
+  --ux-page: var(--ms-bg);
+  --ux-surface: var(--ms-surface);
+  --ux-surface-2: var(--ms-surface-soft);
+  --ux-surface-3: var(--ms-surface-hover);
+  --ux-ink: var(--ms-text-primary);
+  --ux-ink-2: var(--ms-text-secondary);
+  --ux-ink-3: var(--ms-text-muted);
+  --ux-line: var(--ms-border);
+  --ux-line-2: var(--ms-border-control);
+  --ux-accent: var(--ms-accent);
+  --ux-accent-2: var(--ms-info);
+  --ux-accent-soft: var(--ms-accent-subtle);
+  --ux-accent-ink: var(--ms-accent-fg);
+  --ux-mint: var(--ms-success);
+  --ux-warn: var(--ms-warning);
+  --ux-danger: var(--ms-danger);
+  --ux-glass: rgba(251, 253, 247, 0.84);
+  --ux-glass-line: rgba(255, 255, 255, 0.9);
+  --ux-shadow: rgba(21, 26, 20, 0.1);
+  --ux-shadow-strong: rgba(21, 26, 20, 0.22);
+  --ux-grad: linear-gradient(120deg, #dff6b1, #c7f34b 55%, #a8cf3b);
 }
 
 /* Approved Accent Presets */
 :root[data-accent='ice-cyan'][data-theme='dark'] {
-  --ms-accent: #67e8f9;
-  --ms-accent-hover: #22d3ee;
-  --ms-accent-text: #67e8f9;
-  --ms-accent-subtle: rgba(103, 232, 249, 0.14);
-  --ms-accent-fg: #081216;
+  --ms-accent: #7fe3f5;
+  --ms-accent-hover: #53d3eb;
+  --ms-accent-text: #7fe3f5;
+  --ms-accent-subtle: rgba(127, 227, 245, 0.16);
+  --ms-accent-fg: #0b191e;
+  --ms-action-bg: #7fe3f5;
+  --ms-action-fg: #0b191e;
 }
 :root[data-accent='ice-cyan'][data-theme='light'] {
-  --ms-accent: #0891b2;
-  --ms-accent-hover: #0e7490;
+  --ms-accent: #0e7490;
+  --ms-accent-hover: #155e75;
   --ms-accent-text: #0e7490;
-  --ms-accent-subtle: rgba(8, 145, 178, 0.14);
+  --ms-accent-subtle: rgba(14, 116, 144, 0.14);
   --ms-accent-fg: #ffffff;
 }
 :root[data-accent='emerald-signal'][data-theme='dark'] {
-  --ms-accent: #6ee7b7;
-  --ms-accent-hover: #34d399;
-  --ms-accent-text: #6ee7b7;
-  --ms-accent-subtle: rgba(110, 231, 183, 0.14);
-  --ms-accent-fg: #06140f;
+  --ms-accent: #98d5a4;
+  --ms-accent-hover: #7bc78a;
+  --ms-accent-text: #98d5a4;
+  --ms-accent-subtle: rgba(152, 213, 164, 0.16);
+  --ms-accent-fg: #111e14;
+  --ms-action-bg: #98d5a4;
+  --ms-action-fg: #111e14;
 }
 :root[data-accent='emerald-signal'][data-theme='light'] {
-  --ms-accent: #059669;
-  --ms-accent-hover: #047857;
-  --ms-accent-text: #047857;
-  --ms-accent-subtle: rgba(5, 150, 105, 0.14);
+  --ms-accent: #2c6a35;
+  --ms-accent-hover: #215228;
+  --ms-accent-text: #2c6a35;
+  --ms-accent-subtle: rgba(44, 106, 53, 0.14);
   --ms-accent-fg: #ffffff;
 }
 :root[data-accent='warm-amber'][data-theme='dark'] {
-  --ms-accent: #fcd34d;
-  --ms-accent-hover: #fbbf24;
-  --ms-accent-text: #fcd34d;
-  --ms-accent-subtle: rgba(252, 211, 77, 0.14);
-  --ms-accent-fg: #140f04;
+  --ms-accent: #ffd18a;
+  --ms-accent-hover: #ffc062;
+  --ms-accent-text: #ffd18a;
+  --ms-accent-subtle: rgba(255, 209, 138, 0.16);
+  --ms-accent-fg: #1f1405;
+  --ms-action-bg: #ffd18a;
+  --ms-action-fg: #1f1405;
 }
 :root[data-accent='warm-amber'][data-theme='light'] {
-  --ms-accent: #d97706;
-  --ms-accent-hover: #b45309;
-  --ms-accent-text: #92400e;
-  --ms-accent-subtle: rgba(217, 119, 6, 0.14);
+  --ms-accent: #8b5200;
+  --ms-accent-hover: #6e4000;
+  --ms-accent-text: #8b5200;
+  --ms-accent-subtle: rgba(139, 82, 0, 0.14);
   --ms-accent-fg: #ffffff;
 }
 
 /* Density Presets */
 :root[data-density='compact'] {
-  --ms-row-height: 32px;
-  --ms-panel-pad: 12px;
+  --ms-row-height: 34px;
+  --ms-panel-pad: 14px;
 }
 :root[data-density='comfortable'] {
-  --ms-row-height: 36px;
-  --ms-panel-pad: 16px;
+  --ms-row-height: 38px;
+  --ms-panel-pad: 20px;
 }
 :root[data-density='spacious'] {
-  --ms-row-height: 42px;
-  --ms-panel-pad: 20px;
+  --ms-row-height: 44px;
+  --ms-panel-pad: 24px;
 }
 
 /* High Contrast Reinforcement */
 :root[data-high-contrast='true'][data-theme='dark'] {
-  --ms-bg: #000000;
-  --ms-surface: #0a0c10;
-  --ms-border: #555f70;
-  --ms-text-secondary: #d0d6e2;
-  --ms-text-muted: #b6becd;
+  --ms-bg: #0c100b;
+  --ms-surface: #141a13;
+  --ms-border: #8fa17d;
+  --ms-text-secondary: #e5efe0;
+  --ms-text-muted: #cedbc7;
 }
 :root[data-high-contrast='true'][data-theme='light'] {
   --ms-bg: #ffffff;
   --ms-surface: #ffffff;
-  --ms-border: #4a5260;
-  --ms-text-secondary: #22262e;
-  --ms-text-muted: #363c47;
+  --ms-border: #4d5943;
+  --ms-text-secondary: #1e251c;
+  --ms-text-muted: #2e382b;
 }
 
-/* Base Global Rules + Viet-Type Diacritic Safety */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* Base Global Rules inside @layer base so Tailwind v4 utilities always take precedence */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--ms-font-brand);
+    font-size: calc(14.5px * var(--ms-font-scale));
+    line-height: 1.6;
+    background-color: var(--ms-bg);
+    color: var(--ms-text-primary);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--ms-bg);
+    color: var(--ms-text-primary);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--ms-font-display);
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: -0.032em;
+    line-height: 1.24;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ms-accent);
+    outline-offset: 3px;
+  }
 }
 
-html {
-  font-family: var(--ms-font-brand);
-  font-size: calc(14px * var(--ms-font-scale));
-  line-height: 1.5;
-  background-color: var(--ms-bg);
-  color: var(--ms-text-primary);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: clip;
+/* 1ms-studio.com Signature Editorial Surfaces & Highlighter */
+.ms-hero-surface {
+  background: linear-gradient(
+    180deg,
+    var(--ms-surface-elevated) 0%,
+    var(--ms-surface-elevated) 38%,
+    var(--ms-surface) 100%
+  );
+  border: 1px solid var(--ms-border);
+  border-radius: var(--ms-radius-card);
+  box-shadow: 0 24px 60px -42px var(--ux-shadow-strong);
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--ms-bg);
-  color: var(--ms-text-primary);
-  overflow: hidden;
-  user-select: none;
+.ms-card {
+  background: var(--ms-surface);
+  border: 1px solid var(--ms-border);
+  border-radius: var(--ms-radius-xl);
+  transition:
+    border-color var(--ms-duration-normal) var(--ms-ease-out),
+    box-shadow var(--ms-duration-normal) var(--ms-ease-out);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--ms-font-brand);
-  font-style: normal;
-  font-weight: 700;
-  line-height: 1.28;
-  margin: 0;
+.ms-card-raised {
+  background: var(--ms-surface-elevated);
+  border: 1px solid var(--ms-border);
+  border-radius: var(--ms-radius-xl);
 }
 
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-  color: inherit;
+.ms-card-peach {
+  background: var(--ms-peach);
+  border: 1px solid color-mix(in srgb, var(--ms-border-control) 36%, transparent);
+  border-radius: var(--ms-radius-xl);
 }
 
-button {
-  cursor: pointer;
+.ms-card-lavender {
+  background: var(--ms-lavender);
+  border: 1px solid color-mix(in srgb, var(--ms-border-control) 36%, transparent);
+  border-radius: var(--ms-radius-xl);
 }
 
-button:disabled {
-  cursor: not-allowed;
+.ms-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ms-accent-text);
+  background: var(--ms-accent-subtle);
+  padding: 5px 12px;
+  border-radius: var(--ms-radius-pill);
 }
 
-:focus-visible {
-  outline: 2px solid var(--ms-accent);
-  outline-offset: 2px;
+.ms-card-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--ms-radius-pill);
+  background: var(--ms-bg);
+  border: 1px solid var(--ms-border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ms-accent-text);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Lucian .ux Base Inheritance */
-.ux,
-.ux *,
-.ux *::before,
-.ux *::after {
-  box-sizing: border-box;
+.ms-highlight-lime {
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+}
+.ms-highlight-lime::after {
+  content: '';
+  position: absolute;
+  left: -3%;
+  right: -3%;
+  bottom: 4%;
+  height: 24%;
+  border-radius: 6px;
+  background: var(--ms-lime);
+  opacity: 0.34;
+  transform: rotate(-1.5deg);
+  z-index: -1;
+}
+:root[data-theme='light'] .ms-highlight-lime::after {
+  opacity: 0.72;
 }
 
-.ux {
-  font-family: var(--ms-font-brand);
-  color: var(--ux-ink);
-  -webkit-font-smoothing: antialiased;
-  overflow-wrap: break-word;
-}
+@layer base {
+  /* Lucian .ux Base Inheritance */
+  .ux,
+  .ux *,
+  .ux *::before,
+  .ux *::after {
+    box-sizing: border-box;
+  }
 
-.ux :focus-visible {
-  outline: 2px solid var(--ux-accent);
-  outline-offset: 2px;
-}
+  .ux {
+    font-family: var(--ms-font-brand);
+    color: var(--ux-ink);
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
 
-.ux [hidden] {
-  display: none !important;
+  :where(.ux) :is(button, input, textarea, select) {
+    font: inherit;
+    color: inherit;
+  }
+
+  :where(.ux) button {
+    cursor: pointer;
+  }
+
+  .ux :focus-visible {
+    outline: 2px solid var(--ux-accent);
+    outline-offset: 3px;
+  }
+
+  .ux [hidden] {
+    display: none !important;
+  }
 }
 
 /* Titlebar Drag Regions */
@@ -300,20 +456,20 @@ button:disabled {
   -webkit-app-region: no-drag;
 }
 
-/* Custom Subtle Scrollbars */
+/* Custom Subtle Botanical Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--ms-border);
-  border-radius: 4px;
+  background: color-mix(in srgb, var(--ms-border-control) 45%, transparent);
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--ms-text-muted);
+  background: var(--ms-border-control);
 }
 
 /* Reduced Motion & Window Minimized Suspension */

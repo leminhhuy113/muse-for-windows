@@ -20,20 +20,20 @@ const SIZES = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
 const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 
 const svgDark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <rect x="24" y="24" width="464" height="464" rx="112" fill="#0B0D10"/>
-  <rect x="28" y="28" width="456" height="456" rx="108" stroke="#282D36" stroke-width="8"/>
-  <path d="M128 368V152L256 276L384 152V368" stroke="#FAFF69" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="384" cy="140" r="28" fill="#FAFF69"/>
-  <rect x="196" y="356" width="120" height="16" rx="8" fill="#F5F7FA" fill-opacity="0.9"/>
+  <rect x="24" y="24" width="464" height="464" rx="124" fill="#151A14"/>
+  <rect x="28" y="28" width="456" height="456" rx="120" stroke="#3B4933" stroke-width="8"/>
+  <path d="M128 368V152L256 276L384 152V368" stroke="#C7F34B" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="384" cy="140" r="28" fill="#C7F34B"/>
+  <rect x="196" y="356" width="120" height="16" rx="8" fill="#F4F9ED" fill-opacity="0.92"/>
 </svg>
 `;
 
 const svgLight = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <rect x="24" y="24" width="464" height="464" rx="112" fill="#FFFFFF"/>
-  <rect x="28" y="28" width="456" height="456" rx="108" stroke="#DDE1E6" stroke-width="8"/>
-  <path d="M128 368V152L256 276L384 152V368" stroke="#15171C" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="384" cy="140" r="30" fill="#C7CE32"/>
-  <rect x="196" y="356" width="120" height="16" rx="8" fill="#C7CE32"/>
+  <rect x="24" y="24" width="464" height="464" rx="124" fill="#F5FBE9"/>
+  <rect x="28" y="28" width="456" height="456" rx="120" stroke="#DCE5D2" stroke-width="8"/>
+  <path d="M128 368V152L256 276L384 152V368" stroke="#151A14" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="384" cy="140" r="30" fill="#C7F34B"/>
+  <rect x="196" y="356" width="120" height="16" rx="8" fill="#416315"/>
 </svg>
 `;
 
@@ -125,12 +125,12 @@ function renderIconPng(size, { variant = 'dark', activeDot = false } = {}) {
   const scale = 512 / size;
   const aa = Math.max(1.15, scale * 0.85);
 
-  const bgCol = variant === 'light' ? [255, 255, 255, 1] : [11, 13, 16, 1];
-  const borderCol = variant === 'light' ? [205, 211, 219, 1] : [45, 52, 64, 1];
-  const mCol = variant === 'light' ? [21, 23, 28, 1] : [250, 255, 105, 1];
-  const sparkCol = variant === 'light' ? [199, 206, 50, 1] : [250, 255, 105, 1];
-  const barCol = variant === 'light' ? [199, 206, 50, 1] : [245, 247, 250, 0.92];
-  const activeCol = [52, 211, 153, 1]; // #34D399 emerald pulse for active tray
+  const bgCol = variant === 'light' ? [245, 251, 233, 1] : [21, 26, 20, 1];
+  const borderCol = variant === 'light' ? [220, 229, 210, 1] : [59, 73, 51, 1];
+  const mCol = variant === 'light' ? [21, 26, 20, 1] : [199, 243, 75, 1];
+  const sparkCol = [199, 243, 75, 1];
+  const barCol = variant === 'light' ? [65, 99, 21, 1] : [244, 249, 237, 0.92];
+  const activeCol = [152, 213, 164, 1]; // #98D5A4 botanical mint pulse for active tray
 
   const strokeHalf = size <= 24 ? 30 : 24;
 

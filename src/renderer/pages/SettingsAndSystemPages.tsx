@@ -1,7 +1,7 @@
-/* Lucian UX/UI Prompt #008, #250, #269, #289, #355, #416, #433, #434, #438, #447, #448 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
+/* Lucian UX/UI Prompt #008, #044, #047, #267, #416, #433, #434 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
 import { useEffect, useState } from 'react';
 import {
-  CheckCircle2,
+  ArrowUpRight,
   Download,
   ExternalLink,
   KeyRound,
@@ -26,15 +26,21 @@ import {
   Button,
   CopyActionButton,
   LanguageSelector,
+  LucianAccordion,
   LucianSwitch,
   LucianTabs,
   StatusBadge,
+  StudioWordmark,
   ThemeModeSelector,
   ValidatedInput,
 } from '@renderer/components/ui/Primitives';
 
 /** Screens #16, #17, #18, #19, #20 — Unified Tabbed Settings Hub */
-export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'general' | 'appearance' | 'language' | 'shortcuts' | 'privacy' }) {
+export function SettingsHubPage({
+  initialTab = 'general',
+}: {
+  initialTab?: 'general' | 'appearance' | 'language' | 'shortcuts' | 'privacy';
+}) {
   const { t, settings, resolvedLocale, updateSettings, resetSettings, setActiveScreen, pushToast } =
     useAppStore();
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -61,12 +67,12 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-6 overflow-y-auto h-full">
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-6 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold">{t.settings.title}</h1>
+          <h1 className="text-[24px] font-semibold">{t.settings.title}</h1>
           <p className="text-[12.5px] text-[var(--ms-text-muted)] mt-0.5">
-            {t.settings.savedJustNow} · Schema v{settings.schemaVersion}
+            {t.settings.savedJustNow} · 1MS Studio Design DNA · Schema v{settings.schemaVersion}
           </p>
         </div>
 
@@ -114,7 +120,7 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
 
       {/* #16 General & Startup */}
       {activeTab === 'general' && (
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] divide-y divide-[var(--ms-border-subtle)]">
+        <div className="p-6 ms-card-raised divide-y divide-[var(--ms-border)]">
           <LucianSwitch
             checked={settings.general.launchWithWindows}
             onChange={(launchWithWindows) =>
@@ -160,14 +166,15 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
         </div>
       )}
 
-      {/* #17 Appearance & 1RS v1.2 Live Display Settings (#289) */}
+      {/* #17 Appearance & 1ms-studio.com Live Display Settings */}
       {activeTab === 'appearance' && (
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-5">
+        <div className="p-6 ms-card-raised space-y-5">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="text-[14px] font-bold">Color Theme</div>
-              <div className="text-[12px] text-[var(--ms-text-secondary)]">
-                Synchronized with native Windows title bar overlay.
+              <div className="text-[14.5px] font-semibold">Color Theme (1ms-studio.com Palette)</div>
+              <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
+                Botanical Olive Dark (#151A14) & Sage-Cream Light (#F5FBE9), synced with Windows
+                Snap Layouts.
               </div>
             </div>
             <ThemeModeSelector
@@ -178,20 +185,20 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
             />
           </div>
 
-          <div className="pt-4 border-t border-[var(--ms-border-subtle)] flex items-center justify-between gap-4 flex-wrap">
+          <div className="pt-5 border-t border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="text-[14px] font-bold">1MS Studio Accent Preset</div>
-              <div className="text-[12px] text-[var(--ms-text-secondary)]">
-                Contrast-verified accents across Dark and Light surfaces.
+              <div className="text-[14.5px] font-semibold">1MS Studio Accent Preset</div>
+              <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
+                Contrast-verified accents across Dark and Light botanical surfaces.
               </div>
             </div>
             <div className="flex gap-2 flex-wrap">
               {(
                 [
-                  { id: 'electric-lime', label: 'Electric Lime (#FAFF69)', swatch: '#FAFF69' },
-                  { id: 'ice-cyan', label: 'Arctic Pulse', swatch: '#67E8F9' },
-                  { id: 'emerald-signal', label: 'Signal Mint', swatch: '#6EE7B7' },
-                  { id: 'warm-amber', label: 'Solar Amber', swatch: '#FCD34D' },
+                  { id: 'electric-lime', label: '1MS Lime (#C7F34B)', swatch: '#C7F34B' },
+                  { id: 'ice-cyan', label: 'Arctic Mint', swatch: '#7FE3F5' },
+                  { id: 'emerald-signal', label: 'Forest Signal', swatch: '#98D5A4' },
+                  { id: 'warm-amber', label: 'Terracotta Sun', swatch: '#FFD18A' },
                 ] as Array<{ id: AccentPresetId; label: string; swatch: string }>
               ).map((preset) => (
                 <button
@@ -202,14 +209,14 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
                       appearance: { ...settings.appearance, accentPreset: preset.id },
                     })
                   }
-                  className={`px-3 h-8 rounded-md text-[12px] font-bold border inline-flex items-center gap-2 ${
+                  className={`px-3.5 h-9 rounded-full text-[12.5px] font-semibold border inline-flex items-center gap-2 transition-colors ${
                     settings.appearance.accentPreset === preset.id
-                      ? 'border-[var(--ms-accent)] bg-[var(--ms-accent-subtle)]'
-                      : 'border-[var(--ms-border)] bg-[var(--ms-bg)]'
+                      ? 'border-[var(--ms-accent)] bg-[var(--ms-accent-subtle)] text-[var(--ms-accent-text)]'
+                      : 'border-[var(--ms-border)] bg-[var(--ms-bg)] text-[var(--ms-text-secondary)]'
                   }`}
                 >
                   <span
-                    className="w-3 h-3 rounded-full border border-black/30"
+                    className="w-3 h-3 rounded-full border border-black/25"
                     style={{ background: preset.swatch }}
                   />
                   <span>{preset.label}</span>
@@ -218,10 +225,10 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
             </div>
           </div>
 
-          <div className="pt-4 border-t border-[var(--ms-border-subtle)] grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="pt-5 border-t border-[var(--ms-border)] grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="text-[13px] font-bold block mb-1.5">
-                Interface Font Scale ({Math.round(settings.appearance.fontScale * 100)}%)
+              <label className="text-[13.5px] font-semibold block mb-2">
+                Manrope Font Scale ({Math.round(settings.appearance.fontScale * 100)}%)
               </label>
               <input
                 type="range"
@@ -239,7 +246,7 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
             </div>
 
             <div>
-              <label className="text-[13px] font-bold block mb-1.5">UI Density</label>
+              <label className="text-[13.5px] font-semibold block mb-2">UI Density</label>
               <select
                 value={settings.appearance.density}
                 onChange={(e) =>
@@ -250,16 +257,16 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
                     },
                   })
                 }
-                className="lx-input h-9"
+                className="lx-input h-10"
               >
-                <option value="compact">Compact (32px rows)</option>
-                <option value="comfortable">Comfortable (36px rows — Default)</option>
-                <option value="spacious">Spacious (42px rows)</option>
+                <option value="compact">Compact (34px rows)</option>
+                <option value="comfortable">Comfortable (38px rows — Default)</option>
+                <option value="spacious">Spacious (44px rows)</option>
               </select>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-[var(--ms-border-subtle)] divide-y divide-[var(--ms-border-subtle)]">
+          <div className="pt-4 border-t border-[var(--ms-border)] divide-y divide-[var(--ms-border)]">
             <LucianSwitch
               checked={settings.appearance.showDynamicIsland}
               onChange={(showDynamicIsland) =>
@@ -294,20 +301,23 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
         </div>
       )}
 
-      {/* #19 Multi-Language Settings (System, VI, EN, ZH, JA, KO) */}
+      {/* #19 Multi-Language Settings */}
       {activeTab === 'language' && (
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-5">
+        <div className="p-6 ms-card-raised space-y-5">
           <div>
-            <h2 className="text-[16px] font-bold mb-1">Multilingual Interface (VI · EN · 简体中文 · 日本語 · 한국어)</h2>
-            <p className="text-[13px] text-[var(--ms-text-secondary)]">
-              All local shells, permissions, dialogs, and notifications switch immediately with Unicode NFC Vietnamese & CJK rendering. Official Muse content follows your muse.ai language preference.
+            <h2 className="text-[17px] font-semibold mb-1">
+              Multilingual Interface (VI · EN · 简体中文 · 日本語 · 한국어)
+            </h2>
+            <p className="text-[13.5px] text-[var(--ms-text-secondary)] leading-relaxed">
+              Rendered with bundled local Manrope Variable (Vietnamese + Latin subsets) and CJK
+              system fallbacks with strict Unicode NFC normalization.
             </p>
           </div>
           <LanguageSelector
             value={settings.language.locale}
             onChange={(locale) => void updateSettings({ language: { locale } })}
           />
-          <div className="p-4 rounded-lg bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12.5px] space-y-1">
+          <div className="p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[13px] space-y-1.5">
             <div>
               <strong>Active Resolved Locale:</strong> <code>{resolvedLocale}</code>
             </div>
@@ -325,12 +335,12 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
 
       {/* #18 Keyboard Shortcuts */}
       {activeTab === 'shortcuts' && (
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-4">
+        <div className="p-6 ms-card-raised space-y-4">
           {(Object.keys(DEFAULT_SHORTCUTS) as Array<keyof ShortcutBindings>).map((key) => (
             <div key={key} className="flex items-center justify-between gap-4 flex-wrap">
               <div>
-                <div className="text-[13.5px] font-bold">{key}</div>
-                <div className="text-[11.5px] text-[var(--ms-text-muted)]">
+                <div className="text-[14px] font-semibold">{key}</div>
+                <div className="text-[12px] text-[var(--ms-text-muted)]">
                   Default: {DEFAULT_SHORTCUTS[key]}
                 </div>
               </div>
@@ -344,7 +354,7 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
               />
             </div>
           ))}
-          <div className="flex justify-end gap-2 pt-3 border-t border-[var(--ms-border-subtle)]">
+          <div className="flex justify-end gap-2.5 pt-4 border-t border-[var(--ms-border)]">
             <Button
               size="sm"
               variant="secondary"
@@ -368,21 +378,21 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
 
       {/* #20 Privacy & Security */}
       {activeTab === 'privacy' && (
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-4">
-          <div className="flex items-center justify-between gap-3">
+        <div className="p-6 ms-card-raised space-y-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <div className="text-[14px] font-bold">Zero Telemetry Guarantee</div>
-              <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
+              <div className="text-[14.5px] font-semibold">Zero Telemetry Guarantee</div>
+              <div className="text-[13px] text-[var(--ms-text-secondary)]">
                 Muse for Windows collects zero analytics, crash telemetry, or conversation logs.
               </div>
             </div>
             <StatusBadge tone="success">TELEMETRY PERMANENTLY OFF</StatusBadge>
           </div>
 
-          <div className="pt-3 border-t border-[var(--ms-border-subtle)] flex items-center justify-between gap-4">
+          <div className="pt-4 border-t border-[var(--ms-border)] flex items-center justify-between gap-4">
             <div>
-              <div className="text-[13.5px] font-bold">Local SQLite Audit Retention (Days)</div>
-              <div className="text-[12px] text-[var(--ms-text-secondary)]">
+              <div className="text-[14px] font-semibold">Local SQLite Audit Retention (Days)</div>
+              <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
                 Older local audit entries are pruned automatically at startup.
               </div>
             </div>
@@ -408,36 +418,42 @@ export function SettingsHubPage({ initialTab = 'general' }: { initialTab?: 'gene
   );
 }
 
-/** Screen #21 — Integrations (Mode A, Mode B, Mode C) */
+/** Screen #21 — Integrations (Mode A, Mode B, Mode C — 1ms-studio.com Editorial Tinted Cards) */
 export function IntegrationsPage() {
   const { t, settings, updateSettings, setActiveScreen, pushToast } = useAppStore();
   const [apiKeyInput, setApiKeyInput] = useState('');
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
-      <h1 className="text-[22px] font-bold">{t.integrations.title}</h1>
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
+      <h1 className="text-[24px] font-semibold">{t.integrations.title}</h1>
 
       {/* Mode A */}
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-2">
+      <div className="p-6 ms-card-raised space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-[16px] font-bold">{t.integrations.modeATitle}</h2>
+          <div className="flex items-center gap-2.5">
+            <span className="ms-card-index">01</span>
+            <h2 className="text-[16.5px] font-semibold">{t.integrations.modeATitle}</h2>
+          </div>
           <StatusBadge tone="accent">{t.common.verified} · PRIMARY</StatusBadge>
         </div>
-        <p className="text-[13px] text-[var(--ms-text-secondary)] m-0">
+        <p className="text-[13.5px] text-[var(--ms-text-secondary)] m-0 leading-relaxed">
           {t.onboarding.modeADesc}
         </p>
       </div>
 
       {/* Mode B */}
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-3">
+      <div className="p-6 ms-card-peach space-y-3.5">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <h2 className="text-[16px] font-bold">{t.integrations.modeBTitle}</h2>
+          <div className="flex items-center gap-2.5">
+            <span className="ms-card-index">02</span>
+            <h2 className="text-[16.5px] font-semibold">{t.integrations.modeBTitle}</h2>
+          </div>
           <StatusBadge tone="warning">{t.common.requiresOfficial}</StatusBadge>
         </div>
-        <p className="text-[13px] text-[var(--ms-text-secondary)] m-0">
+        <p className="text-[13.5px] text-[var(--ms-text-secondary)] m-0 leading-relaxed">
           {t.onboarding.modeBDesc}
         </p>
-        <div className="flex gap-2">
+        <div className="flex gap-2.5 flex-wrap">
           <Button size="sm" variant="secondary" onClick={() => setActiveScreen('local-bridge')}>
             Configure Loopback MCP (127.0.0.1)
           </Button>
@@ -452,9 +468,12 @@ export function IntegrationsPage() {
       </div>
 
       {/* Mode C */}
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-4">
+      <div className="p-6 ms-card-lavender space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-[16px] font-bold">{t.integrations.modeCTitle}</h2>
+          <div className="flex items-center gap-2.5">
+            <span className="ms-card-index">03</span>
+            <h2 className="text-[16.5px] font-semibold">{t.integrations.modeCTitle}</h2>
+          </div>
           <StatusBadge tone={settings.integrations.modeCEnabled ? 'success' : 'neutral'}>
             {settings.integrations.modeCEnabled ? t.common.enabled : t.common.disabled}
           </StatusBadge>
@@ -471,9 +490,9 @@ export function IntegrationsPage() {
           description="Clearly separated from official Muse; uses shared Permission Center and SQLite Audit Log."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           <div>
-            <label className="text-[12.5px] font-bold block mb-1.5">Provider Adapter</label>
+            <label className="text-[12.5px] font-semibold block mb-1.5">Provider Adapter</label>
             <select
               value={settings.integrations.modeCProvider}
               onChange={(e) =>
@@ -515,7 +534,7 @@ export function IntegrationsPage() {
         </div>
 
         {settings.integrations.modeCProvider === 'openai-compatible' && (
-          <div className="pt-3 border-t border-[var(--ms-border-subtle)] flex items-end gap-2 flex-wrap">
+          <div className="pt-3.5 border-t border-[var(--ms-border)] flex items-end gap-2.5 flex-wrap">
             <div className="flex-1 min-w-[240px]">
               <ValidatedInput
                 type="password"
@@ -542,10 +561,7 @@ export function IntegrationsPage() {
               {t.integrations.saveApiKey}
             </Button>
             {settings.integrations.modeCHasApiKey && (
-              <Button
-                variant="danger"
-                onClick={() => void window.museApi?.clearModeCApiKey()}
-              >
+              <Button variant="danger" onClick={() => void window.museApi?.clearModeCApiKey()}>
                 {t.integrations.clearApiKey}
               </Button>
             )}
@@ -562,11 +578,11 @@ export function UpdateCenterPage() {
   const [checking, setChecking] = useState(false);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
+    <div className="max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold">{t.updates.title}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">
+          <h1 className="text-[24px] font-semibold">{t.updates.title}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
             GitHub Releases Provider: <code>leminhhuy113/muse-for-windows</code>
           </p>
         </div>
@@ -597,13 +613,13 @@ export function UpdateCenterPage() {
         </div>
       </div>
 
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-4">
+      <div className="p-6 ms-card-raised space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <div className="text-[14px] font-bold">
+            <div className="text-[15px] font-semibold">
               Current Version: v{updateState.currentVersion} ({updateState.channel})
             </div>
-            <div className="text-[12px] text-[var(--ms-text-muted)]">
+            <div className="text-[12.5px] text-[var(--ms-text-muted)]">
               {updateState.checkedAt
                 ? `Last checked: ${formatDateTimeLocale(updateState.checkedAt, resolvedLocale)}`
                 : 'Not checked yet in this session'}
@@ -622,8 +638,8 @@ export function UpdateCenterPage() {
           </StatusBadge>
         </div>
 
-        <div className="flex items-center justify-between gap-4 pt-3 border-t border-[var(--ms-border-subtle)]">
-          <span className="text-[13px] font-bold">Release Channel</span>
+        <div className="flex items-center justify-between gap-4 pt-4 border-t border-[var(--ms-border)]">
+          <span className="text-[13.5px] font-semibold">Release Channel</span>
           <select
             value={settings.updates.channel}
             onChange={(e) =>
@@ -631,7 +647,7 @@ export function UpdateCenterPage() {
                 updates: { ...settings.updates, channel: e.target.value as ReleaseChannel },
               })
             }
-            className="lx-input w-44 h-8"
+            className="lx-input w-48 h-9"
           >
             <option value="stable">stable (Default)</option>
             <option value="beta">beta</option>
@@ -640,8 +656,8 @@ export function UpdateCenterPage() {
         </div>
 
         {!updateState.isSignedBuild && (
-          <div className="p-3.5 rounded-lg bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12.5px] text-[var(--ms-text-secondary)] flex items-start gap-2.5">
-            <ShieldCheck size={16} className="text-[var(--ms-warning)] shrink-0 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[13px] text-[var(--ms-text-secondary)] flex items-start gap-3 leading-relaxed">
+            <ShieldCheck size={17} className="text-[var(--ms-warning)] shrink-0 mt-0.5" />
             <span>{t.updates.unsignedNotice}</span>
           </div>
         )}
@@ -672,9 +688,9 @@ export function DiagnosticsPage() {
   const reportJson = diag ? JSON.stringify(diag, null, 2) : '';
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-[22px] font-bold">{t.diagnostics.title}</h1>
+        <h1 className="text-[24px] font-semibold">{t.diagnostics.title}</h1>
         {diag && (
           <CopyActionButton
             textToCopy={reportJson}
@@ -686,33 +702,33 @@ export function DiagnosticsPage() {
 
       {diag && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)]">
-            <div className="text-[11.5px] text-[var(--ms-text-muted)]">Shell Memory (RSS / Heap)</div>
-            <div className="text-[20px] font-bold mt-1">
+          <div className="p-5 ms-card-raised">
+            <div className="text-[12px] text-[var(--ms-text-muted)]">Shell Memory (RSS / Heap)</div>
+            <div className="text-[22px] font-semibold mt-1">
               {diag.memoryUsageMb.rss} MB / {diag.memoryUsageMb.heapUsed} MB
             </div>
           </div>
-          <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)]">
-            <div className="text-[11.5px] text-[var(--ms-text-muted)]">Platform & Architecture</div>
-            <div className="text-[20px] font-bold mt-1">
+          <div className="p-5 ms-card-peach">
+            <div className="text-[12px] text-[var(--ms-text-muted)]">Platform & Architecture</div>
+            <div className="text-[22px] font-semibold mt-1">
               {diag.platform} · {diag.arch}
             </div>
           </div>
-          <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)]">
-            <div className="text-[11.5px] text-[var(--ms-text-muted)]">Electron / Chromium</div>
-            <div className="text-[20px] font-bold mt-1">
+          <div className="p-5 ms-card-lavender">
+            <div className="text-[12px] text-[var(--ms-text-muted)]">Electron / Chromium</div>
+            <div className="text-[22px] font-semibold mt-1">
               v{diag.electronVersion} / {diag.chromeVersion.split('.')[0]}
             </div>
           </div>
         </div>
       )}
 
-      <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)]">
-        <div className="flex items-center gap-2 text-[13px] font-bold mb-2">
+      <div className="p-5 ms-card-raised">
+        <div className="flex items-center gap-2 text-[13.5px] font-semibold mb-2.5">
           <Terminal size={15} className="text-[var(--ms-accent-text)]" />
           <span>Sanitized Runtime Snapshot</span>
         </div>
-        <pre className="m-0 p-3 rounded-lg bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-96">
+        <pre className="m-0 p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-96">
           {reportJson || t.common.loading}
         </pre>
       </div>
@@ -720,7 +736,7 @@ export function DiagnosticsPage() {
   );
 }
 
-/** Screen #24 — Mandatory About & System Information Page */
+/** Screen #24 — Mandatory About & System Information Page (1ms-studio.com Studio Signature) */
 export function AboutPage() {
   const { t, resolvedLocale, setActiveScreen } = useAppStore();
   const [diag, setDiag] = useState<RuntimeDiagnosticsInfo | null>(null);
@@ -730,56 +746,67 @@ export function AboutPage() {
   }, []);
 
   const sysSummary = diag
-    ? `${BRANDING.productName} v${BRANDING.version} (Build ${BRANDING.buildNumber})\nDeveloper: ${BRANDING.developer} · Standard: ${BRANDING.designStandard}\nOS: ${diag.platform} ${diag.osRelease} (${diag.arch})\nElectron: ${diag.electronVersion} · Chromium: ${diag.chromeVersion} · Node.js: ${diag.nodeVersion}`
+    ? `${BRANDING.productName} v${BRANDING.version} (Build ${BRANDING.buildNumber})\nDeveloper: ${BRANDING.developer} (${BRANDING.websiteUrl}) · Standard: ${BRANDING.designStandard}\nOS: ${diag.platform} ${diag.osRelease} (${diag.arch})\nElectron: ${diag.electronVersion} · Chromium: ${diag.chromeVersion} · Node.js: ${diag.nodeVersion}`
     : `${BRANDING.productName} v${BRANDING.version}`;
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-6 space-y-6 overflow-y-auto h-full">
-      <div className="p-6 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <BrandLogo size={68} />
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-[24px] font-bold">{BRANDING.productName}</h1>
-              <StatusBadge tone="accent">v{BRANDING.version}</StatusBadge>
-            </div>
-            <div className="text-[13.5px] font-bold text-[var(--ms-text-secondary)] mt-0.5">
-              Developed by {BRANDING.developer} · Powered by {BRANDING.designStandard}
-            </div>
-            <div className="text-[12px] font-mono text-[var(--ms-text-muted)] mt-1">
-              Build {BRANDING.buildNumber} · Channel: {diag?.releaseChannel || BRANDING.releaseChannel} · {BRANDING.license}
-            </div>
+    <div className="max-w-4xl mx-auto py-8 px-7 space-y-6 overflow-y-auto h-full">
+      <div className="p-8 ms-hero-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="space-y-2.5">
+          <StudioWordmark />
+          <div className="flex items-center gap-2.5 pt-1">
+            <h1 className="text-[28px] font-semibold">{BRANDING.productName}</h1>
+            <StatusBadge tone="accent">v{BRANDING.version}</StatusBadge>
+          </div>
+          <div className="text-[14px] font-medium text-[var(--ms-text-secondary)]">
+            Developed by {BRANDING.developer} · Powered by {BRANDING.designStandard}
+          </div>
+          <div className="text-[12px] font-mono text-[var(--ms-text-muted)]">
+            Build {BRANDING.buildNumber} · Channel: {diag?.releaseChannel || BRANDING.releaseChannel} ·{' '}
+            {BRANDING.license}
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant="primary" onClick={() => setActiveScreen('updates')}>
-            {t.about.checkUpdates}
-          </Button>
-          <CopyActionButton
-            textToCopy={sysSummary}
-            label={t.about.copySystemInfo}
-            copiedLabel={t.common.copied}
-          />
-          <Button size="sm" variant="secondary" onClick={() => setActiveScreen('diagnostics')}>
-            {t.about.openDiagnostics}
-          </Button>
-          <Button
-            size="sm"
-            variant="secondary"
-            icon={<ExternalLink size={13} />}
-            onClick={() => void window.museApi?.openExternal(BRANDING.releasesUrl)}
-          >
-            {t.about.viewReleaseNotes}
-          </Button>
-        </div>
+        <BrandLogo size={72} />
+      </div>
+
+      <div className="flex flex-wrap gap-2.5">
+        <Button size="sm" variant="primary" onClick={() => setActiveScreen('updates')}>
+          {t.about.checkUpdates}
+        </Button>
+        <Button
+          size="sm"
+          variant="lime"
+          icon={<ArrowUpRight size={14} />}
+          onClick={() => void window.museApi?.openExternal(BRANDING.websiteUrl)}
+        >
+          1ms-studio.com
+        </Button>
+        <CopyActionButton
+          textToCopy={sysSummary}
+          label={t.about.copySystemInfo}
+          copiedLabel={t.common.copied}
+        />
+        <Button size="sm" variant="secondary" onClick={() => setActiveScreen('diagnostics')}>
+          {t.about.openDiagnostics}
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          icon={<ExternalLink size={13} />}
+          onClick={() => void window.museApi?.openExternal(BRANDING.releasesUrl)}
+        >
+          {t.about.viewReleaseNotes}
+        </Button>
       </div>
 
       {/* Actual Runtime Versions */}
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] grid grid-cols-2 md:grid-cols-4 gap-4 text-[12.5px]">
+      <div className="p-5 ms-card-raised grid grid-cols-2 md:grid-cols-4 gap-4 text-[12.5px]">
         <div>
           <div className="text-[var(--ms-text-muted)]">Operating System</div>
-          <strong className="font-mono">{diag ? `${diag.platform} (${diag.osRelease})` : 'win32'}</strong>
+          <strong className="font-mono">
+            {diag ? `${diag.platform} (${diag.osRelease})` : 'win32'}
+          </strong>
         </div>
         <div>
           <div className="text-[var(--ms-text-muted)]">Architecture</div>
@@ -797,33 +824,29 @@ export function AboutPage() {
         </div>
       </div>
 
-      {/* Open Source Acknowledgements */}
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-2.5 text-[12.5px]">
-        <h2 className="text-[15px] font-bold flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-[var(--ms-success)]" />
-          <span>{t.about.licensesTitle}</span>
-        </h2>
-        <ul className="space-y-1.5 text-[var(--ms-text-secondary)] pl-5 m-0">
-          <li>
-            <strong>Muse for Windows:</strong> MIT License — Copyright © 2026 1MS Studio (`github.com/leminhhuy113/muse-for-windows`).
-          </li>
-          <li>
-            <strong>Lucian UX/UI Prompt (`Seokwoooo/lucian-uxui` v1.2.0):</strong> MIT License — Copyright © 2026 Seokwoooo (`lucianlabs.dev/uxui-prompt`).
-          </li>
-          <li>
-            <strong>Play Typeface (`@fontsource/play`):</strong> SIL Open Font License 1.1 (OFL-1.1).
-          </li>
-          <li>
-            <strong>Lucide Icons (`lucide-react`):</strong> ISC License.
-          </li>
-          <li>
-            <strong>Electron, React, Vite, Tailwind CSS, Zustand, Zod, Playwright:</strong> MIT / Apache-2.0 Open Source Licenses.
-          </li>
-        </ul>
-      </div>
+      {/* Lucian #044 Open Source Acknowledgements Accordion */}
+      <LucianAccordion
+        items={[
+          {
+            id: 'lic-1ms',
+            title: 'Muse for Windows — MIT License (1MS Studio)',
+            body: 'Copyright © 2026 1MS Studio (https://1ms-studio.com · github.com/leminhhuy113/muse-for-windows).',
+          },
+          {
+            id: 'lic-lucian',
+            title: 'Lucian UX/UI Prompt (Seokwoooo/lucian-uxui v1.2.0)',
+            body: 'MIT License — Copyright © 2026 Seokwoooo (https://lucianlabs.dev/uxui-prompt). Ported sidebar #417, account menu #037, segmented tabs #416/#047, command palette #046, 3D keycap #471, stretch switch #433, accordion #044, language dropdown #267, and fanning toasts #070.',
+          },
+          {
+            id: 'lic-fonts',
+            title: 'Manrope Variable & Lucide Icons',
+            body: '@fontsource-variable/manrope (SIL Open Font License 1.1, Latin + Vietnamese subsets) and lucide-react (ISC License).',
+          },
+        ]}
+      />
 
       {/* Mandatory Unofficial Disclaimer */}
-      <div className="p-4 rounded-xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12px] text-[var(--ms-text-secondary)]">
+      <div className="p-4 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12px] text-[var(--ms-text-secondary)] leading-relaxed">
         <strong>Independent Project Disclaimer:</strong>{' '}
         {resolvedLocale === 'vi'
           ? BRANDING.unofficialDisclaimerVi

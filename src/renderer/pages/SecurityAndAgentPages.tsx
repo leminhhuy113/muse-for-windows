@@ -1,4 +1,4 @@
-/* Lucian UX/UI Prompt #008, #086, #092, #224, #269, #416, #433, #453, #454, #455, #458 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
+/* Lucian UX/UI Prompt #008, #269, #433, #454, #455, #458 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/ */
 import { useCallback, useEffect, useState } from 'react';
 import {
   Activity,
@@ -64,11 +64,11 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
   const [confirmRevoke, setConfirmRevoke] = useState(false);
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-6 overflow-y-auto h-full">
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-6 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold">{t.permissions.title}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">
+          <h1 className="text-[24px] font-semibold">{t.permissions.title}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
             {t.permissions.subtitle}
           </p>
         </div>
@@ -82,11 +82,7 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
           >
             {settings.bridge.paused ? t.permissions.resumeBridge : t.permissions.pauseBridge}
           </Button>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => setConfirmRevoke(true)}
-          >
+          <Button size="sm" variant="secondary" onClick={() => setConfirmRevoke(true)}>
             {t.permissions.revokeAll}
           </Button>
           <Button
@@ -104,10 +100,10 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
       </div>
 
       {/* Pending Approvals Queue (Screen #12) */}
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-3">
+      <div className="p-6 ms-card-peach space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-[15px] font-bold flex items-center gap-2">
-            <ShieldAlert size={17} className="text-[var(--ms-warning)]" />
+          <h2 className="text-[15.5px] font-semibold flex items-center gap-2">
+            <ShieldAlert size={18} className="text-[var(--ms-warning)]" />
             <span>{t.permissions.pendingApprovals}</span>
           </h2>
           <StatusBadge tone={pendingApprovals.length > 0 ? 'warning' : 'success'}>
@@ -116,20 +112,22 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
         </div>
 
         {pendingApprovals.length === 0 ? (
-          <p className="text-[13px] text-[var(--ms-text-muted)] m-0">{t.permissions.noPending}</p>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] m-0">
+            {t.permissions.noPending}
+          </p>
         ) : (
           <div className="space-y-2.5">
             {pendingApprovals.map((req) => (
               <div
                 key={req.id}
-                className="p-3.5 rounded-lg bg-[var(--ms-bg)] border border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap"
+                className="p-4 rounded-2xl bg-[var(--ms-surface-elevated)] border border-[var(--ms-border)] flex items-center justify-between gap-4 flex-wrap"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <strong className="font-mono text-[13px]">{req.toolName}</strong>
                     <RiskBadge risk={req.riskLevel} />
                   </div>
-                  <div className="text-[12px] text-[var(--ms-text-secondary)]">
+                  <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
                     {req.requestingComponent} → <code>{req.targetResource}</code>
                   </div>
                 </div>
@@ -166,17 +164,17 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
       </div>
 
       {!approvalsTabOnly && (
-        <div className="rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] divide-y divide-[var(--ms-border-subtle)]">
+        <div className="ms-card-raised divide-y divide-[var(--ms-border)] overflow-hidden">
           {PERMISSION_CATEGORIES.map((cat) => {
             const current = settings.permissions[cat.id];
             return (
               <div
                 key={cat.id}
-                className="p-4 flex items-center justify-between gap-4 flex-wrap"
+                className="px-6 py-4 flex items-center justify-between gap-4 flex-wrap"
               >
                 <div className="min-w-0">
-                  <div className="text-[14px] font-bold">{cat.label}</div>
-                  <div className="text-[12px] text-[var(--ms-text-secondary)]">{cat.desc}</div>
+                  <div className="text-[14px] font-semibold">{cat.label}</div>
+                  <div className="text-[12.5px] text-[var(--ms-text-secondary)]">{cat.desc}</div>
                 </div>
                 <select
                   aria-label={cat.label}
@@ -187,7 +185,7 @@ export function PermissionsCenterPage({ approvalsTabOnly = false }: { approvalsT
                       e.target.value as PermissionPolicy,
                     )
                   }
-                  className="lx-input w-52 h-8 text-[12.5px]"
+                  className="lx-input w-52 h-9 text-[12.5px]"
                 >
                   {POLICY_OPTIONS.map((pol) => (
                     <option key={pol} value={pol}>
@@ -241,11 +239,11 @@ export function LocalBridgePage() {
   }, [settings.bridge.mcpLoopbackEnabled]);
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-6 overflow-y-auto h-full">
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-6 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold">{t.bridge.title}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">{t.bridge.subtitle}</p>
+          <h1 className="text-[24px] font-semibold">{t.bridge.title}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">{t.bridge.subtitle}</p>
         </div>
         <Button
           size="sm"
@@ -265,7 +263,7 @@ export function LocalBridgePage() {
 
       {/* Bridge Master Controls & Loopback MCP */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-2">
+        <div className="p-6 ms-card-raised space-y-2 divide-y divide-[var(--ms-border)]">
           <LucianSwitch
             checked={settings.bridge.enabled}
             onChange={(enabled) =>
@@ -286,9 +284,9 @@ export function LocalBridgePage() {
           />
         </div>
 
-        <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-3">
+        <div className="p-6 ms-card-lavender space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-[15px] font-bold">{t.bridge.mcpTitle}</h2>
+            <h2 className="text-[15.5px] font-semibold">{t.bridge.mcpTitle}</h2>
             <StatusBadge tone={mcpInfo?.running ? 'success' : 'neutral'}>
               {mcpInfo?.running ? `127.0.0.1:${mcpInfo.port}` : t.common.disabled}
             </StatusBadge>
@@ -319,24 +317,26 @@ export function LocalBridgePage() {
       </div>
 
       {diagnosticResult && (
-        <pre className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-accent)]/40 text-[12px] font-mono overflow-x-auto">
+        <pre className="p-5 ms-card-raised border-[var(--ms-accent)]/45 text-[12px] font-mono overflow-x-auto">
           {diagnosticResult}
         </pre>
       )}
 
       {/* Registered Typed Tool Catalog */}
-      <div className="rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] overflow-hidden">
-        <div className="px-4 py-3 border-b border-[var(--ms-border)] font-bold text-[14px]">
+      <div className="ms-card-raised overflow-hidden">
+        <div className="px-6 py-4 border-b border-[var(--ms-border)] font-semibold text-[14.5px]">
           Registered Typed Tools ({tools.length})
         </div>
-        <div className="divide-y divide-[var(--ms-border-subtle)] max-h-96 overflow-y-auto">
+        <div className="divide-y divide-[var(--ms-border)] max-h-96 overflow-y-auto">
           {tools.map((tool) => (
-            <div key={tool.name} className="px-4 py-2.5 flex items-center justify-between gap-3">
+            <div key={tool.name} className="px-6 py-3 flex items-center justify-between gap-3">
               <div>
-                <code className="text-[13px] font-bold font-mono text-[var(--ms-accent-text)]">
+                <code className="text-[13px] font-semibold font-mono text-[var(--ms-accent-text)]">
                   {tool.name}
                 </code>
-                <div className="text-[12px] text-[var(--ms-text-secondary)]">{tool.description}</div>
+                <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
+                  {tool.description}
+                </div>
               </div>
               <RiskBadge risk={tool.riskLevel} />
             </div>
@@ -372,15 +372,15 @@ export function ComputerUsePage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-6 overflow-y-auto h-full">
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-6 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5">
             <StatusBadge tone="warning">{t.common.experimental}</StatusBadge>
             <StatusBadge tone="info">Windows UI Automation Preferred</StatusBadge>
           </div>
-          <h1 className="text-[22px] font-bold">{t.computerUse.title}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">
+          <h1 className="text-[24px] font-semibold">{t.computerUse.title}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
             {t.computerUse.subtitle}
           </p>
         </div>
@@ -394,7 +394,7 @@ export function ComputerUsePage() {
         </Button>
       </div>
 
-      <div className="p-5 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-4">
+      <div className="p-6 ms-card-raised space-y-4">
         <LucianSwitch
           checked={settings.computerUse.enabled}
           onChange={(enabled) =>
@@ -411,13 +411,13 @@ export function ComputerUsePage() {
         />
 
         {/* Approved Applications Allowlist */}
-        <div className="pt-3 border-t border-[var(--ms-border)] space-y-2.5">
-          <div className="text-[13px] font-bold">{t.computerUse.approvedAppsLabel}</div>
+        <div className="pt-4 border-t border-[var(--ms-border)] space-y-3">
+          <div className="text-[13.5px] font-semibold">{t.computerUse.approvedAppsLabel}</div>
           <div className="flex flex-wrap gap-2">
             {settings.computerUse.approvedApps.map((exe) => (
               <span
                 key={exe}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12px] font-mono"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--ms-bg)] border border-[var(--ms-border)] text-[12px] font-mono"
               >
                 <span>{exe}</span>
                 <button
@@ -443,7 +443,7 @@ export function ComputerUsePage() {
               value={newApprovedApp}
               onChange={(e) => setNewApprovedApp(e.target.value)}
               placeholder="e.g. mspaint.exe"
-              className="lx-input h-8 text-[12.5px] font-mono"
+              className="lx-input h-9 text-[12.5px] font-mono"
             />
             <Button
               size="sm"
@@ -466,7 +466,7 @@ export function ComputerUsePage() {
         </div>
 
         {/* Live Win32 & UIA Actions */}
-        <div className="flex gap-2 flex-wrap pt-2">
+        <div className="flex gap-2.5 flex-wrap pt-2">
           <Button
             size="sm"
             variant="secondary"
@@ -521,11 +521,11 @@ export function ComputerUsePage() {
       </div>
 
       {windowsList.length > 0 && (
-        <div className="rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] divide-y divide-[var(--ms-border-subtle)]">
+        <div className="ms-card-raised divide-y divide-[var(--ms-border)] overflow-hidden">
           {windowsList.map((w) => (
-            <div key={w.hwnd} className="px-4 py-2.5 flex items-center justify-between gap-3">
+            <div key={w.hwnd} className="px-5 py-3 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[13px] font-bold truncate">{w.title}</div>
+                <div className="text-[13.5px] font-semibold truncate">{w.title}</div>
                 <code className="text-[11.5px] font-mono text-[var(--ms-text-muted)]">
                   {w.processName} (PID {w.pid})
                 </code>
@@ -539,7 +539,7 @@ export function ComputerUsePage() {
       )}
 
       {uiaSnapshot && (
-        <pre className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] text-[11.5px] font-mono overflow-auto max-h-72">
+        <pre className="p-5 ms-card-raised text-[11.5px] font-mono overflow-auto max-h-72">
           {uiaSnapshot}
         </pre>
       )}
@@ -552,15 +552,21 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
   const { t, agentState } = useAppStore();
 
   return (
-    <div className={compact ? 'p-4 space-y-4 text-[12.5px]' : 'max-w-4xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full'}>
+    <div
+      className={
+        compact
+          ? 'p-5 space-y-4 text-[12.5px]'
+          : 'max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full'
+      }
+    >
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <div className="lx-orb" data-active={String(agentState.active)} aria-hidden="true" />
           <div>
-            <h2 className={compact ? 'text-[14px] font-bold' : 'text-[20px] font-bold'}>
+            <h2 className={compact ? 'text-[15px] font-semibold' : 'text-[22px] font-semibold'}>
               {t.activity.inspectorTitle}
             </h2>
-            <div className="text-[11.5px] text-[var(--ms-text-muted)]">
+            <div className="text-[12px] text-[var(--ms-text-muted)]">
               {agentState.active ? agentState.providerLabel : t.activity.noActiveTask}
             </div>
           </div>
@@ -586,13 +592,13 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
         )}
       </div>
 
-      {/* Lucian #454 Vertical Observable Step Timeline */}
-      <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-3">
-        <div className="text-[12px] font-bold uppercase tracking-wider text-[var(--ms-text-muted)]">
+      {/* Vertical Observable Step Timeline */}
+      <div className="p-5 ms-card-raised space-y-3">
+        <div className="text-[11.5px] font-semibold uppercase tracking-wider text-[var(--ms-text-muted)]">
           Observable Tool Steps ({agentState.steps.length})
         </div>
         {agentState.steps.length === 0 ? (
-          <p className="text-[12.5px] text-[var(--ms-text-muted)] m-0">
+          <p className="text-[13px] text-[var(--ms-text-muted)] m-0 leading-relaxed">
             Real tool invocations will stream here with exact duration and status.
           </p>
         ) : (
@@ -600,13 +606,16 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
             {agentState.steps.map((step) => (
               <li
                 key={step.id}
-                className="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-[var(--ms-bg)] border border-[var(--ms-border-subtle)]"
+                className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-[var(--ms-bg)] border border-[var(--ms-border)]"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   {step.status === 'completed' ? (
                     <CheckCircle2 size={15} className="text-[var(--ms-success)] shrink-0" />
                   ) : step.status === 'running' ? (
-                    <RefreshCw size={15} className="text-[var(--ms-accent-text)] animate-spin shrink-0" />
+                    <RefreshCw
+                      size={15}
+                      className="text-[var(--ms-accent-text)] animate-spin shrink-0"
+                    />
                   ) : (
                     <Activity size={15} className="text-[var(--ms-danger)] shrink-0" />
                   )}
@@ -629,15 +638,17 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
         )}
       </div>
 
-      {/* Lucian #224 Traceable Sources */}
       {agentState.sources.length > 0 && (
-        <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] space-y-2">
-          <div className="text-[12px] font-bold uppercase tracking-wider text-[var(--ms-text-muted)]">
+        <div className="p-5 ms-card-raised space-y-2">
+          <div className="text-[11.5px] font-semibold uppercase tracking-wider text-[var(--ms-text-muted)]">
             Traceable Context Sources
           </div>
           {agentState.sources.map((src) => (
-            <div key={src.id} className="p-2.5 rounded bg-[var(--ms-bg)] text-[12px]">
-              <strong>[{src.id}] {src.title}</strong> — <code>{src.pathOrUrl}</code>
+            <div key={src.id} className="p-3 rounded-2xl bg-[var(--ms-bg)] text-[12px]">
+              <strong>
+                [{src.id}] {src.title}
+              </strong>{' '}
+              — <code>{src.pathOrUrl}</code>
               <div className="text-[var(--ms-text-secondary)] mt-0.5">{src.snippet}</div>
             </div>
           ))}
@@ -645,7 +656,7 @@ export function AgentActivityInspectorPage({ compact = false }: { compact?: bool
       )}
 
       {agentState.lastOutput && (
-        <div className="p-4 rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] whitespace-pre-wrap text-[13px]">
+        <div className="p-5 ms-card-raised whitespace-pre-wrap text-[13.5px]">
           {agentState.lastOutput}
         </div>
       )}
@@ -678,12 +689,13 @@ export function ActivityHistoryPage() {
   }, [loadLogs]);
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
+    <div className="max-w-5xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold">{t.activity.historyTitle}</h1>
-          <p className="text-[13px] text-[var(--ms-text-secondary)] mt-1">
-            Local SQLite audit trail — passwords, cookies, API keys, and screenshot pixels are never logged.
+          <h1 className="text-[24px] font-semibold">{t.activity.historyTitle}</h1>
+          <p className="text-[13.5px] text-[var(--ms-text-secondary)] mt-1">
+            Local SQLite audit trail — passwords, cookies, API keys, and screenshot pixels are never
+            logged.
           </p>
         </div>
 
@@ -712,21 +724,21 @@ export function ActivityHistoryPage() {
         <div className="relative flex-1 min-w-[220px]">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ms-text-muted)]"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--ms-text-muted)]"
           />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.activity.searchLogs}
-            className="lx-input lx-input-search h-9"
+            className="lx-input lx-input-search h-10"
           />
         </div>
         <select
           aria-label="Filter category"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="lx-input w-44 h-9"
+          className="lx-input w-44 h-10"
         >
           <option value="">All Categories</option>
           {PERMISSION_CATEGORIES.map((c) => (
@@ -739,7 +751,7 @@ export function ActivityHistoryPage() {
           aria-label="Filter result"
           value={resultFilter}
           onChange={(e) => setResultFilter(e.target.value)}
-          className="lx-input w-40 h-9"
+          className="lx-input w-40 h-10"
         >
           <option value="">All Outcomes</option>
           <option value="success">success</option>
@@ -750,24 +762,24 @@ export function ActivityHistoryPage() {
         </select>
       </div>
 
-      <div className="rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] overflow-hidden">
+      <div className="ms-card-raised overflow-hidden">
         {entries.length === 0 ? (
-          <div className="py-12 text-center text-[13px] text-[var(--ms-text-muted)]">
+          <div className="py-14 text-center text-[13.5px] text-[var(--ms-text-muted)]">
             <Shield size={26} className="mx-auto mb-2 opacity-60" />
             No matching audit entries recorded yet.
           </div>
         ) : (
-          <div className="divide-y divide-[var(--ms-border-subtle)]">
+          <div className="divide-y divide-[var(--ms-border)]">
             {entries.map((row) => (
-              <div key={row.id} className="p-3.5 flex items-center justify-between gap-4 flex-wrap">
+              <div key={row.id} className="p-4 flex items-center justify-between gap-4 flex-wrap">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <code className="text-[13px] font-bold font-mono">{row.toolName}</code>
+                    <code className="text-[13px] font-semibold font-mono">{row.toolName}</code>
                     <span className="text-[11.5px] text-[var(--ms-text-muted)]">
                       by {row.requestingComponent} · {row.durationMs}ms
                     </span>
                   </div>
-                  <div className="text-[12px] text-[var(--ms-text-secondary)] truncate">
+                  <div className="text-[12.5px] text-[var(--ms-text-secondary)] truncate">
                     Scope: {row.requestedScope} · Decision: {row.approvalDecision}
                   </div>
                   {row.errorDetails && (
@@ -819,9 +831,9 @@ export function NotificationsCenterPage() {
   const { t, notifications, resolvedLocale } = useAppStore();
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-6 space-y-5 overflow-y-auto h-full">
+    <div className="max-w-4xl mx-auto py-8 px-7 space-y-5 overflow-y-auto h-full">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-[22px] font-bold">{t.nav.notifications}</h1>
+        <h1 className="text-[24px] font-semibold">{t.nav.notifications}</h1>
         <div className="flex gap-2">
           <Button
             size="sm"
@@ -841,19 +853,19 @@ export function NotificationsCenterPage() {
         </div>
       </div>
 
-      <div className="rounded-xl bg-[var(--ms-surface)] border border-[var(--ms-border)] overflow-hidden">
+      <div className="ms-card-raised overflow-hidden">
         {notifications.length === 0 ? (
-          <div className="py-14 text-center text-[13px] text-[var(--ms-text-muted)]">
+          <div className="py-16 text-center text-[13.5px] text-[var(--ms-text-muted)]">
             <Bell size={26} className="mx-auto mb-2 opacity-60" />
             All caught up — no recent notifications.
           </div>
         ) : (
-          <div className="divide-y divide-[var(--ms-border-subtle)]">
+          <div className="divide-y divide-[var(--ms-border)]">
             {notifications.map((n) => (
               <div key={n.id} className="p-4 flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-[13.5px] font-bold">{n.title}</div>
-                  <div className="text-[12.5px] text-[var(--ms-text-secondary)] mt-0.5">{n.body}</div>
+                  <div className="text-[14px] font-semibold">{n.title}</div>
+                  <div className="text-[13px] text-[var(--ms-text-secondary)] mt-0.5">{n.body}</div>
                 </div>
                 <span className="text-[11px] font-mono text-[var(--ms-text-muted)] shrink-0">
                   {formatDateTimeLocale(n.createdAt, resolvedLocale)}

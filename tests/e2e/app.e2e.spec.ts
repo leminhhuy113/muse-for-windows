@@ -70,16 +70,19 @@ test('Electron E2E, Security Isolation, Multi-Language (VI/EN/ZH), All Screens &
 
     // 1. Onboarding screen (Vietnamese default / switchable)
     await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'en' } }));
+    await win.waitForTimeout(220);
     await expect(win.locator('h1')).toContainText('Welcome to Muse for Windows');
     await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '01-onboarding-en.png') });
 
     // Switch to Vietnamese & verify NFC rendering
     await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'vi' } }));
+    await win.waitForTimeout(220);
     await expect(win.locator('h1')).toContainText('Chào mừng đến với Muse for Windows');
     await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '01-onboarding-vi.png') });
 
     // Switch to Simplified Chinese & verify CJK rendering
     await win.evaluate(() => window.museApi.updateSettings({ language: { locale: 'zh' } }));
+    await win.waitForTimeout(220);
     await expect(win.locator('h1')).toContainText('欢迎使用 Muse for Windows');
     await win.screenshot({ path: path.join(REPORTS_SHOTS, 'states', '01-onboarding-zh.png') });
 

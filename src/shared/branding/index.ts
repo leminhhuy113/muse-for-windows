@@ -1,5 +1,5 @@
 /**
- * Centralized Typed Branding Configuration — 1MS Studio (1RS v1.2)
+ * Centralized Typed Branding Configuration — 1MS Studio (1RS v1.2 · 1ms-studio.com DNA)
  * Only verified values are populated. Synchronized across Main, Preload, Renderer, About, and Packaging.
  */
 
@@ -10,6 +10,7 @@ export interface BrandingConfig {
   readonly shortName: string;
   readonly appId: string;
   readonly developer: string;
+  readonly studioFullName: string;
   readonly version: string;
   readonly buildNumber: string;
   readonly releaseChannel: ReleaseChannel;
@@ -35,20 +36,21 @@ export const BRANDING: BrandingConfig = {
   shortName: 'Muse',
   appId: 'com.1msstudio.museforwindows',
   developer: '1MS Studio',
+  studioFullName: 'ONE MILLISECOND STUDIO',
   version: '1.0.0',
-  buildNumber: '2026.11.25.100',
+  buildNumber: '2026.11.25.101',
   releaseChannel: 'stable',
   designStandard: '1RS v1.2',
-  designStandardSubtitle: 'Muse macOS-inspired Desktop Design System for Windows',
-  brandAccent: '#FAFF69',
-  brandAccentLight: '#C7CE32',
-  brandFont: 'Play',
+  designStandardSubtitle: '1MS Studio Botanical Editorial Desktop System · Lucian UX/UI',
+  brandAccent: '#C7F34B',
+  brandAccentLight: '#416315',
+  brandFont: 'Manrope',
   copyright: 'Copyright © 2026 1MS Studio',
   license: 'MIT License',
   repositoryUrl: 'https://github.com/leminhhuy113/muse-for-windows',
   releasesUrl: 'https://github.com/leminhhuy113/muse-for-windows/releases',
   supportUrl: 'https://github.com/leminhhuy113/muse-for-windows/issues',
-  websiteUrl: 'https://github.com/leminhhuy113/muse-for-windows',
+  websiteUrl: 'https://1ms-studio.com',
   officialMuseUrl: 'https://muse.ai',
   officialMusePortalUrl: 'https://ai.meta.com/muse',
   unofficialDisclaimerEn:

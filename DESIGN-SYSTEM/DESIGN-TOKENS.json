@@ -1,43 +1,47 @@
 {
   "$schema": "https://tr.designtokens.org/format/",
   "meta": {
-    "name": "1MS Studio Design System — Muse for Windows",
+    "name": "1MS Studio Design System — Muse for Windows (1ms-studio.com Edition)",
     "standard": "1RS v1.2",
     "version": "1.0.0",
-    "brandAccent": "#FAFF69",
-    "brandFont": "Play",
-    "iconSystem": "Lucide Icons"
+    "websiteReference": "https://1ms-studio.com/",
+    "brandAccent": "#C7F34B",
+    "brandFont": "Manrope",
+    "iconSystem": "Lucide Icons",
+    "uiComponentLibrary": "Lucian UX/UI (Seokwoooo/lucian-uxui)"
   },
   "primitive": {
     "color": {
-      "lime-400": "#FAFF69",
-      "lime-500": "#E5EC4B",
-      "lime-600": "#C7CE32",
-      "lime-700": "#9EA51C",
-      "lime-ink": "#101208",
-      "carbon-950": "#0B0D10",
-      "carbon-900": "#12151A",
-      "carbon-850": "#1B1F26",
-      "carbon-800": "#20242B",
-      "carbon-700": "#282D36",
-      "carbon-600": "#363D49",
-      "slate-50": "#F5F7FA",
-      "slate-100": "#F5F6F8",
-      "slate-150": "#EAEDF1",
-      "slate-200": "#DDE1E6",
-      "slate-400": "#949BA8",
-      "slate-500": "#727986",
-      "slate-600": "#555D68",
-      "slate-900": "#15171C",
+      "lime-400": "#DFF6B1",
+      "lime-500": "#C7F34B",
+      "lime-600": "#A8CF3B",
+      "forest-700": "#416315",
+      "forest-800": "#344621",
+      "olive-950": "#151A14",
+      "olive-900": "#1F271D",
+      "olive-850": "#283224",
+      "olive-800": "#34402E",
+      "olive-700": "#3B4933",
+      "olive-500": "#7E8B6F",
+      "sage-50": "#F5FBE9",
+      "sage-100": "#FBFDF7",
+      "sage-150": "#EDF5DF",
+      "sage-200": "#EAF1E1",
+      "sage-300": "#DCE5D2",
+      "sage-600": "#64705A",
+      "sage-700": "#535A4F",
+      "charcoal-900": "#181D27",
+      "peach-light": "#FFEBDC",
+      "peach-dark": "#342A22",
+      "lavender-light": "#F1EAFB",
+      "lavender-dark": "#2D2838",
       "white": "#FFFFFF",
-      "emerald-400": "#34D399",
-      "emerald-600": "#059669",
-      "amber-400": "#FBBF24",
-      "amber-600": "#D97706",
-      "rose-400": "#F87171",
-      "rose-600": "#DC2626",
-      "blue-400": "#60A5FA",
-      "blue-600": "#2563EB"
+      "mint-dark": "#98D5A4",
+      "mint-light": "#2C6A35",
+      "warn-dark": "#FFD18A",
+      "warn-light": "#8B5200",
+      "danger-dark": "#FFA59A",
+      "danger-light": "#B42318"
     },
     "spacing": {
       "1": "4px",
@@ -51,127 +55,138 @@
       "12": "48px"
     },
     "radius": {
-      "xs": "4px",
-      "sm": "6px",
-      "md": "8px",
-      "lg": "10px",
-      "xl": "12px",
+      "xs": "8px",
+      "sm": "12px",
+      "md": "14px",
+      "lg": "18px",
+      "xl": "24px",
+      "card": "28px",
       "pill": "9999px"
     },
     "typography": {
       "fontFamily": {
-        "brand": "'Play', 'Segoe UI', system-ui, -apple-system, sans-serif",
-        "mono": "'Cascadia Mono', 'Consolas', ui-monospace, monospace"
+        "brand": "'Manrope Variable', 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif",
+        "mono": "ui-monospace, 'Cascadia Mono', 'SFMono-Regular', 'Consolas', monospace"
       },
       "fontSize": {
         "xs": "11px",
-        "sm": "12px",
-        "compact": "13px",
-        "base": "14px",
+        "sm": "12.5px",
+        "compact": "13.5px",
+        "base": "14.5px",
         "md": "16px",
-        "lg": "20px",
-        "xl": "24px",
-        "2xl": "28px"
+        "lg": "21px",
+        "xl": "28px",
+        "2xl": "36px"
       },
       "lineHeight": {
-        "heading": "1.28",
-        "compact": "1.38",
-        "body": "1.5"
+        "heading": "1.2",
+        "compact": "1.4",
+        "body": "1.6"
       }
     },
     "motion": {
       "duration": {
-        "instant": "80ms",
-        "fast": "120ms",
-        "normal": "180ms",
-        "moderate": "220ms",
-        "slow": "280ms"
+        "instant": "90ms",
+        "fast": "150ms",
+        "normal": "240ms",
+        "moderate": "360ms",
+        "slow": "550ms"
       },
       "easing": {
-        "outQuint": "cubic-bezier(0.23, 1, 0.32, 1)",
-        "outCubic": "cubic-bezier(0.33, 1, 0.68, 1)",
-        "inOutCubic": "cubic-bezier(0.645, 0.045, 0.355, 1)",
-        "spring": "cubic-bezier(0.34, 1.36, 0.64, 1)"
+        "ease": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "spring": "cubic-bezier(0.34, 1.45, 0.64, 1)",
+        "reveal": "cubic-bezier(0.22, 1, 0.36, 1)"
       }
     }
   },
   "semantic": {
     "dark": {
-      "background": "#0B0D10",
-      "surface": "#12151A",
-      "surfaceElevated": "#1B1F26",
-      "surfaceHover": "#20242B",
-      "border": "#282D36",
-      "borderSubtle": "#1E232B",
-      "textPrimary": "#F5F7FA",
-      "textSecondary": "#949BA8",
-      "textMuted": "#858D9C",
-      "accent": "#FAFF69",
-      "accentHover": "#E5EC4B",
-      "accentSubtle": "rgba(250, 255, 105, 0.12)",
-      "accentForeground": "#101208",
-      "success": "#34D399",
-      "warning": "#FBBF24",
-      "danger": "#F87171",
-      "info": "#60A5FA"
+      "background": "#151A14",
+      "surface": "#1F271D",
+      "surfaceElevated": "#283224",
+      "surfaceHover": "#34402E",
+      "peach": "#342A22",
+      "lavender": "#2D2838",
+      "border": "#3B4933",
+      "borderControl": "#7E8B6F",
+      "textPrimary": "#F4F9ED",
+      "textSecondary": "#CBD5C1",
+      "textMuted": "#ABB99E",
+      "brand": "#C7F34B",
+      "action": "#C7F34B",
+      "actionForeground": "#151A14",
+      "accent": "#C7F34B",
+      "accentHover": "#B5E238",
+      "accentSubtle": "#344621",
+      "accentForeground": "#151A14",
+      "success": "#98D5A4",
+      "warning": "#FFD18A",
+      "danger": "#FFA59A",
+      "info": "#9EC5FF"
     },
     "light": {
-      "background": "#F5F6F8",
-      "surface": "#FFFFFF",
+      "background": "#F5FBE9",
+      "surface": "#FBFDF7",
       "surfaceElevated": "#FFFFFF",
-      "surfaceHover": "#EAEDF1",
-      "border": "#DDE1E6",
-      "borderSubtle": "#E8ECEF",
-      "textPrimary": "#15171C",
-      "textSecondary": "#555D68",
-      "textMuted": "#636B78",
-      "accent": "#C7CE32",
-      "accentHover": "#B2B926",
-      "accentSubtle": "rgba(199, 206, 50, 0.16)",
-      "accentForeground": "#101208",
-      "success": "#059669",
-      "warning": "#B45309",
-      "danger": "#DC2626",
-      "info": "#2563EB"
+      "surfaceSoft": "#EDF5DF",
+      "surfaceHover": "#EAF1E1",
+      "peach": "#FFEBDC",
+      "lavender": "#F1EAFB",
+      "border": "#DCE5D2",
+      "borderControl": "#7E8B6F",
+      "textPrimary": "#151A14",
+      "textSecondary": "#535A4F",
+      "textMuted": "#64705A",
+      "brand": "#C7F34B",
+      "action": "#181D27",
+      "actionForeground": "#FFFFFF",
+      "accent": "#416315",
+      "accentHover": "#334F0F",
+      "accentSubtle": "#E9F6CF",
+      "accentForeground": "#FFFFFF",
+      "success": "#2C6A35",
+      "warning": "#8B5200",
+      "danger": "#B42318",
+      "info": "#1D5BBF"
     }
   },
   "accentPresets": {
     "electric-lime": {
-      "labelEn": "1MS Electric Lime (Default)",
-      "labelVi": "Vàng Chanh Điện 1MS (Mặc định)",
-      "dark": "#FAFF69",
-      "light": "#C7CE32",
-      "foreground": "#101208"
+      "labelEn": "1MS Botanical Lime (#C7F34B)",
+      "labelVi": "Xanh Chanh 1MS Studio (#C7F34B)",
+      "dark": "#C7F34B",
+      "light": "#416315",
+      "foreground": "#151A14"
     },
     "ice-cyan": {
-      "labelEn": "Arctic Pulse",
-      "labelVi": "Xanh Băng Bắc Cực",
-      "dark": "#67E8F9",
-      "light": "#0891B2",
-      "foreground": "#081216"
+      "labelEn": "Arctic Mint",
+      "labelVi": "Xanh Băng Thảo Mộc",
+      "dark": "#7FE3F5",
+      "light": "#0E7490",
+      "foreground": "#0B191E"
     },
     "emerald-signal": {
-      "labelEn": "Signal Mint",
-      "labelVi": "Xanh Ngọc Tín Hiệu",
-      "dark": "#6EE7B7",
-      "light": "#059669",
-      "foreground": "#06140F"
+      "labelEn": "Forest Signal",
+      "labelVi": "Xanh Rừng Tín Hiệu",
+      "dark": "#98D5A4",
+      "light": "#2C6A35",
+      "foreground": "#111E14"
     },
     "warm-amber": {
-      "labelEn": "Solar Amber",
-      "labelVi": "Hổ Phách Ấm",
-      "dark": "#FCD34D",
-      "light": "#D97706",
-      "foreground": "#140F04"
+      "labelEn": "Terracotta Sun",
+      "labelVi": "Nắng Ấm 1MS",
+      "dark": "#FFD18A",
+      "light": "#8B5200",
+      "foreground": "#1F1405"
     }
   },
   "component": {
     "titlebar": {
-      "height": "38px"
+      "height": "44px"
     },
     "navRail": {
-      "collapsedWidth": "56px",
-      "expandedWidth": "224px"
+      "collapsedWidth": "64px",
+      "expandedWidth": "236px"
     },
     "inspector": {
       "defaultWidth": "340px",
