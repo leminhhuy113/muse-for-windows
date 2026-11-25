@@ -516,7 +516,7 @@ export class LocalAgentBridge {
         return { tabs: await this.browserController.listTabs() };
       }
       case 'browser.navigate': {
-        const { url } = z.object({ url: z.string().url() }).parse(rawInput);
+        const { url } = z.object({ url: z.url().max(2048) }).parse(rawInput);
         return await this.browserController.navigate(url, browserOpts);
       }
       case 'browser.snapshot': {

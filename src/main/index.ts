@@ -310,7 +310,7 @@ if (!isSingleInstance) {
     });
 
     registerSecureHandler(IPC_CHANNELS.APP_OPEN_EXTERNAL, async (_e, url: string) => {
-      const safeUrl = z.string().url().max(2048).parse(url);
+      const safeUrl = z.url().max(2048).parse(url);
       if (!isSafeExternalHttpUrl(safeUrl)) {
         throw new Error('Blocked unsafe external protocol.');
       }

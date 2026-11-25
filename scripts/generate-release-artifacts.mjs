@@ -19,6 +19,7 @@ fs.mkdirSync(DIST_DIR, { recursive: true });
 fs.mkdirSync(DOCS_ASSETS_DIR, { recursive: true });
 
 async function generateSocialPreview() {
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   const outPng = path.join(DOCS_ASSETS_DIR, 'github-social-preview.png');
   const playWoffPath = path
     .join(ROOT, 'node_modules', '@fontsource', 'play', 'files', 'play-latin-700-normal.woff2')
@@ -98,7 +99,7 @@ async function generateSocialPreview() {
         <circle cx="384" cy="140" r="30" fill="#FAFF69"/>
       </svg>
       <div>
-        <div style="font-size:20px;font-weight:700;">Muse v1.0.0</div>
+        <div style="font-size:20px;font-weight:700;">Muse v${pkg.version}</div>
         <div style="font-size:13px;color:#949BA8;">Developed by 1MS Studio</div>
       </div>
     </div>

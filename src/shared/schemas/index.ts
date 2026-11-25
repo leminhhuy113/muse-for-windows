@@ -86,7 +86,7 @@ export const AppSettingsSchema = z.object({
   workspace: z.object({
     rootPath: z.string().min(1).max(1024),
     quotaBytes: z.number().int().min(100 * 1024 * 1024).max(500 * 1024 * 1024 * 1024),
-    approvedFolders: z.array(ApprovedFolderSchema),
+    approvedFolders: z.array(ApprovedFolderSchema).max(100),
     autoCleanTempDays: z.number().int().min(1).max(90),
   }),
   shortcuts: ShortcutBindingsSchema,
@@ -111,7 +111,7 @@ export const AppSettingsSchema = z.object({
   }),
   computerUse: z.object({
     enabled: z.boolean(),
-    approvedApps: z.array(z.string().min(1).max(120)),
+    approvedApps: z.array(z.string().min(1).max(120)).max(100),
     maxSessionSeconds: z.number().int().min(10).max(600),
     preferUia: z.boolean(),
   }),
@@ -133,7 +133,7 @@ export const AppSettingsSchema = z.object({
   integrations: z.object({
     modeCEnabled: z.boolean(),
     modeCProvider: z.enum(['ollama', 'openai-compatible']),
-    modeCBaseUrl: z.string().url().max(512),
+    modeCBaseUrl: z.url().max(512),
     modeCModel: z.string().min(1).max(120),
     modeCHasApiKey: z.boolean(),
   }),

@@ -41,6 +41,9 @@ jobs:
       - name: Verify original brand assets
         run: npm run assets:generate
 
+      - name: Mandatory production dependency vulnerability audit
+        run: npm audit --omit=dev --audit-level=high
+
       - name: TypeScript strict check
         run: npm run typecheck
 

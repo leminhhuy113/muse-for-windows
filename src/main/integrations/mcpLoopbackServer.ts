@@ -8,6 +8,7 @@
  */
 import crypto from 'node:crypto';
 import http from 'node:http';
+import { BRANDING } from '@shared/branding';
 import type { BridgeToolName } from '@shared/types';
 import { BRIDGE_TOOL_CATALOG, type LocalAgentBridge } from '../bridge/localAgentBridge';
 
@@ -122,7 +123,7 @@ export class LoopbackMcpServer {
               id: rpc.id ?? 1,
               result: {
                 protocolVersion: '2025-03-26',
-                serverInfo: { name: 'muse-for-windows-local-bridge', version: '1.0.0' },
+                serverInfo: { name: 'muse-for-windows-local-bridge', version: BRANDING.version },
                 capabilities: { tools: {} },
               },
             }),
