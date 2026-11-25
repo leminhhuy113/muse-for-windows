@@ -1,0 +1,81 @@
+name: Windows Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release version tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+  attestations: write
+  id-token: write
+
+jobs:
+  release-windows:
+    name: Build & Publish Windows x64 + ARM64 Artifacts
+    runs-on: windows-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install pinned dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Run approved binary setup scripts
+        run: |
+          node node_modules/esbuild/install.js
+          node node_modules/@tailwindcss/oxide/scripts/install.js
+          node node_modules/electron/install.js
+
+      - name: Generate original brand assets
+        run: npm run assets:generate
+
+      - name: Run pre-release quality & security gates
+        run: |
+          npm run typecheck
+          npm run lint
+          npm test
+          npm run security:scan
+
+      - name: Package Windows x64 & ARM64 Setup + Portable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/prepare-wincodesign.mjs
+          npm run build
+          npx electron-builder --win nsis portable --x64 --arm64 --publish never
+
+      - name: Generate SBOM & SHA256SUMS
+        run: npm run release:metadata
+
+      - name: Attest build provenance
+        if: github.event_name == 'push'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'dist/*.exe'
+
+      - name: Publish to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            dist/*.exe
+            dist/*.blockmap
+            dist/*.yml
+            dist/SHA256SUMS.txt
+            dist/SBOM.cdx.json

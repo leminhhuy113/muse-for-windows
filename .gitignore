@@ -1,0 +1,54 @@
+# Dependencies & build outputs
+node_modules/
+dist/
+out/
+release/
+build-temp/
+coverage/
+playwright-report/
+test-results/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & runtime databases
+*.log
+npm-debug.log*
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Code signing & private keys
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.crt
+
+# Crash dumps & temporary files
+*.dmp
+*.tmp
+*.temp
+*.bak
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Application runtime user data (never commit)
+.user-data/
+.assistant-browser-profile/
+.muse-workspace-test/
+.local-cache/
+
+# Private local agent workspace configuration (AGENTS.md is public & tracked)
+.agents/
+.claude/
+.gstack/
+.hallmark/

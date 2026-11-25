@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability (Private Advisory)
+    url: https://github.com/leminhhuy113/muse-for-windows/security/advisories/new
+    about: Privately report security vulnerabilities without exposing exploits publicly.
+  - name: Documentation & Troubleshooting
+    url: https://github.com/leminhhuy113/muse-for-windows/blob/main/docs/TROUBLESHOOTING.md
+    about: Read user guides and common troubleshooting steps first.

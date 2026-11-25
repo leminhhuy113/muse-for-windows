@@ -1,0 +1,39 @@
+import { resolve } from 'node:path';
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  main: {
+    plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        '@shared': resolve('src/shared'),
+        '@main': resolve('src/main'),
+      },
+    },
+    build: {
+      rollupOptions: {
+        external: ['node:sqlite'],
+      },
+    },
+  },
+  preload: {
+    plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        '@shared': resolve('src/shared'),
+      },
+    },
+  },
+  renderer: {
+    resolve: {
+      alias: {
+        '@renderer': resolve('src/renderer'),
+        '@shared': resolve('src/shared'),
+        '@design-system': resolve('DESIGN-SYSTEM'),
+      },
+    },
+    plugins: [react(), tailwindcss()],
+  },
+});

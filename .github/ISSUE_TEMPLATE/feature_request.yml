@@ -1,0 +1,32 @@
+name: Feature Request
+description: Propose an enhancement for Muse for Windows (1MS Studio · 1RS v1.2).
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem or Use Case
+      description: What workflow or native Windows capability would this improve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Component Area
+      options:
+        - Official Muse Shell (Mode A)
+        - Quick Assistant / Shortcuts
+        - Local Workspace
+        - Permissions Center / Security
+        - Local Agent Bridge / MCP
+        - Windows Computer Use / Browser Automation
+        - UI/UX & Localization (1RS v1.2)
+    validations:
+      required: true

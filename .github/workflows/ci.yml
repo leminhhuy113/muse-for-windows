@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Windows Verify (Typecheck, Lint, Test, Build, E2E)
+    runs-on: windows-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install pinned dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Run approved binary setup scripts
+        run: |
+          node node_modules/esbuild/install.js
+          node node_modules/@tailwindcss/oxide/scripts/install.js
+          node node_modules/electron/install.js
+
+      - name: Verify original brand assets
+        run: npm run assets:generate
+
+      - name: TypeScript strict check
+        run: npm run typecheck
+
+      - name: ESLint check
+        run: npm run lint
+
+      - name: Unit, Integration & Security tests
+        run: npm test
+
+      - name: Production Electron Vite build
+        run: npm run build
+
+      - name: Electron E2E & Sandbox verification
+        run: npm run test:e2e

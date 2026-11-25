@@ -1,0 +1,55 @@
+appId: com.1msstudio.museforwindows
+productName: Muse for Windows
+copyright: "Copyright © 2026 1MS Studio. Powered by 1RS v1.2."
+asar: true
+directories:
+  buildResources: resources
+  output: dist
+files:
+  - "out/**/*"
+  - "resources/icons/**/*"
+  - "native/windows-helper/**/*"
+  - "LICENSE"
+  - "THIRD-PARTY-NOTICES.md"
+  - "!node_modules/**/{test,__tests__,tests,powered-test,example,examples}"
+extraResources:
+  - from: "native/windows-helper"
+    to: "windows-helper"
+  - from: "resources/icons"
+    to: "icons"
+publish:
+  provider: github
+  owner: leminhhuy113
+  repo: muse-for-windows
+  releaseType: release
+win:
+  icon: resources/icons/muse.ico
+  legalTrademarks: "Muse for Windows — Developed by 1MS Studio (1RS v1.2)"
+  requestedExecutionLevel: asInvoker
+  verifyUpdateCodeSignature: false
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - arm64
+    - target: portable
+      arch:
+        - x64
+        - arm64
+nsis:
+  artifactName: "Muse-for-Windows-1MS-Studio-v${version}-Setup-${arch}.${ext}"
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: "Muse for Windows"
+  uninstallDisplayName: "Muse for Windows (1MS Studio)"
+  deleteAppDataOnUninstall: false
+  installerIcon: resources/icons/muse.ico
+  uninstallerIcon: resources/icons/muse.ico
+  installerHeaderIcon: resources/icons/muse.ico
+portable:
+  artifactName: "Muse-for-Windows-1MS-Studio-v${version}-Portable-${arch}.${ext}"
+  requestExecutionLevel: user
