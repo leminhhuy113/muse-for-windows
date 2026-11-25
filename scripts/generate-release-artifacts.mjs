@@ -44,10 +44,10 @@ async function generateSocialPreview() {
     .replace(/\\/g, '/');
 
   const darkShotPath = path
-    .join(ROOT, 'reports', 'screenshots', 'states', '02-quota-popover-vi.png')
+    .join(ROOT, 'docs', 'assets', 'screenshots', 'agent-activity-inspector.png')
     .replace(/\\/g, '/');
   const lightShotPath = path
-    .join(ROOT, 'reports', 'screenshots', 'light', '09-local-bridge-vi-light.png')
+    .join(ROOT, 'docs', 'assets', 'screenshots', 'theme-light.png')
     .replace(/\\/g, '/');
 
   /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */

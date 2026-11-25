@@ -38,21 +38,21 @@ Hiện tại, **Muse** (`https://muse.ai`, phát triển bởi Meta Platforms, I
 
 ## Hình ảnh Thực tế từ Ứng dụng
 
-| Không gian Muse Chính (Giao diện Tối) | Cửa sổ Trợ lý Nhanh (Quick Assistant) |
+| Không gian Muse & Khay Công cụ Windows | Thẻ Hạn mức Sử dụng Trực tiếp (Góc trái dưới & Tray) |
 |---|---|
-| ![Main Workspace](./docs/assets/screenshots/main-workspace-dark.png) | ![Quick Assistant](./docs/assets/screenshots/quick-assistant.png) |
+| ![Main Workspace VI](./docs/assets/screenshots/vi/main-workspace-dark.png) | ![Quota Popover VI](./docs/assets/screenshots/vi/quota-popover.png) |
+
+| Cầu nối Công cụ Cục bộ (100% Tiếng Việt) | Cửa sổ Trợ lý Nhanh (Quick Assistant) |
+|---|---|
+| ![Local Bridge VI](./docs/assets/screenshots/vi/local-bridge-dark.png) | ![Quick Assistant](./docs/assets/screenshots/quick-assistant.png) |
 
 | Bảng Lệnh Nhanh (`Ctrl+K`) | Trình Quản lý Thư mục Cục bộ |
 |---|---|
 | ![Command Palette](./docs/assets/screenshots/command-palette.png) | ![Local Workspace](./docs/assets/screenshots/local-workspace.png) |
 
-| Trung tâm Quyền hạn (Default-Deny) | Thẻ Hạn mức Sử dụng Trực tiếp (Góc trái dưới & Tray) |
+| Giao diện Tối (`#151A14` Botanical Dark) | Giao diện Sáng (`#F5FBE9` Sage-Cream Light) |
 |---|---|
-| ![Permissions Center](./docs/assets/screenshots/permissions-center.png) | ![Live Quota Popover](./docs/assets/screenshots/agent-activity-inspector.png) |
-
-| Cài đặt (Giao diện Tối) | Cài đặt (Giao diện Sáng) |
-|---|---|
-| ![Settings Dark](./docs/assets/screenshots/theme-dark.png) | ![Settings Light](./docs/assets/screenshots/theme-light.png) |
+| ![Settings Dark](./docs/assets/screenshots/theme-dark.png) | ![Theme Light](./docs/assets/screenshots/theme-light.png) |
 
 ---
 

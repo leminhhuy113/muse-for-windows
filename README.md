@@ -38,7 +38,7 @@
 
 ## Product Screenshots
 
-| Main Desktop Workspace (Dark) | Quick Assistant Launcher |
+| Main Desktop Workspace & Windows Companion | Quick Assistant Launcher |
 |---|---|
 | ![Main Workspace](./docs/assets/screenshots/main-workspace-dark.png) | ![Quick Assistant](./docs/assets/screenshots/quick-assistant.png) |
 
@@ -50,9 +50,9 @@
 |---|---|
 | ![Permissions Center](./docs/assets/screenshots/permissions-center.png) | ![Live Quota Popover](./docs/assets/screenshots/agent-activity-inspector.png) |
 
-| Settings (Dark Theme) | Settings (Light Theme) |
+| Appearance Settings (Botanical Dark) | Local Agent Bridge (Sage-Cream Light) |
 |---|---|
-| ![Settings Dark](./docs/assets/screenshots/theme-dark.png) | ![Settings Light](./docs/assets/screenshots/theme-light.png) |
+| ![Settings Dark](./docs/assets/screenshots/theme-dark.png) | ![Local Bridge Light](./docs/assets/screenshots/theme-light.png) |
 
 | About & Runtime Information |
 |---|

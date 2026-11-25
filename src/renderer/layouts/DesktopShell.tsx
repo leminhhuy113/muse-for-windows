@@ -688,12 +688,21 @@ export function DesktopShell() {
               ref={museSlotRef}
               className="flex-1 h-full bg-[var(--ms-bg)] relative grid place-items-center"
             >
-              <div className="text-center space-y-2.5 p-8 max-w-sm opacity-75">
-                <div className="mx-auto w-fit">
-                  <BrandLogo size={48} />
+              <div className="text-center space-y-3 p-8 max-w-md">
+                <div className="mx-auto w-fit p-3 rounded-[22px] bg-[var(--ms-surface)] border border-[var(--ms-border)]">
+                  <BrandLogo size={46} />
                 </div>
-                <div className="text-[15px] font-semibold">{t.app.name}</div>
-                <div className="text-[12px] text-[var(--ms-text-muted)]">{t.titlebar.loading}</div>
+                <div className="space-y-1">
+                  <div className="text-[16px] font-semibold tracking-tight">{t.app.name}</div>
+                  <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
+                    {t.app.sessionSub} · https://muse.ai
+                  </div>
+                </div>
+                <div>
+                  <StatusBadge tone={museState.isLoading ? 'info' : 'accent'}>
+                    {museState.isLoading ? t.titlebar.loading : t.titlebar.online}
+                  </StatusBadge>
+                </div>
               </div>
             </div>
             {settings.appearance.inspectorOpen && !settings.general.focusMode && (
