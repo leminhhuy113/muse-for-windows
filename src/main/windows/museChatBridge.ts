@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Headless / Background Official Muse Session Chat Bridge
  * Synchronizes real conversations, streaming assistant responses, agent status, and scheduled tasks
  * from the isolated `persist:muse-official` engine window into the native 1MS Studio React Chat UI,
@@ -243,7 +243,7 @@ const EXTRACT_CHAT_DOM_SCRIPT = `(() => {
       const insideScroller = Boolean(mainScroller && mainScroller.contains(el));
       if (r.left < colLeft - 4 || r.right > rightPanelLeft + 8) continue;
       if (!insideScroller && (r.top < 54 || r.bottom > composerTop + 4)) continue;
-      if (r.width < 26 || r.width > colWidth * 0.95 || r.height < 22) continue;
+      if (r.width < 80 || r.width > colWidth * 0.95 || r.height < 36) continue;
 
       const cs = getComputedStyle(el);
       const bg = cs.backgroundColor;
@@ -259,6 +259,12 @@ const EXTRACT_CHAT_DOM_SCRIPT = `(() => {
 
       const rawTxt = (el.textContent || '').replace(/\\s+/g, ' ').trim();
       if (!rawTxt || /^(?:Chats|Call|Invite|Message)$/i.test(rawTxt)) continue;
+      // Skip pure emoji / reaction-button content (thumbs up, fire, etc.)
+      if (rawTxt.length < 4) continue;
+      if (/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u2764\u2665\u2660\u2663\u2666\u2714\u2718 ]{1,8}$/u.test(rawTxt)) continue;
+      // Skip elements whose only direct children are buttons/SVG (reaction containers)
+      const dbChk = Array.from(el.children).filter(c => c.tagName === 'BUTTON' || c.tagName === 'SVG' || c.getAttribute('role') === 'button');
+      if (dbChk.length > 0 && el.children.length === dbChk.length) continue;
 
       bubbleCandidates.push(el);
     }
@@ -592,7 +598,13 @@ export class MuseChatBridge {
       this.snapshot.agentName = nextAgentName;
       this.snapshot.agentConnected = raw.agentConnected;
       if (raw.agentAvatarUrl) this.snapshot.agentAvatarUrl = raw.agentAvatarUrl;
-      this.snapshot.messages = mappedMessages;
+      // Guard: do not wipe messages with empty array while streaming/sending
+      if (mappedMessages.length > 0) {
+        this.snapshot.messages = mappedMessages;
+      } else if (!this.snapshot.streaming && !this.snapshot.sending) {
+        this.snapshot.messages = mappedMessages; // allow clearing only when truly idle
+      }
+      // (if empty mid-stream, keep last known good messages)
       this.snapshot.threads = mappedThreads;
       this.snapshot.scheduledTasks = mappedTasks;
 
