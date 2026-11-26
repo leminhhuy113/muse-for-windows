@@ -12,6 +12,7 @@ import type {
   BridgeToolName,
   DownloadItemRecord,
   LiveAgentExecutionState,
+  MuseChatSnapshot,
   MuseConnectionState,
   MuseQuotaSnapshot,
   PermissionCategory,
@@ -31,6 +32,7 @@ const museApi = {
       settings: AppSettings;
       museState: MuseConnectionState;
       quotaState: MuseQuotaSnapshot;
+      chatState: MuseChatSnapshot;
       agentState: LiveAgentExecutionState;
       pendingApprovals: ToolApprovalRequest[];
       updateState: UpdateStateSnapshot;
@@ -77,6 +79,17 @@ const museApi = {
   museGetQuota: () => ipcRenderer.invoke(IPC_CHANNELS.MUSE_GET_QUOTA) as Promise<MuseQuotaSnapshot>,
   museSyncQuota: (interactive = true) =>
     ipcRenderer.invoke(IPC_CHANNELS.MUSE_SYNC_QUOTA, interactive) as Promise<MuseQuotaSnapshot>,
+  museGetChatSnapshot: () =>
+    ipcRenderer.invoke(IPC_CHANNELS.MUSE_GET_CHAT_SNAPSHOT) as Promise<MuseChatSnapshot>,
+  museSendMessage: (payload: { prompt: string; attachments?: string[] }) =>
+    ipcRenderer.invoke(IPC_CHANNELS.MUSE_SEND_MESSAGE, payload) as Promise<MuseChatSnapshot>,
+  museNewChat: () => ipcRenderer.invoke(IPC_CHANNELS.MUSE_NEW_CHAT) as Promise<MuseChatSnapshot>,
+  museSelectThread: (threadId: string) =>
+    ipcRenderer.invoke(IPC_CHANNELS.MUSE_SELECT_THREAD, threadId) as Promise<MuseChatSnapshot>,
+  museOpenSignInWindow: () =>
+    ipcRenderer.invoke(IPC_CHANNELS.MUSE_OPEN_SIGNIN_WINDOW) as Promise<boolean>,
+  musePickChatAttachments: () =>
+    ipcRenderer.invoke(IPC_CHANNELS.MUSE_PICK_CHAT_ATTACHMENTS) as Promise<string[]>,
 
   // Quick Assistant
   submitQuickPrompt: (payload: {
@@ -207,6 +220,7 @@ const museApi = {
     const allowedEvents = new Set<string>([
       IPC_CHANNELS.EVENT_MUSE_STATE,
       IPC_CHANNELS.EVENT_QUOTA_UPDATED,
+      IPC_CHANNELS.EVENT_MUSE_CHAT_UPDATED,
       IPC_CHANNELS.EVENT_SETTINGS_UPDATED,
       IPC_CHANNELS.EVENT_APPROVAL_REQUESTED,
       IPC_CHANNELS.EVENT_APPROVAL_RESOLVED,

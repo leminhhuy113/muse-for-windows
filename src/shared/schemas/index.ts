@@ -125,6 +125,11 @@ export const AppSettingsSchema = z.object({
     notifyOnDownload: z.boolean(),
     notifyOnApproval: z.boolean(),
     notifyOnUpdate: z.boolean(),
+    quotaAlerts: z.object({
+      enabled: z.boolean(),
+      warning: z.number().int().min(1).max(99),
+      critical: z.number().int().min(2).max(100),
+    }).refine(({ warning, critical }) => warning < critical),
   }),
   privacy: z.object({
     auditRetentionDays: z.number().int().min(1).max(365),
@@ -224,4 +229,9 @@ export const MuseQuotaSnapshotSchema = z.object({
   workspaceQuotaBytes: z.number().min(1),
   syncedAt: z.string().nullable(),
   source: z.enum(['none', 'cache', 'relay', 'dom']),
+});
+
+export const MuseSendMessageSchema = z.object({
+  prompt: z.string().min(1).max(32000),
+  attachments: z.array(z.string().max(1024)).max(10).default([]),
 });

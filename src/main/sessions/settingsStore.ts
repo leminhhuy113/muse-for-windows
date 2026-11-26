@@ -86,6 +86,7 @@ export function createDefaultSettings(defaultWorkspaceRoot?: string): AppSetting
       notifyOnDownload: true,
       notifyOnApproval: true,
       notifyOnUpdate: true,
+      quotaAlerts: { enabled: true, warning: 80, critical: 95 },
     },
     privacy: {
       auditRetentionDays: 30,

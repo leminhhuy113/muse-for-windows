@@ -5,8 +5,9 @@ import path from 'node:path';
 import { _electron as electron, expect, test } from '@playwright/test';
 
 const ROOT = process.cwd();
-const REPORTS_SHOTS = path.join(ROOT, 'reports', 'screenshots');
-const PUBLIC_SHOTS = path.join(ROOT, 'docs', 'assets', 'screenshots');
+const SCREENSHOT_ROOT = process.env.MUSE_E2E_SCREENSHOT_ROOT || ROOT;
+const REPORTS_SHOTS = path.join(SCREENSHOT_ROOT, 'reports', 'screenshots');
+const PUBLIC_SHOTS = path.join(SCREENSHOT_ROOT, 'docs', 'assets', 'screenshots');
 const PUBLIC_VI_SHOTS = path.join(PUBLIC_SHOTS, 'vi');
 
 for (const sub of ['dark', 'light', 'compact', 'high-dpi', 'states']) {
@@ -15,7 +16,7 @@ for (const sub of ['dark', 'light', 'compact', 'high-dpi', 'states']) {
 fs.mkdirSync(PUBLIC_SHOTS, { recursive: true });
 fs.mkdirSync(PUBLIC_VI_SHOTS, { recursive: true });
 
-test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification & Live Quota Usage', async () => {
+test('Electron E2E — Native Muse Chat UI, Direct Quick Assistant Delivery, Top Menu & Quota Verification', async () => {
   const tmpUserData = fs.mkdtempSync(path.join(os.tmpdir(), 'muse-e2e-ud-'));
   const tmpWorkspace = fs.mkdtempSync(path.join(os.tmpdir(), 'muse-e2e-ws-'));
 
@@ -23,7 +24,7 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
   fs.mkdirSync(path.join(tmpWorkspace, 'Shared'), { recursive: true });
   fs.writeFileSync(
     path.join(tmpWorkspace, 'Workspace', 'Q4-Product-Roadmap.md'),
-    '# Q4 Product Roadmap\n\n- Native Windows 11 5-Space Workstation\n- Live Quota Usage in Bottom-Left Status Bar & Tray Icon\n- 34 Default-Deny Local Windows Tools\n',
+    '# Q4 Product Roadmap\n\n- Native 1MS Studio Chat Interface\n- Direct Quick Assistant Delivery to Muse\n- Live Quota Usage in Bottom-Left Status Bar & Tray Icon\n',
     'utf8',
   );
   fs.writeFileSync(
@@ -45,7 +46,7 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
 
   try {
     let win = await app.firstWindow();
-    for (let attempt = 0; attempt < 20; attempt++) {
+    for (let attempt = 0; attempt < 25; attempt++) {
       const match = app.windows().find((w) => w.url().includes('index.html'));
       if (match) {
         win = match;
@@ -77,31 +78,62 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
     expect(securityCheck.hasProcess).toBe(false);
     expect(securityCheck.hasMuseApi).toBe(true);
 
-    // 2. Verify Vietnamese default Onboarding & Pure Vietnamese Screens (`docs/assets/screenshots/vi/*`)
+    // 2. Verify Vietnamese default Onboarding & Enter Native Muse Chat
     await win.waitForTimeout(180);
     await expect(win.locator('h1')).toContainText('Chào mừng đến với Muse cho Windows');
     await win.screenshot({ path: path.join(REPORTS_SHOTS, 'dark', '01-onboarding-vi.png') });
 
     await win.getByRole('button', { name: 'Bắt đầu làm việc với Muse' }).click();
-    await win.waitForTimeout(220);
+    await win.waitForTimeout(300);
 
-    // Sync live Quota Usage (45% used / 1B tokens left)
-    await win.getByTestId('quota-sync-btn').click();
-    await expect(win.getByTestId('quota-status-trigger')).toContainText('45% đã dùng', {
+    // 2.1 Verify Native Muse Chat synced initial state (NO embedded website chrome!)
+    await expect(win.getByTestId('native-agent-name')).toContainText('Muse Assistant', {
       timeout: 8000,
     });
+    await expect(win.getByTestId('native-chat-stream')).toContainText('Workspace Ready:');
+    await expect(win.getByTestId('scheduled-task-card').first()).toBeVisible();
+
+    // 2.2 Verify top header language menu opens cleanly on top of Muse (never hidden behind WebContentsView!)
+    await win.getByRole('button', { name: 'Chọn ngôn ngữ hiển thị' }).click();
+    await expect(win.getByRole('option', { name: /Tiếng Việt/ })).toBeVisible();
+    await win.keyboard.press('Escape');
+
+    // 2.3 Sync live Quota Usage (45% đã dùng / Còn 1 tỷ token)
+    await win.getByTestId('quota-sync-btn').click();
+    await expect(win.getByTestId('quota-status-trigger')).toContainText('Gói Miễn phí', {
+      timeout: 8000,
+    });
+    await expect(win.getByTestId('quota-status-trigger')).toContainText('45% đã dùng');
     await dismissAllToasts();
 
-    // Open Windows Companion Dock & capture Vietnamese gallery set
-    await win.getByRole('button', { name: 'Khay Công cụ Windows' }).click();
-    await win.waitForTimeout(200);
+    // 2.4 Send a message directly inside NativeMuseChatPage (VI)
+    await win
+      .getByTestId('native-chat-input')
+      .fill('Tổng hợp tiến độ hạ tầng tuần này và kiểm tra cảnh báo hệ thống');
+    await win.getByTestId('native-chat-input').press('Enter');
+    await expect(win.getByTestId('native-chat-stream')).toContainText(
+      'Processed request — Tổng hợp tiến độ hạ tầng tuần này',
+      { timeout: 8000 },
+    );
+    await win.waitForTimeout(220);
     await win.screenshot({ path: path.join(PUBLIC_VI_SHOTS, 'main-workspace-dark.png') });
 
+    // 2.5 Verify Quick Assistant (`Trợ lý Nhanh`) sends prompt DIRECTLY into Muse conversation!
+    await win.getByRole('tab', { name: 'Trợ lý Nhanh' }).click();
+    await win.waitForTimeout(160);
+    await win.locator('textarea').fill('Kiểm tra danh sách phát hành v1.2.0 cho Windows 11');
+    await win.locator('textarea').press('Enter');
+    await expect(win.getByTestId('native-chat-stream')).toContainText(
+      'Processed request — Kiểm tra danh sách phát hành v1.2.0 cho Windows 11',
+      { timeout: 8000 },
+    );
+    await dismissAllToasts();
+
+    // Capture Vietnamese Quota Popover & Local Bridge
     await win.getByTestId('quota-status-trigger').click();
     await expect(win.getByTestId('quota-popover')).toBeVisible();
     await win.waitForTimeout(180);
     await win.screenshot({ path: path.join(PUBLIC_VI_SHOTS, 'quota-popover.png') });
-    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'states', '02-quota-popover-vi.png') });
     await win.keyboard.press('Escape');
 
     await win.getByRole('tab', { name: 'Tác tử Windows' }).click();
@@ -119,15 +151,25 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
     await win.waitForTimeout(220);
     await dismissAllToasts();
 
-    // 3.1 Main Desktop Workspace (EN, Dark, Windows Companion open, Live Quota 45% used in bottom-left)
+    // Reset to clean English conversation for crisp hero screenshot
     await win.getByRole('tab', { name: 'Muse' }).click();
+    await win.getByRole('button', { name: 'New Conversation' }).first().click();
+    await win.waitForTimeout(350);
+    await win
+      .getByTestId('native-chat-input')
+      .fill('Summarize Q4 roadmap milestones and verify weekly infrastructure checks');
+    await win.getByTestId('native-chat-input').press('Enter');
+    await expect(win.getByTestId('native-chat-stream')).toContainText(
+      'Processed request — Summarize Q4 roadmap milestones',
+      { timeout: 8000 },
+    );
+    await win.getByRole('button', { name: 'Windows Companion Dock' }).click();
     await win.waitForTimeout(220);
     await expect(win.getByTestId('quota-status-trigger')).toContainText('Free plan');
     await expect(win.getByTestId('quota-status-trigger')).toContainText('45% used');
-    await expect(win.getByText('Windows Companion')).toBeVisible();
     await win.screenshot({ path: path.join(PUBLIC_SHOTS, 'main-workspace-dark.png') });
 
-    // 3.2 Live Quota Usage Popover (EN, Dark — used in README & Hero Banner foreground!)
+    // 3.2 Live Quota Usage Popover (EN, Dark)
     await win.getByTestId('quota-status-trigger').click();
     await expect(win.getByTestId('quota-popover')).toContainText('Muse Usage & Quota');
     await expect(win.getByTestId('quota-popover')).toContainText('Weekly limit resets on 1 Dec');
@@ -154,7 +196,7 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
     await win.keyboard.press('Escape');
     await win.waitForTimeout(120);
 
-    // 3.5 Sandboxed Local Workspace (EN, Dark — select Q4-Product-Roadmap.md to show File Inspector!)
+    // 3.5 Sandboxed Local Workspace (EN, Dark)
     await win.getByRole('tab', { name: 'Workspace Files' }).click();
     await win.waitForTimeout(200);
     await win.getByText('Q4-Product-Roadmap.md', { exact: true }).click();
@@ -167,7 +209,7 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
     await expect(win.locator('h1')).toContainText('Permissions Center');
     await win.screenshot({ path: path.join(PUBLIC_SHOTS, 'permissions-center.png') });
 
-    // 3.7 Local Agent Bridge in Sage-Cream Light Theme (EN, Light — used in README & Hero Banner background!)
+    // 3.7 Local Agent Bridge in Sage-Cream Light Theme (EN, Light)
     await win.getByRole('button', { name: 'Local Bridge', exact: true }).click();
     await win.waitForTimeout(180);
     await win.getByRole('button', { name: 'Switch Theme' }).click();
@@ -176,11 +218,29 @@ test('Electron E2E — Full English Public Gallery, Pure Vietnamese Verification
     await expect(win.getByText('RISK · LOW').first()).toBeVisible();
     await win.screenshot({ path: path.join(PUBLIC_SHOTS, 'theme-light.png') });
 
-    // 3.8 Application Settings — Appearance Tab (EN, Dark)
+    // 3.8 Application Settings — Threshold Persistence & Appearance Tab (EN, Dark)
     await win.getByRole('button', { name: 'Switch Theme' }).click();
     await win.waitForTimeout(200);
     await win.getByRole('tab', { name: 'Settings' }).click();
+    await win.getByRole('tab', { name: 'General' }).click();
+    const warningThreshold = win.getByRole('spinbutton', { name: 'Warning (%)' });
+    const criticalThreshold = win.getByRole('spinbutton', { name: 'Critical (%)' });
+    const saveThresholds = win.getByRole('button', { name: 'Save thresholds' });
+    await expect(warningThreshold).toHaveValue('80');
+    await expect(criticalThreshold).toHaveValue('95');
+    await warningThreshold.fill('96');
+    await expect(saveThresholds).toBeDisabled();
+    await warningThreshold.fill('75');
+    await criticalThreshold.fill('90');
+    await saveThresholds.focus();
+    await win.keyboard.press('Enter');
+    await expect(saveThresholds).toBeDisabled();
     await win.waitForTimeout(180);
+    await win.getByRole('tab', { name: 'Appearance' }).click();
+    await win.getByRole('tab', { name: 'General' }).click();
+    await expect(warningThreshold).toHaveValue('75');
+    await expect(criticalThreshold).toHaveValue('90');
+    await win.screenshot({ path: path.join(REPORTS_SHOTS, 'states', 'quota-alert-settings.png') });
     await win.getByRole('tab', { name: 'Appearance' }).click();
     await win.waitForTimeout(180);
     await win.screenshot({ path: path.join(PUBLIC_SHOTS, 'theme-dark.png') });

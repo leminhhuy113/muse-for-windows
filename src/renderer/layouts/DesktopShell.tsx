@@ -66,6 +66,7 @@ import {
   UnsupportedIntegrationPage,
 } from '@renderer/pages/OnboardingAndAccountPages';
 import { QuickAssistantPage } from '@renderer/pages/QuickAssistantPage';
+import { NativeMuseChatPage } from '@renderer/pages/NativeMuseChatPage';
 import {
   DownloadsPage,
   FolderPermissionsPage,
@@ -122,6 +123,9 @@ function resolveSpaceFromScreen(screen: AppScreenId): PrimarySpaceId {
 
 function formatPlanLabel(raw: string | null, locale: ResolvedLocale, fallback: string): string {
   if (!raw) return fallback;
+  if (/reset|weekly\s+limit|daily\s+limit|expires/i.test(raw)) {
+    return locale === 'vi' ? 'Gói Miễn phí' : 'Free plan';
+  }
   if (locale !== 'vi') return raw;
   const lower = raw.trim().toLowerCase();
   if (lower === 'free plan') return 'Gói Miễn phí';
@@ -143,8 +147,17 @@ function formatResetText(raw: string | null, locale: ResolvedLocale): string | n
 function formatTokensLeft(raw: string | null, locale: ResolvedLocale): string | null {
   if (!raw) return null;
   if (locale !== 'vi') return raw;
-  const m = raw.match(/^([0-9.,]+[KMBT]?)\s+tokens?\s+left$/i);
-  if (m) return `Còn ${m[1]} token`;
+  const m = raw.match(/^([0-9.,]+)\s*([KMBT])?\s+tokens?\s+left$/i);
+  if (m) {
+    const unitMap: Record<string, string> = {
+      K: ' nghìn',
+      M: ' triệu',
+      B: ' tỷ',
+      T: ' nghìn tỷ',
+    };
+    const unit = m[2] ? unitMap[m[2].toUpperCase()] || m[2] : '';
+    return `Còn ${m[1]}${unit} token`;
+  }
   return raw;
 }
 
@@ -376,7 +389,6 @@ export function DesktopShell() {
     visible: false,
   });
 
-  const museSlotRef = useRef<HTMLDivElement>(null);
   const navListRef = useRef<HTMLUListElement>(null);
   const pillRef = useRef<HTMLLIElement>(null);
   const accountWrapRef = useRef<HTMLDivElement>(null);
@@ -389,46 +401,6 @@ export function DesktopShell() {
     (activeSpace === 'files' || activeSpace === 'agent' || activeSpace === 'settings');
 
   const activeApproval = pendingApprovals[0] || null;
-  const anyOverlayOpen =
-    commandPaletteOpen || Boolean(activeApproval) || accountMenuOpen || quotaPopoverOpen;
-  const isMuseVisible = activeScreen === 'muse' && !anyOverlayOpen;
-
-  // Synchronize WebContentsView coordinates strictly with the Muse slot div
-  useEffect(() => {
-    if (!window.museApi) return;
-
-    const syncBounds = () => {
-      const slot = museSlotRef.current;
-      if (!isMuseVisible || !slot) {
-        void window.museApi.setMuseBounds({ visible: false, x: 0, y: 0, width: 0, height: 0 });
-        return;
-      }
-      const rect = slot.getBoundingClientRect();
-      void window.museApi.setMuseBounds({
-        visible: true,
-        x: Math.round(rect.left),
-        y: Math.round(rect.top),
-        width: Math.max(0, Math.round(rect.width)),
-        height: Math.max(0, Math.round(rect.height)),
-      });
-    };
-
-    syncBounds();
-    const observer = new ResizeObserver(syncBounds);
-    if (museSlotRef.current) observer.observe(museSlotRef.current);
-    window.addEventListener('resize', syncBounds);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', syncBounds);
-    };
-  }, [
-    isMuseVisible,
-    showContextualSidebar,
-    settings.appearance.sidebarCollapsed,
-    settings.appearance.inspectorOpen,
-    settings.general.focusMode,
-  ]);
 
   // Close popovers on outside click
   useEffect(() => {
@@ -684,26 +656,8 @@ export function DesktopShell() {
       case 'muse':
         return (
           <div className="flex h-full w-full overflow-hidden">
-            <div
-              ref={museSlotRef}
-              className="flex-1 h-full bg-[var(--ms-bg)] relative grid place-items-center"
-            >
-              <div className="text-center space-y-3 p-8 max-w-md">
-                <div className="mx-auto w-fit p-3 rounded-[22px] bg-[var(--ms-surface)] border border-[var(--ms-border)]">
-                  <BrandLogo size={46} />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-[16px] font-semibold tracking-tight">{t.app.name}</div>
-                  <div className="text-[12.5px] text-[var(--ms-text-secondary)]">
-                    {t.app.sessionSub} · https://muse.ai
-                  </div>
-                </div>
-                <div>
-                  <StatusBadge tone={museState.isLoading ? 'info' : 'accent'}>
-                    {museState.isLoading ? t.titlebar.loading : t.titlebar.online}
-                  </StatusBadge>
-                </div>
-              </div>
+            <div className="flex-1 min-w-0 h-full overflow-hidden">
+              <NativeMuseChatPage />
             </div>
             {settings.appearance.inspectorOpen && !settings.general.focusMode && (
               <WindowsCompanionDock />
@@ -1194,14 +1148,22 @@ export function DesktopShell() {
                         {quotaState.weeklyPercentUsed}% {t.quota.usedSuffix}
                       </strong>
                     </div>
-                    <div className="h-2 rounded-full bg-[var(--ms-surface)] overflow-hidden">
+                    <div className="relative h-2.5 rounded-full bg-[var(--ms-surface)] overflow-hidden"
+                      role="progressbar" aria-label={t.quota.title} aria-valuemin={0}
+                      aria-valuemax={100} aria-valuenow={quotaState.weeklyPercentUsed}>
                       <div
-                        className="h-full rounded-full transition-all"
+                        className="h-full rounded-full motion-safe:transition-[width,background-color]"
                         style={{
                           width: `${Math.min(100, quotaState.weeklyPercentUsed)}%`,
                           background: quotaToneColor(quotaState.weeklyPercentUsed),
                         }}
                       />
+                      {settings.notifications.quotaAlerts.enabled &&
+                        [settings.notifications.quotaAlerts.warning, settings.notifications.quotaAlerts.critical].map((threshold) => (
+                          <span key={threshold} aria-hidden="true"
+                            className="absolute inset-y-0 w-px bg-[var(--ms-text-primary)]"
+                            style={{ left: `min(${threshold}%, calc(100% - 1px))` }} />
+                        ))}
                     </div>
                     {resetDisplay && (
                       <div className="text-[11px] text-[var(--ms-text-muted)]">{resetDisplay}</div>
@@ -1260,6 +1222,12 @@ export function DesktopShell() {
                   </span>
                 )}
               </div>
+              <Button size="sm" variant="secondary" className="w-full" onClick={() => {
+                setQuotaPopoverOpen(false);
+                setActiveScreen('settings-general');
+              }}>
+                {t.settings.title}
+              </Button>
             </div>
           )}
         </div>

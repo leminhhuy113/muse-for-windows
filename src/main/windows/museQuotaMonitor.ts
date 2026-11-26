@@ -127,14 +127,31 @@ export function parseMuseQuotaFromLeafTexts(rawLines: string[]): ExtractedMuseQu
       }
     } else if (weeklyPercentUsed === null) {
       weeklyPercentUsed = metric.percent;
-      if (
+      if (prevLine && SUBTITLE_HINT_RE.test(prevLine) && !parseUsageMetricLine(prevLine)) {
+        weeklyResetLabel = prevLine;
+        const prev2 = i > 1 ? windowLines[i - 2] : '';
+        if (
+          prev2 &&
+          !parseUsageMetricLine(prev2) &&
+          !SUBTITLE_HINT_RE.test(prev2) &&
+          !SKIP_PLAN_LABELS.has(prev2.toLowerCase())
+        ) {
+          planLabel = prev2;
+        }
+      } else if (
         prevLine &&
         !parseUsageMetricLine(prevLine) &&
+        !SUBTITLE_HINT_RE.test(prevLine) &&
         !SKIP_PLAN_LABELS.has(prevLine.toLowerCase())
       ) {
         planLabel = prevLine;
       }
-      if (nextLine && SUBTITLE_HINT_RE.test(nextLine) && !parseUsageMetricLine(nextLine)) {
+      if (
+        !weeklyResetLabel &&
+        nextLine &&
+        SUBTITLE_HINT_RE.test(nextLine) &&
+        !parseUsageMetricLine(nextLine)
+      ) {
         weeklyResetLabel = nextLine;
       }
     }
@@ -429,8 +446,16 @@ export class MuseQuotaMonitor {
       });
       if (validated.success && validated.data.synced) {
         const ws = this.safeWorkspaceSummary();
+        let cleanPlan = validated.data.planLabel;
+        let cleanReset = validated.data.weeklyResetLabel;
+        if (cleanPlan && SUBTITLE_HINT_RE.test(cleanPlan)) {
+          if (!cleanReset) cleanReset = cleanPlan;
+          cleanPlan = 'Free plan';
+        }
         this.snapshot = {
           ...validated.data,
+          planLabel: cleanPlan,
+          weeklyResetLabel: cleanReset,
           workspaceUsedBytes: ws.totalBytes,
           workspaceQuotaBytes: ws.quotaBytes,
         };

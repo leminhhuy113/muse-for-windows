@@ -20,6 +20,7 @@ import { BRANDING } from '@shared/branding';
 import { IPC_CHANNELS } from '@shared/contracts/ipc';
 import {
   AuditFilterSchema,
+  MuseSendMessageSchema,
   PermissionCategorySchema,
   PermissionPolicySchema,
   QuickPromptSubmissionSchema,
@@ -40,6 +41,8 @@ import {
 import { LoopbackMcpServer } from './integrations/mcpLoopbackServer';
 import { runWindowsHelper } from './integrations/windowsHelperClient';
 import { NotificationCenterStore } from './notifications/notificationStore';
+import { QuotaAlertTracker } from '@shared/quotaAlerts';
+import { quotaAlertCopy } from '@shared/quotaAlertCopy';
 import { PermissionManager } from './permissions/permissionManager';
 import {
   assertTrustedLocalIpcSender,
@@ -195,6 +198,7 @@ if (!isSingleInstance) {
     });
 
     const mainWin = windowManager.createMainWindow();
+    const quotaAlerts = new QuotaAlertTracker();
 
     museViewManager = new MuseViewManager({
       userDataDir,
@@ -206,6 +210,26 @@ if (!isSingleInstance) {
       onQuotaChange: (qState) => {
         trayManager?.updateConfig({ quota: qState });
         windowManager.broadcast(IPC_CHANNELS.EVENT_QUOTA_UPDATED, qState);
+        const settings = settingsStore.get();
+        const preferences = settings.notifications.quotaAlerts;
+        const threshold = quotaAlerts.observe(qState, {
+          ...preferences,
+          enabled: preferences.enabled && settings.notifications.enabled && !settings.general.focusMode,
+        });
+        if (threshold !== null) {
+          const locale = settings.language.locale === 'system' ? app.getLocale() : settings.language.locale;
+          const [title, , warning, critical] = quotaAlertCopy(locale);
+          notificationStore.push({
+            title: `Muse · ${title}`,
+            body: `${threshold === preferences.critical ? critical : warning} · ${qState.weeklyPercentUsed}% / ${threshold}%`,
+            level: 'warning',
+            targetScreen: 'muse',
+            nativeToast: true,
+          });
+        }
+      },
+      onChatChange: (cState) => {
+        windowManager.broadcast(IPC_CHANNELS.EVENT_MUSE_CHAT_UPDATED, cState);
       },
       onDownloadUpdate: (dl) => {
         windowManager.broadcast(IPC_CHANNELS.EVENT_DOWNLOAD_UPDATED, dl);
@@ -221,6 +245,7 @@ if (!isSingleInstance) {
         }
       },
     });
+    quotaAlerts.observe(museViewManager.getQuotaSnapshot(), initialSettings.notifications.quotaAlerts);
     museViewManager.init(mainWin);
 
     if (process.env.MUSE_E2E_TEST !== '1') {
@@ -286,6 +311,7 @@ if (!isSingleInstance) {
         settings: s,
         museState: museViewManager.getState(),
         quotaState: museViewManager.getQuotaSnapshot(),
+        chatState: museViewManager.getChatSnapshot(),
         agentState: localBridge.getExecutionState(),
         pendingApprovals: permissionManager.getPendingRequests(),
         updateState: updateManager.getState(),
@@ -448,23 +474,50 @@ if (!isSingleInstance) {
     registerSecureHandler(IPC_CHANNELS.MUSE_SYNC_QUOTA, (_e, interactive = true) =>
       museViewManager.syncQuota(z.boolean().parse(interactive)),
     );
+    registerSecureHandler(IPC_CHANNELS.MUSE_GET_CHAT_SNAPSHOT, () =>
+      museViewManager.refreshChatSnapshot(),
+    );
+    registerSecureHandler(IPC_CHANNELS.MUSE_SEND_MESSAGE, async (_e, rawPayload: unknown) => {
+      const parsed = MuseSendMessageSchema.parse(rawPayload);
+      return await museViewManager.sendChatMessage(parsed.prompt, parsed.attachments);
+    });
+    registerSecureHandler(IPC_CHANNELS.MUSE_NEW_CHAT, () => museViewManager.startNewChat());
+    registerSecureHandler(IPC_CHANNELS.MUSE_SELECT_THREAD, (_e, _threadId: string) =>
+      museViewManager.refreshChatSnapshot(),
+    );
+    registerSecureHandler(IPC_CHANNELS.MUSE_OPEN_SIGNIN_WINDOW, () =>
+      museViewManager.openSignInWindow(),
+    );
+    registerSecureHandler(IPC_CHANNELS.MUSE_PICK_CHAT_ATTACHMENTS, async () => {
+      const res = await dialog.showOpenDialog({
+        properties: ['openFile', 'multiSelections'],
+      });
+      if (res.canceled) return [];
+      return res.filePaths.slice(0, 8);
+    });
 
-    // Quick Assistant Prompt Handoff (Mode A legitimate clipboard + focus handoff, or Mode C local agent)
+    // Quick Assistant Direct Prompt Delivery (Mode A sends directly to Muse Chat Engine, or Mode C local agent)
     registerSecureHandler(IPC_CHANNELS.QUICK_SUBMIT_PROMPT, async (_e, rawPayload: unknown) => {
       const payload = QuickPromptSubmissionSchema.parse(rawPayload);
       if (payload.targetMode === 'mode-a') {
-        const attachmentNote =
-          payload.attachments.length > 0
-            ? `\n\n[Staged in Muse Shared Folder: ${payload.attachments.join(', ')}]`
-            : '';
-        clipboard.writeText(`${payload.prompt}${attachmentNote}`);
+        const resolvedAttachments = payload.attachments
+          .map((item) => {
+            if (path.isAbsolute(item) && fs.existsSync(item)) return item;
+            try {
+              return workspaceManager.resolveAuthorizedPath(path.join('Shared', item), 'read');
+            } catch {
+              return '';
+            }
+          })
+          .filter(Boolean);
+
+        await museViewManager.sendChatMessage(payload.prompt, resolvedAttachments);
         windowManager.hideQuickAssistant();
         windowManager.focusAndNavigate('muse');
-        setTimeout(() => museViewManager.focusView(), 80);
         return {
           mode: 'mode-a' as const,
-          output: 'Prompt copied to clipboard and official Muse focused. Press Ctrl+V to submit.',
-          providerLabel: 'Official Muse (Mode A Handoff)',
+          output: 'Sent directly to Muse.',
+          providerLabel: 'Muse',
         };
       }
 

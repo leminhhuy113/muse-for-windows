@@ -128,6 +128,22 @@ describe('1MS Studio Branding, Pure Vietnamese i18n & Quota Usage Engine', () =>
     expect(parsedRelay?.weeklyPercentUsed).toBe(72.5);
     expect(parsedRelay?.additionalPercentUsed).toBe(12);
     expect(parsedRelay?.additionalTokensLeft).toBe('880M tokens left');
+
+    // Regression: when reset subtitle precedes "100% used", planLabel must remain "Free plan"
+    const exhaustedLeaves = [
+      'Usage',
+      'Free plan',
+      'Weekly limit resets on 29 Nov',
+      '100% used',
+      'Additional tokens',
+      '0% used (32B tokens left)',
+      'Never expires',
+    ];
+    const parsedExhausted = parseMuseQuotaFromLeafTexts(exhaustedLeaves);
+    expect(parsedExhausted?.planLabel).toBe('Free plan');
+    expect(parsedExhausted?.weeklyPercentUsed).toBe(100);
+    expect(parsedExhausted?.weeklyResetLabel).toBe('Weekly limit resets on 29 Nov');
+    expect(parsedExhausted?.additionalTokensLeft).toBe('32B tokens left');
   });
 
   it('generates valid 32x32 RGBA PNG buffers and ASCII bars for Windows System Tray', () => {

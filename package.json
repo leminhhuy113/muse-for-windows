@@ -1,6 +1,6 @@
 {
   "name": "muse-for-windows",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "An independent open-source Windows desktop client for Muse, featuring native Windows integration, secure local tools and a premium 1MS Studio interface.",
   "author": {
     "name": "1MS Studio",
@@ -50,7 +50,7 @@
     "release:metadata": "node scripts/generate-release-artifacts.mjs",
     "dist:win:x64": "npm run audit:prod && node scripts/prepare-wincodesign.mjs && npm run build && electron-builder --win nsis portable --x64 --publish never",
     "dist:win:arm64": "npm run audit:prod && node scripts/prepare-wincodesign.mjs && npm run build && electron-builder --win nsis portable --arm64 --publish never",
-    "dist:win:all": "npm run audit:prod && node scripts/prepare-wincodesign.mjs && npm run build && electron-builder --win nsis portable --x64 --arm64 --publish never"
+    "dist:win:all": "npm run dist:win:x64 && npm run dist:win:arm64"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

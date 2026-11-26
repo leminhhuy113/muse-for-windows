@@ -177,6 +177,7 @@ export interface AppSettings {
     notifyOnDownload: boolean;
     notifyOnApproval: boolean;
     notifyOnUpdate: boolean;
+    quotaAlerts: { enabled: boolean; warning: number; critical: number };
   };
   privacy: {
     auditRetentionDays: number;
@@ -224,6 +225,42 @@ export interface MuseQuotaSnapshot {
   workspaceQuotaBytes: number;
   syncedAt: string | null;
   source: 'none' | 'cache' | 'relay' | 'dom';
+}
+
+export interface MuseChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+  timestamp: string | null;
+  optimistic?: boolean;
+}
+
+export interface MuseScheduledTaskItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  completed: boolean;
+}
+
+export interface MuseThreadSummary {
+  id: string;
+  title: string;
+  snippet: string | null;
+  active: boolean;
+}
+
+export interface MuseChatSnapshot {
+  authenticated: boolean;
+  engineWindowOpen: boolean;
+  agentName: string;
+  agentConnected: boolean;
+  agentAvatarUrl: string | null;
+  sending: boolean;
+  streaming: boolean;
+  messages: MuseChatMessage[];
+  threads: MuseThreadSummary[];
+  scheduledTasks: MuseScheduledTaskItem[];
+  lastUpdatedAt: string;
 }
 
 export interface WorkspaceFileEntry {

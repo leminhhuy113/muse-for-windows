@@ -8,7 +8,7 @@
 
 [**English**](./README.md) · [**Tiếng Việt**](./README.vi.md)
 
-[![Phiên bản](https://img.shields.io/badge/version-1.1.0-C7F34B?labelColor=151A14)](https://github.com/leminhhuy113/muse-for-windows/releases/latest)
+[![Phiên bản](https://img.shields.io/badge/version-1.2.0-C7F34B?labelColor=151A14)](https://github.com/leminhhuy113/muse-for-windows/releases/latest)
 [![Giấy phép: MIT](https://img.shields.io/badge/license-MIT-98D5A4?labelColor=151A14)](./LICENSE)
 [![Nền tảng](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20(x64%20%2F%20ARM64)-F5FBE9?labelColor=151A14)](./docs/COMPATIBILITY.md)
 [![Tiêu chuẩn](https://img.shields.io/badge/1MS%20Studio-1RS%20v1.2-C7F34B?labelColor=151A14)](https://1ms-studio.com)
@@ -26,10 +26,10 @@ Hiện tại, **Muse** (`https://muse.ai`, phát triển bởi Meta Platforms, I
 
 **Muse for Windows** — phát triển bởi **1MS Studio** trên tiêu chuẩn thiết kế **1RS v1.2** — mang đến trải nghiệm trợ lý AI máy tính nguyên bản, tốc độ cao và ưu tiên bảo mật:
 
-- **Trải nghiệm Muse Chính thức Liền mạch (Chế độ A):** Không gian `WebContentsView` tràn viền cô lập (`persist:muse-official`) đồng bộ trực tiếp Sáng/Tối, giữ trọn tài khoản thật, Hội thoại, **Feed**, **Ideas**, **Goals**, **Library**, **Connectors** và **Cloud Computer (Secure VM)** — không cần khóa API phụ, không can thiệp cookie hay mật khẩu.
-- **Hiển thị Hạn mức Sử dụng (Quota Usage) ở Góc trái dưới & Biểu tượng Khay hệ thống:** Theo dõi trực tiếp gói hiện tại (`Free` / `Power` / `Maximum`), phần trăm đã dùng trong tuần, lịch đặt lại và số token bổ sung còn lại ngay trên thanh trạng thái đáy góc trái và trên biểu tượng Khay hệ thống Windows động `32×32`.
+- **Giao diện Trò chuyện Gốc Riêng biệt (Chế độ A):** Giao diện hội thoại nguyên bản chuẩn `1MS Studio × Lucian UX/UI` đồng bộ trực tiếp với phiên cô lập `persist:muse-official` — hiển thị phản hồi trực tiếp, tác vụ định kỳ, đính kèm tệp/ảnh chụp màn hình và không còn tình trạng chèn khung web hay che khuất thanh menu trên.
+- **Hiển thị Hạn mức Sử dụng (Quota Usage) ở Góc trái dưới & Biểu tượng Khay hệ thống:** Theo dõi trực tiếp gói hiện tại (`Gói Miễn phí` / `Gói Power` / `Gói Maximum`), phần trăm đã dùng trong tuần, cảnh báo vượt ngưỡng, lịch đặt lại và số token bổ sung còn lại ngay trên thanh trạng thái đáy góc trái và trên biểu tượng Khay hệ thống Windows động `32×32`.
 - **Trạm làm việc 5 Không gian Windows 10 & 11 (`1ms-studio.com` × Lucian UX/UI):** Thanh tiêu đề `44px` đồng bộ **Snap Layouts (`Win+Z`)**, cụm chuyển **5 Không gian Lucian `#416`**, **Khay Công cụ Windows** bên phải (chụp màn hình & đính kèm tệp nhanh), thanh bên thu gọn **Lucian `#417`** và Phím tắt toàn cục (`Ctrl+Alt+M`, `Ctrl+Alt+Space`).
-- **Trợ lý Nhanh (Quick Assistant):** Cửa sổ lệnh tức thì hỗ trợ `@workspace`, gợi ý thông minh (`Tab`), nhập giọng nói và chuyển tiếp hợp lệ sang Muse chính thức (hoặc chạy Tác tử Cục bộ Chế độ C).
+- **Trợ lý Nhanh (Quick Assistant):** Cửa sổ lệnh tức thì hỗ trợ `@workspace`, gợi ý thông minh (`Tab`), nhập giọng nói và **gửi thẳng tin nhắn + tệp đính kèm vào cuộc trò chuyện Muse** ngay khi nhấn `Enter` (hoặc chạy Tác tử Cục bộ Chế độ C).
 - **Thư mục Làm việc Cô lập (`10 GB` mặc định):** Chống vượt cấp đường dẫn (`..`), chặn symlink & **NTFS junction**, thanh đo dung lượng trực quan, xóa an toàn vào Thùng rác Windows và di chuyển thư mục có đối chiếu mã băm SHA-256 kèm tự động hoàn tác khi lỗi.
 - **Trung tâm Quyền hạn Mặc định Từ chối & 34 Công cụ Cục bộ:** Hộp thoại phê duyệt tự hết hạn sau 45 giây, nút **Dừng Khẩn cấp (Emergency Stop)**, máy chủ MCP `127.0.0.1` xác thực Bearer, tự động hóa trình duyệt Playwright hồ sơ riêng, Windows UI Automation (thử nghiệm) và nhật ký kiểm toán **SQLite** tự động ẩn dữ liệu nhạy cảm.
 - **Hệ thống Đa ngôn ngữ:** Hỗ trợ sẵn **Tiếng Việt** (chuẩn Unicode NFC), **English**, **简体中文 (Tiếng Trung)**, **日本語 (Tiếng Nhật)** và **한국어 (Tiếng Hàn)** trên cả Giao diện Tối, Sáng và Theo hệ thống.
@@ -58,10 +58,10 @@ Hiện tại, **Muse** (`https://muse.ai`, phát triển bởi Meta Platforms, I
 
 ## Tải xuống & Cài đặt
 
-Tải các bản thực thi tại trang [**GitHub Releases (`v1.1.0`)**](https://github.com/leminhhuy113/muse-for-windows/releases/tag/v1.1.0):
+Tải các bản thực thi tại trang [**GitHub Releases (`v1.2.0`)**](https://github.com/leminhhuy113/muse-for-windows/releases/tag/v1.2.0):
 
-- **Bản Cài đặt Windows x64 (Khuyên dùng):** `Muse-for-Windows-1MS-Studio-v1.1.0-Setup-x64.exe` *(Cài đặt theo tài khoản người dùng, không cần quyền Admin)*
-- **Bản Di động Windows x64 (Portable):** `Muse-for-Windows-1MS-Studio-v1.1.0-Portable-x64.exe`
+- **Bản Cài đặt Windows x64 (Khuyên dùng):** `Muse-for-Windows-1MS-Studio-v1.2.0-Setup-x64.exe` *(Cài đặt theo tài khoản người dùng, không cần quyền Admin)*
+- **Bản Di động Windows x64 (Portable):** `Muse-for-Windows-1MS-Studio-v1.2.0-Portable-x64.exe`
 - **Bản ARM64 (Biên dịch chéo — Chưa kiểm chứng trên phần cứng ARM64 vật lý):** `Setup-arm64.exe` & `Portable-arm64.exe`
 - Kiểm tra mã băm an toàn trong tệp `SHA256SUMS.txt` và danh mục phần mềm `SBOM.cdx.json`.
 

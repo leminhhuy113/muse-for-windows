@@ -12,6 +12,7 @@ import type {
   AppSettings,
   DownloadItemRecord,
   LiveAgentExecutionState,
+  MuseChatSnapshot,
   MuseConnectionState,
   MuseQuotaSnapshot,
   ResolvedLocale,
@@ -93,6 +94,7 @@ const FALLBACK_SETTINGS: AppSettings = {
     notifyOnDownload: true,
     notifyOnApproval: true,
     notifyOnUpdate: true,
+    quotaAlerts: { enabled: true, warning: 80, critical: 95 },
   },
   privacy: {
     auditRetentionDays: 30,
@@ -153,6 +155,7 @@ interface AppStoreState {
   settings: AppSettings;
   museState: MuseConnectionState;
   quotaState: MuseQuotaSnapshot;
+  chatState: MuseChatSnapshot;
   agentState: LiveAgentExecutionState;
   pendingApprovals: ToolApprovalRequest[];
   downloads: DownloadItemRecord[];
@@ -168,6 +171,10 @@ interface AppStoreState {
   updateSettings: (patch: Partial<AppSettings>) => Promise<void>;
   resetSettings: () => Promise<void>;
   syncQuota: (interactive?: boolean) => Promise<MuseQuotaSnapshot | null>;
+  refreshMuseChat: () => Promise<MuseChatSnapshot | null>;
+  sendMuseMessage: (prompt: string, attachments?: string[]) => Promise<MuseChatSnapshot | null>;
+  startNewMuseChat: () => Promise<MuseChatSnapshot | null>;
+  openMuseSignInWindow: () => Promise<boolean>;
   pushToast: (toast: Omit<ToastEntry, 'id'>) => void;
   dismissToast: (id: string) => void;
 }
@@ -209,6 +216,19 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
     workspaceQuotaBytes: DEFAULT_WORKSPACE_LIMIT_BYTES,
     syncedAt: null,
     source: 'none',
+  },
+  chatState: {
+    authenticated: false,
+    engineWindowOpen: false,
+    agentName: 'Muse',
+    agentConnected: false,
+    agentAvatarUrl: null,
+    sending: false,
+    streaming: false,
+    messages: [],
+    threads: [],
+    scheduledTasks: [],
+    lastUpdatedAt: new Date().toISOString(),
   },
   agentState: {
     active: false,
@@ -286,6 +306,7 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
       settings: data.settings,
       museState: data.museState,
       quotaState: data.quotaState,
+      chatState: data.chatState,
       agentState: data.agentState,
       pendingApprovals: data.pendingApprovals,
       updateState: data.updateState,
@@ -312,6 +333,10 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
 
     window.museApi.onEvent<MuseQuotaSnapshot>(IPC_CHANNELS.EVENT_QUOTA_UPDATED, (qState) => {
       set({ quotaState: qState });
+    });
+
+    window.museApi.onEvent<MuseChatSnapshot>(IPC_CHANNELS.EVENT_MUSE_CHAT_UPDATED, (cState) => {
+      set({ chatState: cState });
     });
 
     window.museApi.onEvent<AppSettings>(IPC_CHANNELS.EVENT_SETTINGS_UPDATED, (nextSettings) => {
@@ -421,6 +446,39 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
     const next = await window.museApi.museSyncQuota(interactive);
     set({ quotaState: next });
     return next;
+  },
+
+  refreshMuseChat: async () => {
+    if (!window.museApi) return null;
+    const next = await window.museApi.museGetChatSnapshot();
+    set({ chatState: next });
+    return next;
+  },
+
+  sendMuseMessage: async (prompt, attachments = []) => {
+    if (!window.museApi) return null;
+    set((s) => ({
+      chatState: {
+        ...s.chatState,
+        sending: true,
+        streaming: true,
+      },
+    }));
+    const next = await window.museApi.museSendMessage({ prompt, attachments });
+    set({ chatState: next });
+    return next;
+  },
+
+  startNewMuseChat: async () => {
+    if (!window.museApi) return null;
+    const next = await window.museApi.museNewChat();
+    set({ chatState: next });
+    return next;
+  },
+
+  openMuseSignInWindow: async () => {
+    if (!window.museApi) return false;
+    return await window.museApi.museOpenSignInWindow();
   },
 
   pushToast: (toast) => {

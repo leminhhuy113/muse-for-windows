@@ -211,7 +211,7 @@ export function AccountConnectionPage() {
             variant="primary"
             icon={<KeyRound size={15} />}
             onClick={() => {
-              void window.museApi?.museNavigate(BRANDING.officialMuseUrl);
+              void window.museApi?.museOpenSignInWindow();
               setActiveScreen('muse');
             }}
           >

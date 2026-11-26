@@ -8,7 +8,7 @@
 
 [**English**](./README.md) · [**Tiếng Việt**](./README.vi.md)
 
-[![Version](https://img.shields.io/badge/version-1.1.0-C7F34B?labelColor=151A14)](https://github.com/leminhhuy113/muse-for-windows/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.2.0-C7F34B?labelColor=151A14)](https://github.com/leminhhuy113/muse-for-windows/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-98D5A4?labelColor=151A14)](./LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20(x64%20%2F%20ARM64)-F5FBE9?labelColor=151A14)](./docs/COMPATIBILITY.md)
 [![Standard](https://img.shields.io/badge/1MS%20Studio-1RS%20v1.2-C7F34B?labelColor=151A14)](https://1ms-studio.com)
@@ -26,10 +26,10 @@
 
 **Muse for Windows** — engineered by **1MS Studio** on the **1RS v1.2** design standard — delivers a fast, security-first, native-feeling Windows desktop workspace that combines:
 
-- **Official Muse Experience (Mode A):** Seamless full-bleed `WebContentsView` (`persist:muse-official`) synchronized with native Dark/Light themes, preserving your real Muse account, Conversations, **Feed**, **Ideas**, **Goals**, **Library**, **Connectors**, and **Cloud Computer (Secure VM)** — with zero credential interception and zero extra API keys required.
-- **Live Quota Usage in Bottom-Left Status Bar & Dynamic Tray Icon:** Real-time read-only quota telemetry displaying your active Muse plan (`Free` / `Power` / `Maximum`), weekly usage percentage, reset window, and additional token balance right in the **Bottom-Left Studio Bar** and on a dynamically rendered **32×32 Windows System Tray Icon**.
+- **Dedicated Native 1MS Studio Chat Interface (Mode A):** Pure native desktop conversation UI (`1ms-studio.com` × Lucian UX/UI) backed by an isolated `persist:muse-official` session engine — delivering formatted streaming responses, scheduled & recent tasks, file/screenshot attachments, and zero overlapping web-wrapper chrome.
+- **Live Quota Usage in Bottom-Left Status Bar & Dynamic Tray Icon:** Real-time read-only quota telemetry displaying your active Muse plan (`Free` / `Power` / `Maximum`), weekly usage percentage, configurable threshold alerts, reset window, and additional token balance right in the **Bottom-Left Studio Bar** and on a dynamically rendered **32×32 Windows System Tray Icon**.
 - **Native Windows 10 & 11 5-Space Studio (`1ms-studio.com` × Lucian UX/UI):** Custom `44px` header with **Snap Layouts (`Win+Z`)**, **Lucian `#416` 5-Space Switcher**, right-side **Windows Companion Dock** (1-click screen capture & file staging), contextual **Lucian `#417` Collapsible Sidebars**, Global Keyboard Shortcuts (`Ctrl+Alt+M`, `Ctrl+Alt+Space`), and Native Toast Notifications.
-- **Quick Assistant Launcher:** Instant keyboard-first prompt composer with `@workspace` mentions, ghost suggestions, voice trigger, and legitimate clipboard/focus handoff to official Muse (or optional Mode C local agent execution).
+- **Quick Assistant Launcher:** Instant keyboard-first prompt composer with `@workspace` mentions, ghost suggestions, voice trigger, and direct message + attachment delivery straight into your active Muse conversation (or optional Mode C local agent execution).
 - **Sandboxed Local Workspace (`10 GB` Default Quota):** Path-traversal, symlink, and **NTFS junction** escape guards, segmented storage meter, Windows Recycle Bin deletion, and SHA-256 verified workspace migration with automatic rollback.
 - **Default-Deny Permission Center & 34-Tool Local Agent Bridge:** Granular policies (`Disabled`, `Deny`, `Ask every time`, `Read only`, `Allow in scope`), 45-second expiring approval dialogs, Emergency Stop, Loopback-only `127.0.0.1` MCP server, dedicated-profile Playwright browser automation, experimental Windows UI Automation Computer Use, and sanitized **SQLite** audit logging.
 - **Multilingual Out of the Box:** Full support for **Vietnamese (`Tiếng Việt`, Unicode NFC)**, **English**, **Simplified Chinese (`简体中文`)**, **Japanese (`日本語`)**, and **Korean (`한국어`)** across Dark, Light, and System themes.
@@ -76,16 +76,16 @@
 
 ## Download & Installation
 
-Download verified binaries from [**GitHub Releases (`v1.1.0`)**](https://github.com/leminhhuy113/muse-for-windows/releases/tag/v1.1.0):
+Download verified binaries from [**GitHub Releases (`v1.2.0`)**](https://github.com/leminhhuy113/muse-for-windows/releases/tag/v1.2.0):
 
-- **Installer (x64 — Recommended):** `Muse-for-Windows-1MS-Studio-v1.1.0-Setup-x64.exe` *(Per-user install, no Administrator rights required)*
-- **Portable (x64):** `Muse-for-Windows-1MS-Studio-v1.1.0-Portable-x64.exe`
+- **Installer (x64 — Recommended):** `Muse-for-Windows-1MS-Studio-v1.2.0-Setup-x64.exe` *(Per-user install, no Administrator rights required)*
+- **Portable (x64):** `Muse-for-Windows-1MS-Studio-v1.2.0-Portable-x64.exe`
 - **ARM64 Builds (Cross-compiled, Unverified Hardware):** `Setup-arm64.exe` & `Portable-arm64.exe`
 - **Checksums & Supply Chain:** Verify downloads against `SHA256SUMS.txt` and `SBOM.cdx.json`.
 
 ```powershell
 # Verify SHA-256 checksum in PowerShell before running
-Get-FileHash .\Muse-for-Windows-1MS-Studio-v1.1.0-Setup-x64.exe -Algorithm SHA256
+Get-FileHash .\Muse-for-Windows-1MS-Studio-v1.2.0-Setup-x64.exe -Algorithm SHA256
 ```
 
 ---

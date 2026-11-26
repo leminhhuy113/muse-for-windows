@@ -4,6 +4,15 @@ All notable changes to **Muse for Windows** (by **1MS Studio**, powered by **1RS
 
 ---
 
+## [1.2.0] — 2026-11-26
+
+### Added & Changed
+- **Dedicated Native 1MS Studio Chat Interface (`NativeMuseChatPage` + Isolated Background Session Engine):** Replaced the overlapping embedded web view with a 100% native React conversation workstation (`1ms-studio.com` × Lucian UX/UI), featuring live synced assistant profile, scheduled & recent tasks rail, formatted Markdown/code message cards, native multi-line composer (`Enter` to send, `Shift+Enter` newline), screen capture attachment, and 1-click official session window access.
+- **Direct Prompt & Attachment Delivery from Quick Assistant:** Submitting in **Quick Assistant** (`Enter` or `Ctrl+Enter`) now dispatches prompts and attachments directly into your active Muse conversation and streams the live response natively instead of requiring manual clipboard paste.
+- **Zero Top-Menu Occlusion & Quota Threshold Alerts:** Eliminated child `WebContentsView` z-order clipping over header dropdowns and overlays; fixed `100% used` plan label parsing in `MuseQuotaMonitor`; added configurable Warning/Critical quota threshold notifications and markers.
+
+---
+
 ## [1.1.0] — 2026-11-26
 
 ### Added & Redesigned

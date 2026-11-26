@@ -54,10 +54,9 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
 
   const handleAttachToShared = async () => {
     if (!window.museApi) return;
-    const importedCount = await window.museApi.importWorkspaceFiles('Shared');
-    if (importedCount > 0) {
-      const files = await window.museApi.listWorkspaceFiles('Shared');
-      setAttachments(files.slice(0, importedCount).map((f) => f.name));
+    const picked = await window.museApi.musePickChatAttachments();
+    if (picked.length > 0) {
+      setAttachments((prev) => Array.from(new Set([...prev, ...picked])).slice(0, 8));
     }
   };
 
@@ -111,12 +110,16 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
         });
         setLastResult(res.mode === 'mode-a' ? t.quickAssistant.handoffNotice : res.output);
         if (res.mode === 'mode-a') {
+          setPrompt('');
+          setAttachments([]);
           pushToast({
             title: t.quickAssistant.title,
             body: t.quickAssistant.handoffNotice,
             tone: 'success',
           });
-          setPrompt('');
+          if (!standalone) {
+            setActiveScreen('muse');
+          }
         }
       }
     } catch (err) {
@@ -127,6 +130,7 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) return;
     if (e.key === 'Escape') {
       if (standalone && window.museApi) {
         void window.museApi.hideQuickAssistant();
@@ -136,7 +140,10 @@ export function QuickAssistantPage({ standalone = false }: { standalone?: boolea
     } else if (e.key === 'Tab' && ghostCompletion) {
       e.preventDefault();
       setPrompt((p) => p + ghostCompletion);
-    } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    } else if (
+      (e.key === 'Enter' && !e.shiftKey) ||
+      ((e.ctrlKey || e.metaKey) && e.key === 'Enter')
+    ) {
       e.preventDefault();
       void handleSubmit();
     }

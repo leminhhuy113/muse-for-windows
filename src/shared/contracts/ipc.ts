@@ -33,6 +33,12 @@ export const IPC_CHANNELS = {
   MUSE_GET_STATE: 'muse:view:get-state',
   MUSE_GET_QUOTA: 'muse:view:get-quota',
   MUSE_SYNC_QUOTA: 'muse:view:sync-quota',
+  MUSE_GET_CHAT_SNAPSHOT: 'muse:chat:get-snapshot',
+  MUSE_SEND_MESSAGE: 'muse:chat:send-message',
+  MUSE_NEW_CHAT: 'muse:chat:new-chat',
+  MUSE_SELECT_THREAD: 'muse:chat:select-thread',
+  MUSE_OPEN_SIGNIN_WINDOW: 'muse:chat:open-signin-window',
+  MUSE_PICK_CHAT_ATTACHMENTS: 'muse:chat:pick-attachments',
 
   // Quick Assistant
   QUICK_SUBMIT_PROMPT: 'muse:quick:submit-prompt',
@@ -92,6 +98,7 @@ export const IPC_CHANNELS = {
   // Push events (Main -> Trusted Local Renderer)
   EVENT_MUSE_STATE: 'muse:event:muse-state',
   EVENT_QUOTA_UPDATED: 'muse:event:quota-updated',
+  EVENT_MUSE_CHAT_UPDATED: 'muse:event:muse-chat-updated',
   EVENT_SETTINGS_UPDATED: 'muse:event:settings-updated',
   EVENT_APPROVAL_REQUESTED: 'muse:event:approval-requested',
   EVENT_APPROVAL_RESOLVED: 'muse:event:approval-resolved',

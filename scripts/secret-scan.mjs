@@ -17,6 +17,8 @@ const IGNORED_DIRS = new Set([
   'coverage',
   '.local-cache',
   '.agents',
+  '.codex',
+  'reports',
   'playwright-report',
   'test-results',
 ]);

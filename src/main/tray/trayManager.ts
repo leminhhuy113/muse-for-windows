@@ -139,6 +139,9 @@ function formatBytesCompact(bytes: number): string {
 
 function localizePlanName(raw: string | null, locale: ResolvedLocale): string {
   if (!raw) return locale === 'vi' ? 'Gói Muse' : 'Muse Plan';
+  if (/reset|weekly\s+limit|daily\s+limit|expires/i.test(raw)) {
+    return locale === 'vi' ? 'Gói Miễn phí' : 'Free plan';
+  }
   if (locale !== 'vi') return raw;
   const lower = raw.trim().toLowerCase();
   if (lower === 'free plan') return 'Gói Miễn phí';
@@ -160,8 +163,17 @@ function localizeResetPhrase(raw: string | null, locale: ResolvedLocale): string
 function localizeTokensLeft(raw: string | null, locale: ResolvedLocale): string | null {
   if (!raw) return null;
   if (locale !== 'vi') return raw;
-  const m = raw.match(/^([0-9.,]+[KMBT]?)\s+tokens?\s+left$/i);
-  if (m) return `còn ${m[1]} token`;
+  const m = raw.match(/^([0-9.,]+)\s*([KMBT])?\s+tokens?\s+left$/i);
+  if (m) {
+    const unitMap: Record<string, string> = {
+      K: ' nghìn',
+      M: ' triệu',
+      B: ' tỷ',
+      T: ' nghìn tỷ',
+    };
+    const unit = m[2] ? unitMap[m[2].toUpperCase()] || m[2] : '';
+    return `còn ${m[1]}${unit} token`;
+  }
   return raw;
 }
 

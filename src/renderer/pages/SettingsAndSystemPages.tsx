@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowUpRight,
+  BellRing,
   Download,
   ExternalLink,
   KeyRound,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 import { BRANDING, type ReleaseChannel } from '@shared/branding';
 import { DEFAULT_SHORTCUTS } from '@shared/constants';
+import { quotaAlertCopy } from '@shared/quotaAlertCopy';
 import type {
   AccentPresetId,
   AppScreenId,
@@ -34,6 +36,65 @@ import {
   ThemeModeSelector,
   ValidatedInput,
 } from '@renderer/components/ui/Primitives';
+
+function QuotaAlertCard() {
+  const { settings, resolvedLocale, updateSettings } = useAppStore();
+  const notifications = settings.notifications;
+  const { quotaAlerts } = notifications;
+  const [title, description, warningLabel, criticalLabel, save, hint] = quotaAlertCopy(resolvedLocale);
+  const [warningDraft, setWarning] = useState(String(quotaAlerts.warning));
+  const [criticalDraft, setCritical] = useState(String(quotaAlerts.critical));
+  const warning = Number(warningDraft);
+  const critical = Number(criticalDraft);
+  const valid = Number.isInteger(warning) && Number.isInteger(critical) &&
+    warning >= 1 && warning < critical && critical <= 100;
+
+  return (
+    <section className="ms-card-raised p-5 sm:p-6 space-y-4 min-w-0" aria-labelledby="quota-alert-heading">
+      <div className="flex items-start gap-3">
+        <span className="grid place-items-center size-10 shrink-0 rounded-xl bg-[var(--ms-accent-subtle)] text-[var(--ms-accent)]">
+          <BellRing size={18} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 id="quota-alert-heading" className="text-lg font-semibold">{title}</h2>
+          <p className="text-sm text-[var(--ms-text-muted)]">{description}</p>
+        </div>
+      </div>
+      <LucianSwitch
+        checked={quotaAlerts.enabled}
+        label={title}
+        onChange={(enabled) => void updateSettings({ notifications: {
+          ...notifications, quotaAlerts: { ...quotaAlerts, enabled },
+        } })}
+      />
+      <form className="space-y-3" onSubmit={(event) => {
+        event.preventDefault();
+        if (valid) void updateSettings({ notifications: {
+          ...notifications, quotaAlerts: { ...quotaAlerts, warning, critical },
+        } });
+      }}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {([
+            [warningLabel, warningDraft, setWarning],
+            [criticalLabel, criticalDraft, setCritical],
+          ] as const).map(([label, value, change]) => (
+            <label key={label} className="grid gap-1 min-w-0 text-sm font-semibold">
+              {label}
+              <input type="number" min={1} max={100} step={1} required value={value}
+                aria-describedby="quota-alert-hint"
+                className="w-full rounded-xl border border-[var(--ms-border-control)] bg-[var(--ms-surface)] px-3 py-2"
+                onChange={(event) => change(event.target.value)} />
+            </label>
+          ))}
+        </div>
+        <p id="quota-alert-hint" className="text-xs text-[var(--ms-text-muted)]">{hint}</p>
+        <Button type="submit" disabled={!valid || (warning === quotaAlerts.warning && critical === quotaAlerts.critical)}>
+          {save}
+        </Button>
+      </form>
+    </section>
+  );
+}
 
 /** Screens #16, #17, #18, #19, #20 — Unified Tabbed Settings Hub */
 export function SettingsHubPage({
@@ -120,7 +181,9 @@ export function SettingsHubPage({
       />
 
       {activeTab === 'general' && (
-        <div className="p-6 ms-card-raised divide-y divide-[var(--ms-border)]">
+        <div className="grid gap-4 xl:grid-cols-2 items-start">
+        <QuotaAlertCard key={`${settings.notifications.quotaAlerts.warning}:${settings.notifications.quotaAlerts.critical}`} />
+        <div className="p-5 sm:p-6 ms-card-raised divide-y divide-[var(--ms-border)]">
           <LucianSwitch
             checked={settings.general.launchWithWindows}
             onChange={(launchWithWindows) =>
@@ -163,6 +226,7 @@ export function SettingsHubPage({
             label={t.settings.generalItems.browserTitle}
             description={t.settings.generalItems.browserDesc}
           />
+        </div>
         </div>
       )}
 
