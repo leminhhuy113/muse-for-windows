@@ -47,8 +47,17 @@ Desktop.ini
 .muse-workspace-test/
 .local-cache/
 
-# Private local agent workspace configuration (AGENTS.md is public & tracked)
+# Private local workspace notes & internal build reports (never publish)
 .agents/
 .claude/
+.codex/
 .gstack/
 .hallmark/
+AGENTS.md
+CLAUDE.md
+CODEX-HANDOFF.md
+HANDOFF.md
+TASKS.md
+docs/SKILLS-INVENTORY.md
+docs/SKILLS-REGISTRY.md
+reports/

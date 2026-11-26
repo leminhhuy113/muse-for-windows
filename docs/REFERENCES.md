@@ -46,4 +46,3 @@
 | **Microsoft Windows Docs** | `https://learn.microsoft.com/en-us/windows/` | Verified Active | Win32 window enumeration, Windows UI Automation (`System.Windows.Automation`), DPAPI, Toast Notifications, NTFS reparse point / junction detection. |
 | **Playwright** | `https://playwright.dev/` | Verified Active | Dedicated assistant Chromium profile automation (`browser.*` tools) and automated E2E / Visual QA screenshot verification. |
 | **Model Context Protocol** | `https://modelcontextprotocol.io/` | Verified Active | JSON-RPC 2.0 MCP tool definitions and loopback MCP bridge (`integrations/mcp/`). |
-| **Google Antigravity** | `https://antigravity.google/` | Verified Active | Autonomous SDLC orchestration, workspace `.agents/` rules & skills hierarchy. |
